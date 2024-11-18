@@ -1,4 +1,5 @@
 # Boilerplate code taken from geeksforgeeks.org
+# Needs SpeechRecognition and PyAudio
 
 import speech_recognition as sr
 
