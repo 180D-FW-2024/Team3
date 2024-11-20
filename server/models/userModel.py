@@ -6,18 +6,17 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, nullable=False, primary_key=True, autoincrement=True)
     first_name = Column(String, nullable=False)
-    username = Column(String, nullable=False)
+    username = Column(String, unique=True)
     allergies = Column(String, nullable=False)
     inventory = Column(String, nullable=False)
     hasScale = Column(Integer, nullable=False)
     hasThermometer = Column(Integer, nullable=False)
 
     def __init__(
-            self, id=0, first_name="", username="", 
+            self, first_name="", username="", 
             allergies="", inventory="", hasScale=False, hasThermometer=False):
-        self.id = id
         self.first_name = first_name
         self.username = username
         self.allergies = allergies

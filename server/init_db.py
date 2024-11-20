@@ -13,7 +13,6 @@ Base.metadata.create_all(engine, tables=[User.__table__])
 
 # Create and insert new posts
 testUser = User(
-    id=1,
     first_name="Test",
     username="testuser",
     allergies="",

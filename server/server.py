@@ -15,10 +15,9 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 @app.route("/<username>", methods=['GET'])
-# Initial call to return userID from source IP 
+# Initial call to return userID from source IP, and create if not present
 def start_session(username):
     user = session.query(User).filter_by(username=username).first()
-    
     if user is None:
         session.add(User(username=username))
         session.commit()
