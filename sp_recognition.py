@@ -1,12 +1,20 @@
 # Boilerplate code taken from geeksforgeeks.org
-# Needs SpeechRecognition and PyAudio
+# pip install SpeechRecognition
+# sudo apt install python3-pyaudio
+# pip install typing-extensions -u
+# apt-get install portaudio19-dev python-all-dev
+# pip install google-cloud-speech
+# apt-get install flac
 
 import speech_recognition as sr
 
 r = sr.Recognizer()
 
+
 with sr.Microphone() as source:
-    print("Speak")
+    print("Adjusting for ambient noise; please wait a few seconds...")
+    r.adjust_for_ambient_noise(source, duration = 2)
+    print("Speak!")
     audio_text = r.listen(source)
     
     try:
