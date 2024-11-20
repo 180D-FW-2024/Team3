@@ -8,21 +8,20 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 # Ensure the table is created (if it doesn't already exist)
-Base.metadata.drop_all(engine)
-Base.metadata.create_all(engine)
+Base.metadata.drop_all(engine, tables=[User.__table__])
+Base.metadata.create_all(engine, tables=[User.__table__])
 
 # Create and insert new posts
 testUser = User(
     id=1,
     first_name="Test",
-    last_name="User",
+    username="testuser",
     allergies="",
     inventory="",
     hasScale=False,
     hasThermometer=False
 )
-print(testUser.to_dict())
-print(testUser.__repr__())
+print(testUser)
 
 
 # Add the posts to the session and commit
