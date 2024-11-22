@@ -1,5 +1,8 @@
-import pyttsx3
 # Code from https://pypi.org/project/pyttsx3/
+# pip install pyttsx3
+# apt-get install espeak-ng
+
+import pyttsx3
 
 engine = pyttsx3.init()
 
