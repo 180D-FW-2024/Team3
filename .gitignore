@@ -1,0 +1,4 @@
+__pycache__/
+.env
+Users.db
+llama-agentic-system/
