@@ -1,7 +1,15 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey, Table
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+from models.ingredientModel import Ingredient, InventoryIngredient
 
 Base = declarative_base()
+
+user_allergy_association = Table(
+    'user_allergy', Base.metadata,
+    Column('user_id', ForeignKey('users.id'), primary_key=True),
+    Column('allergy_id', ForeignKey('allergies.id'), primary_key=True)
+)
 
 class User(Base):
     __tablename__ = 'users'
@@ -9,10 +17,11 @@ class User(Base):
     id = Column(Integer, nullable=False, primary_key=True, autoincrement=True)
     first_name = Column(String, nullable=False)
     username = Column(String, unique=True)
-    allergies = Column(String, nullable=False)
-    inventory = Column(String, nullable=False)
+    allergies = relationship('Allergy', secondary=user_allergy_association, back_populates='allergic_users')
+    inventory = relationship('InventoryIngredient', back_populates='user')
     hasScale = Column(Integer, nullable=False)
     hasThermometer = Column(Integer, nullable=False)
+
 
     def __init__(
             self, first_name="", username="", 
