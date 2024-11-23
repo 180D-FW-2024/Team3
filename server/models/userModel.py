@@ -19,8 +19,8 @@ class User(Base):
     username = Column(String, unique=True)
     allergies = relationship('Allergy', secondary=user_allergy_association, back_populates='allergic_users')
     inventory = relationship('InventoryIngredient', back_populates='user')
-    hasScale = Column(Integer, nullable=False)
-    hasThermometer = Column(Integer, nullable=False)
+    has_scale = Column(Integer, nullable=False)
+    has_thermometer = Column(Integer, nullable=False)
 
 
     def __init__(
@@ -30,13 +30,13 @@ class User(Base):
         self.username = username
         self.allergies = allergies
         self.inventory = inventory
-        self.hasScale = hasScale
-        self.hasThermometer = hasThermometer
+        self.has_scale = hasScale
+        self.has_thermometer = hasThermometer
     
     def __repr__(self):
         return f"""<id={self.id}, User(<first_name={self.first_name}, username={self.username},
                 allergies={self.allergies}, inventory={self.inventory},
-                hasScale={self.hasScale}, hasThermometer={self.hasThermometer})>"""
+                has_scale={self.has_scale}, has_thermometer={self.has_thermometer})>"""
 
     def to_dict(self):
         return {
@@ -45,6 +45,6 @@ class User(Base):
             "username": self.username,
             "allergies": self.allergies,
             "inventory": self.inventory,
-            "hasScale": self.hasScale,
-            "hasThermometer": self.hasThermometer
+            "hasScale": self.has_scale,
+            "hasThermometer": self.has_thermometer
         }
