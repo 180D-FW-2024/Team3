@@ -28,6 +28,17 @@ class User(Base):
                 allergies={self.allergies}, inventory={self.inventory},
                 has_scale={self.has_scale}, has_thermometer={self.has_thermometer})>"""
 
+    def addAllergy(self, allergy):
+        self.allergies.append(allergy)
+    
+    def removeAllergy(self, allergy):
+        if allergy not in self.allergies:
+            return
+        self.allergies.remove(allergy)
+    
+    def addInventoryItem(self, inventoryItem):
+        self.inventory.append(inventoryItem)
+
     def to_dict(self):
         return {
             "id": self.id,

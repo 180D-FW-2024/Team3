@@ -10,8 +10,11 @@ class MeasureType(enum.Enum):
 class InstructionType(enum.Enum):
     TIMED = "Timed"
     UNTIMED = "Untimed"
-    TEMPERATURE_TIMED = "Temperature Timed"
-    MEASURE = "Measure"
+    TEMPERATURE = "Temperature"
+    MEASUREMENT = "Measurement"
+    QUANTITY = "Quantity"
+    FINISH = "Finish"
+
 
 measureTypeMapping = {
     # Mapping for weight input

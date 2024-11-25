@@ -78,17 +78,12 @@ class Allergy(Base):
     id = Column(Integer, nullable=False, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False, unique=True)
     users = relationship("User", secondary=user_allergy_association, back_populates="allergies")
-    measureType = Column(Enum(MeasureType), nullable=False)
 
-    def __init__(self, name="", measureType=MeasureType.WEIGHT, user=None):
+    def __init__(self, name="", user=None):
         self.name = standardize(name)
-        self.measureType = measureType
         if user is not None:
             self.addUser(user)
 
-    def addUser(self, user):
-        self.users.append(user)
-
     def __repr__(self):
         user_names = {user.username for user in self.users}
-        return f"""<id={self.id}, Allergy(name={self.name}, name={self.name}, measureType={self.measureType}, users={user_names})>"""
+        return f"""<id={self.id}, Allergy(name={self.name}, users={user_names})>"""

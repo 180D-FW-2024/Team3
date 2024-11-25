@@ -26,11 +26,11 @@ testUser = User(
 print(testUser)
 
 testAllergy = Allergy(
-    name="testAllergy",
-    measureType=MeasureType.WEIGHT,
-    user=testUser
+    name="testAllergy"
 )
 print(testAllergy)
+
+testUser.addAllergy(testAllergy)
 
 testInventory = InventoryIngredient(
     user=testUser,
