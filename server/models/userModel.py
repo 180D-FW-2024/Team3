@@ -1,15 +1,8 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
-from models.ingredientModel import Ingredient, InventoryIngredient
-
-Base = declarative_base()
-
-user_allergy_association = Table(
-    'user_allergy', Base.metadata,
-    Column('user_id', ForeignKey('users.id'), primary_key=True),
-    Column('allergy_id', ForeignKey('allergies.id'), primary_key=True)
-)
+from .ingredientModel import user_allergy_association, Allergy
+from .Base import Base
 
 class User(Base):
     __tablename__ = 'users'
@@ -17,19 +10,16 @@ class User(Base):
     id = Column(Integer, nullable=False, primary_key=True, autoincrement=True)
     first_name = Column(String, nullable=False)
     username = Column(String, unique=True)
-    allergies = relationship('Allergy', secondary=user_allergy_association, back_populates='allergic_users')
+    allergies = relationship('Allergy', secondary=user_allergy_association, back_populates='users')
     inventory = relationship('InventoryIngredient', back_populates='user')
     has_scale = Column(Integer, nullable=False)
     has_thermometer = Column(Integer, nullable=False)
 
 
     def __init__(
-            self, first_name="", username="", 
-            allergies="", inventory="", hasScale=False, hasThermometer=False):
+            self, first_name="", username="", hasScale=False, hasThermometer=False):
         self.first_name = first_name
         self.username = username
-        self.allergies = allergies
-        self.inventory = inventory
         self.has_scale = hasScale
         self.has_thermometer = hasThermometer
     

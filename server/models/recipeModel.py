@@ -1,15 +1,17 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
-from models.helpers import InstructionType
-
-Base = declarative_base()
-
+from .helpers import InstructionType
+# from .Base import Base
+'''
 recipe_ingredients_association = Table(
     'recipe_ingredients_association', Base.metadata,
     Column('recipe_id', ForeignKey('recipes.id'), primary_key=True),
-    Column('ingredient_id', ForeignKey('ingredients.id'), primary_key=True)
+    Column('ingredient_id', ForeignKey('recipe_ingredients.id'), primary_key=True)
 )
+'''
+
+Base = declarative_base()
 
 class Recipe(Base):
     __tablename__ = 'recipes'
