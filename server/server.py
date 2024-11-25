@@ -5,12 +5,11 @@ from sqlalchemy.orm import sessionmaker
 from .models.userModel import User
 import subprocess
 
-subprocess.run(["bash", "FlaskExports.sh"])
-subprocess.run(["python3", "init_db.py"])
+subprocess.run(["python3", "test_db.py"])
 
 app = Flask(__name__)
 
-engine = create_engine('sqlite:///Users.db', echo=True)
+engine = create_engine('sqlite:///raspitouille.db', echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 

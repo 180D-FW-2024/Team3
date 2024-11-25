@@ -2,16 +2,13 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from .helpers import InstructionType
-# from .Base import Base
-'''
+from .Base import Base
+
 recipe_ingredients_association = Table(
     'recipe_ingredients_association', Base.metadata,
     Column('recipe_id', ForeignKey('recipes.id'), primary_key=True),
     Column('ingredient_id', ForeignKey('recipe_ingredients.id'), primary_key=True)
 )
-'''
-
-Base = declarative_base()
 
 class Recipe(Base):
     __tablename__ = 'recipes'
@@ -28,6 +25,10 @@ class Recipe(Base):
         self.title = title
         self.scale_needed = scale_needed
         self.thermometer_needed = thermometer_needed
+    
+    def __repr__(self):
+        ingredients = ", ".join([ingredient.name for ingredient in self.ingredients])
+        return f"<id={self.id}, Recipe(title={self.title}, recipe_text={self.recipe_text}, ingredients={ingredients}, scale_needed={self.scale_needed}, thermometer_needed={self.thermometer_needed})"
 
     def to_dict(self):
         return {
