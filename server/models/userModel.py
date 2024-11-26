@@ -47,8 +47,12 @@ class User(Base):
         self.allergies.remove(allergy)
         return True
     
-    def addInventory(self, itemName, quantity, measureType):
-        pass
+    def addInventory(self, inventoryItem):
+        if inventoryItem in self.inventory:
+            return False
+        self.inventory.append(inventoryItem)
+        return True
+    
     
     def addRecipeHistory(self, recipe):
         if recipe not in self.recipe_history:
@@ -59,8 +63,8 @@ class User(Base):
             "id": self.id,
             "first_name": self.first_name,
             "username": self.username,
-            "allergies": self.allergies,
-            "inventory": self.inventory,
+            "allergies": [allergy.name for allergy in self.allergies],
+            "inventory": [(item.name+""+str(item.quantity)) for item in self.inventory],
             "hasScale": self.has_scale,
             "hasThermometer": self.has_thermometer
         }

@@ -7,6 +7,9 @@ class MeasureType(enum.Enum):
     VOLUME = "Volume" # Volume in ml (converted from other units)
     COUNT = "Count" # Count
 
+    def __str__(self):
+        return self.value
+
 class InstructionType(enum.Enum):
     TIMED = "Timed"
     UNTIMED = "Untimed"
@@ -57,5 +60,7 @@ def getMeasureType(rawType: str) -> Tuple[ MeasureType, float ]:
     return measureTypeMapping.get( rawType, [ MeasureType.COUNT, 1] )
 
 def standardize(rawName: str) -> str:
+    if rawName is None:
+        return None
     rawName = re.sub(r'[^a-zA-Z\s]', '', rawName).strip()
     return re.sub(r'[\s\_]+', '_', rawName).lower()

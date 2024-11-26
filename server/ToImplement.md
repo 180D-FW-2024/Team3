@@ -4,4 +4,6 @@
 - [] Add recipe (for backend)
     - Can be implemented via script or endpoint up to me tbh
 - [] addInventory function
-- [] Fix recipe search
+- [C] Fix recipe search
+- [] Refactor inventory ingredient system to uniquely be keyed by user_id and name
+- [] User first name lol

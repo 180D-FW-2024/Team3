@@ -31,23 +31,22 @@ class RecipeIngredient(Base):
 
     def __str__(self):
         if self.measureType == MeasureType.WEIGHT:
-            return f"""{self.name}, {self.quantity} grams"""
+            return f"""{self.name}, {self.quantity}_grams"""
         elif self.measureType == MeasureType.VOLUME:
-            return f"""{self.name}, {self.quantity} ml"""
+            return f"""{self.name}, {self.quantity}_ml"""
         elif self.measureType == MeasureType.COUNT:
             if self.quantity == 1:
                 return f"""{self.quantity} {self.name}"""
             else:
                 return f"""{self.quantity} {self.name}s"""
             
-        return f"""{self.name}, {self.quantity} {self.measureType}"""
+        return f"""{self.name}, {self.quantity}_{self.measureType}"""
 
     def to_dict(self):
         return {
             "id": self.id,
             "name": self.name,
-            "measureType": self.measureType,
-            "recipes": [recipe.to_dict() for recipe in self.recipes]
+            "measureType": str(self.measureType)
         }
 
 class InventoryIngredient(Base):
@@ -70,7 +69,7 @@ class InventoryIngredient(Base):
             self.user_id = user_id
         else:
             raise ValueError("Either user or user_id must be provided")
-        self.name = name
+        self.name = standardize(name)
 
 
     def __repr__(self):
@@ -100,3 +99,10 @@ class Allergy(Base):
     def __repr__(self):
         user_names = {user.username for user in self.users}
         return f"""<id={self.id}, Allergy(name={self.name}, users={user_names})>"""
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "userCount": len(self.users)
+        }

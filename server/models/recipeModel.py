@@ -41,7 +41,7 @@ class Recipe(Base):
             'title': self.title,
             'recipe_text': self.recipe_text,
             'completion_time': self.completion_time,
-            'ingredients': [ingredient for ingredient in self.ingredients],
+            'ingredients': [ingredient.to_dict() for ingredient in self.ingredients],
             'scale_needed': self.scale_needed,
             'thermometer_needed': self.thermometer_needed,
             'completion_time': self.completion_time
