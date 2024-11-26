@@ -11,7 +11,52 @@
 # have each recipe class contain: array of instruction classes, int counter for which step the recipe is on, (ingredient list?)
 # each instruction class has type, value, string instruction
 
-from text_to_speech import say
+# Timer Class - courtesy of ChatGPT
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+import time
+class CountdownTimer:
+    def __init__(self, duration):
+        # Initialize the timer with a given duration (in seconds).
+        self.initial_duration = duration
+        self.remaining_time = duration
+        self.end_time = None
+        self.running = False
+
+    def set_time(self, seconds):
+        # Set the countdown to start with a specific duration (in seconds).
+        self.initial_duration = seconds
+        self.remaining_time = seconds
+        self.end_time = None
+        self.running = False
+
+    def start(self):
+        # Start or resume the countdown.
+        if not self.running:
+            self.end_time = time.time() + self.remaining_time
+            self.running = True
+
+    def pause(self):
+        # Pause the countdown and save the remaining time.
+        if self.running:
+            self.remaining_time = self.end_time - time.time()
+            self.running = False
+
+    def reset(self):
+        # Reset the countdown to the initial duration.
+        self.remaining_time = self.initial_duration
+        self.end_time = None
+        self.running = False
+
+    def time_left(self):
+        # Return the remaining time in the countdown.
+        if self.running:
+            self.remaining_time = max(0, self.end_time - time.time())
+        return self.remaining_time
+
+    def is_finished(self):
+        return self.time_left() <= 0
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 # Instruction Class
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -27,9 +72,10 @@ class Step:
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 class Recipe:
     # Initialize Recipe object with list of steps and counter = 0
-    def __init__(self, recipeString: str):
+    def __init__(self, recipeString):
         self.steps = self.parseInstrString(recipeString)
         self.stepCounter = 0
+        self.timer = CountdownTimer(0)
 
     def parseInstrString(self, recipeString):
         # Prepare step list to later append to
@@ -70,18 +116,33 @@ class Recipe:
             return 0
         else:
             return 1
+
+    # Manages the different types of values; ex: for Timed type, set timer; for Measurement type, get weight reading
+    def manageCurrentStep(self):
+        step = self.steps[self.stepCounter]
+
+        # if step is Timed type, set Recipe's timer to start at step's value
+        if(step.type == "Timed"):
+            self.timer.set_time(int(step.value))
+
+
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+from text_to_speech import say
 
 # 13 steps
 test = "Quantity; 1; Prepare two 9-inch pie crusts and one 9-inch pie dish| Measurement; 150; Measure out 150 grams of white sugar| Measurement; 5.69; Measure out 5.69 grams of ground cinnamon| Quantity; 6; Prepare 6 cups of sliced apples| Measurement; 14; Measure out 14 grams of butter| Temperature; 450; Gather the ingredients. Preheat the oven to 450 degrees F (230 degrees C)| Untimed; None; Line your 9-inch pie dish with one pastry crust. Set other one to the side| Untimed; None; Combine 3/4 cup sugar and cinnamon in a small bowl. Add more sugar if your apples are tart| Untimed; None; Layer apple slices in the prepared pie dish, sprinkling each layer with cinnamon-sugar mixture| Untimed; None; Dot top layer with small pieces of butter. Cover with top crust| Timed; 600; Bake pie on the lowest rack of the preheated oven for 10 minutes| Timed; 1800; Reduce oven temperature to 350 degrees F (175 degrees C) and continue baking for about 30 minutes, until golden brown and filling bubbles| Finish; None; Serve!"
 
 recipe = Recipe(test)
-print(recipe.getCurrentInstruction())
-for x in range(12):
+# jump to 10 min pie bake step
+for x in range(10):
     recipe.incrementStepCounter()
-    say(recipe.getCurrentInstruction())
+recipe.manageCurrentStep()
+print(recipe.timer.initial_duration)
+recipe.timer.start()
+time.sleep(5)
+print(recipe.timer.time_left())
+recipe.timer.pause()
+time.sleep(3)
+print(recipe.timer.time_left())
 
-for x in range (12):
-    recipe.decrementStepCounter()
-    print(recipe.getCurrentInstruction())
