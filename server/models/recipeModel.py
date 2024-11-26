@@ -40,7 +40,8 @@ class Recipe(Base):
             'id': self.id,
             'title': self.title,
             'recipe_text': self.recipe_text,
-            'ingredients': [ingredient.to_dict() for ingredient in self.ingredients],
+            'completion_time': self.completion_time,
+            'ingredients': [ingredient for ingredient in self.ingredients],
             'scale_needed': self.scale_needed,
             'thermometer_needed': self.thermometer_needed,
             'completion_time': self.completion_time

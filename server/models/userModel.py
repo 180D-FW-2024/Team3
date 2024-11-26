@@ -4,6 +4,12 @@ from sqlalchemy.ext.declarative import declarative_base
 from .ingredientModel import user_allergy_association, Allergy
 from .Base import Base
 
+user_history_association = Table(
+    'user_history', Base.metadata,
+    Column('user_id', ForeignKey('users.id'), primary_key=True),
+    Column('recipe_id', ForeignKey('recipes.id'), primary_key=True)
+)
+
 class User(Base):
     __tablename__ = 'users'
 
@@ -12,6 +18,7 @@ class User(Base):
     username = Column(String, unique=True)
     allergies = relationship('Allergy', secondary=user_allergy_association, back_populates='users')
     inventory = relationship('InventoryIngredient', back_populates='user')
+    recipe_history = relationship('Recipe', secondary=user_history_association)
     has_scale = Column(Integer, nullable=False)
     has_thermometer = Column(Integer, nullable=False)
 
@@ -29,15 +36,23 @@ class User(Base):
                 has_scale={self.has_scale}, has_thermometer={self.has_thermometer})>"""
 
     def addAllergy(self, allergy):
+        if allergy in self.allergies:
+            return False
         self.allergies.append(allergy)
+        return True
     
     def removeAllergy(self, allergy):
         if allergy not in self.allergies:
-            return
+            return False
         self.allergies.remove(allergy)
+        return True
     
-    def addInventoryItem(self, inventoryItem):
-        self.inventory.append(inventoryItem)
+    def addInventory(self, itemName, quantity, measureType):
+        pass
+    
+    def addRecipeHistory(self, recipe):
+        if recipe not in self.recipe_history:
+            self.recipe_history.append(recipe)
 
     def to_dict(self):
         return {

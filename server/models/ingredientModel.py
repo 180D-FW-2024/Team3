@@ -29,6 +29,19 @@ class RecipeIngredient(Base):
         return f"""<id={self.id}, RecipeIngredient(name={self.name}, measureType={self.measureType}, 
             recipes={self.recipes})>"""
 
+    def __str__(self):
+        if self.measureType == MeasureType.WEIGHT:
+            return f"""{self.name}, {self.quantity} grams"""
+        elif self.measureType == MeasureType.VOLUME:
+            return f"""{self.name}, {self.quantity} ml"""
+        elif self.measureType == MeasureType.COUNT:
+            if self.quantity == 1:
+                return f"""{self.quantity} {self.name}"""
+            else:
+                return f"""{self.quantity} {self.name}s"""
+            
+        return f"""{self.name}, {self.quantity} {self.measureType}"""
+
     def to_dict(self):
         return {
             "id": self.id,
