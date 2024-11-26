@@ -11,6 +11,8 @@
 # have each recipe class contain: array of instruction classes, int counter for which step the recipe is on, (ingredient list?)
 # each instruction class has type, value, string instruction
 
+from text_to_speech import say
+
 # Instruction Class
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 class Step:
@@ -78,7 +80,7 @@ recipe = Recipe(test)
 print(recipe.getCurrentInstruction())
 for x in range(12):
     recipe.incrementStepCounter()
-    print(recipe.getCurrentInstruction())
+    say(recipe.getCurrentInstruction())
 
 for x in range (12):
     recipe.decrementStepCounter()
