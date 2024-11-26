@@ -4,10 +4,11 @@
 
 import pyttsx3
 
-engine = pyttsx3.init()
+def tts(string):
+    engine = pyttsx3.init()
 
-engine.setProperty('rate', 125)  
+    engine.setProperty('rate', 125)  
 
-engine.say("I will speak this text")
-engine.runAndWait()
-engine.stop()
+    engine.say(string)
+    engine.runAndWait()
+    engine.stop()
