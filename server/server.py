@@ -1,7 +1,7 @@
 # Flask script for handling incoming requests
 from flask import Flask, jsonify, request
-from sqlalchemy import create_engine, not_, case
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine, not_, or_
+from sqlalchemy.orm import sessionmaker, aliased
 from .models.userModel import User
 from .models.recipeModel import Recipe
 from .models.ingredientModel import Allergy, RecipeIngredient, InventoryIngredient
@@ -166,12 +166,28 @@ def suggest_recipes(user_id):
     for ingredient in user.inventory:
         userInventoryMap[ingredient.name] = ingredient.quantity
     print(userInventoryMap)
-    validRecipes = session.query(Recipe).filter(
-        not_( Recipe.ingredients.any(RecipeIngredient.name.in_(userAllergyNames)) ),
-        not_( Recipe.ingredients.any(RecipeIngredient.quantity > ( userInventoryMap[RecipeIngredient.name] if 
-              RecipeIngredient.name in userInventoryMap else -1 )) )
-
-    ).all()
+    userInventoryAlias = aliased(InventoryIngredient)
+    # BROKENNN
+    validRecipes = (
+        session.query(Recipe)
+        .join(Recipe.ingredients)
+        .outerjoin(
+            userInventoryAlias,
+            (RecipeIngredient.name == userInventoryAlias.name) & (userInventoryAlias.user_id == user.id),
+        ) 
+        .filter(
+            not_(
+                Recipe.ingredients.any(RecipeIngredient.name.in_(userAllergyNames))
+            ), 
+            not_(
+                or_(
+                    userInventoryAlias.quantity.is_(None),  # No matching inventory row
+                    Recipe.ingredients.any(RecipeIngredient.quantity > userInventoryAlias.quantity)
+                )
+            )
+        )
+    .all()
+    )
     return jsonify([recipe.to_dict() for recipe in validRecipes]), 200
 
 @app.route("/start-recipe/<recipe_id>/<user_id>", methods=['PUT'])
@@ -232,7 +248,7 @@ def modify_inventory(user_id, ingredient_name, quantity, measureTypeName, change
         newItem = InventoryIngredient(user=user, name=ingredient_name, quantity=quantity_n, measureType=measureType)
         user.addInventory(newItem)
     else:
-        inventoryItem.quantity += quantity_n
+        inventoryItem.quantity = max( quantity_n+inventoryItem.quantity, 0 )
         session.commit()
     return jsonify(user.to_dict()), 200
     

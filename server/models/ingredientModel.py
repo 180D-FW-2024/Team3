@@ -14,7 +14,7 @@ user_allergy_association = Table(
 class RecipeIngredient(Base):
     __tablename__ = 'recipe_ingredients'
     id = Column(Integer, nullable=False, primary_key=True, autoincrement=True)
-    name = Column(String, nullable=False, unique=True)
+    name = Column(String, nullable=False)
     measureType = Column(Enum(MeasureType), nullable=False)
     quantity = Column(Integer, nullable=False)
 
@@ -54,7 +54,7 @@ class InventoryIngredient(Base):
     id = Column(Integer, nullable=False, primary_key=True, autoincrement=True)
     quantity = Column(Integer, nullable=False)
     measureType = Column(Enum(MeasureType), nullable=False)
-    name = Column(String, nullable=False, unique=True)
+    name = Column(String, nullable=False)
 
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship('User', back_populates='inventory')

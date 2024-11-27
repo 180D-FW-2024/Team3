@@ -25,6 +25,13 @@ testUser = User(
 )
 print(testUser)
 
+anotherUser = User(
+    first_name="Test2",
+    username="testuser2",
+    hasScale=False,
+    hasThermometer=False
+)
+
 testAllergy = Allergy(
     name="testAllergy"
 )
@@ -40,6 +47,13 @@ testInventory = InventoryIngredient(
 )
 print(testInventory)
 
+testInventory2 = InventoryIngredient(
+    user=anotherUser,
+    quantity=100,
+    measureType=MeasureType.WEIGHT,
+    name="salt"
+)
+
 testRecipe = Recipe(
     title="Test Recipe",
     recipe_text="This is a test recipe",
@@ -53,14 +67,21 @@ testRecipeIngredient = RecipeIngredient(
     measureType=MeasureType.WEIGHT,
     quantity=100
 )
+testRecipeIngredient2 = RecipeIngredient(
+    name="apples",
+    measureType=MeasureType.COUNT,
+    quantity=3
+)
 print(testRecipeIngredient)
 
 testRecipe.ingredients.append(testRecipeIngredient)
+testRecipe.ingredients.append(testRecipeIngredient2)
 
-# Add the posts to the session and commit
 session.add(testUser)
+session.add(anotherUser)
 session.add(testAllergy)
 session.add(testInventory)
+session.add(testInventory2)
 session.add(testRecipe)
 session.commit()
 

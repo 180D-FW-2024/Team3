@@ -1,4 +1,4 @@
 __pycache__/
 .env
-Users.db
+*.db
 llama-agentic-system/
