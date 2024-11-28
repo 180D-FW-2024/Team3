@@ -11,6 +11,10 @@
 # have each recipe class contain: array of instruction classes, int counter for which step the recipe is on, (ingredient list?)
 # each instruction class has type, value, string instruction
 
+# TTS import
+from text_to_speech import say
+
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Timer Class - courtesy of ChatGPT
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 import time
@@ -32,13 +36,14 @@ class CountdownTimer:
     def start(self):
         # Start or resume the countdown.
         if not self.running:
+            # Calculate the end time from now using the remaining time
             self.end_time = time.time() + self.remaining_time
             self.running = True
 
     def pause(self):
         # Pause the countdown and save the remaining time.
         if self.running:
-            self.remaining_time = self.end_time - time.time()
+            self.remaining_time = max(0, self.end_time - time.time())
             self.running = False
 
     def reset(self):
@@ -54,10 +59,13 @@ class CountdownTimer:
         return self.remaining_time
 
     def is_finished(self):
+        # Check if the countdown has finished.
         return self.time_left() <= 0
+
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Instruction Class
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 class Step:
@@ -68,9 +76,14 @@ class Step:
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Recipe Class
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 class Recipe:
+    # ------------------------------------------------------------------------
+    # UTILITY FUNCTIONS
+    # ------------------------------------------------------------------------
+
     # Initialize Recipe object with list of steps and counter = 0
     def __init__(self, recipeString):
         self.steps = self.parseInstrString(recipeString)
@@ -125,24 +138,71 @@ class Recipe:
         if(step.type == "Timed"):
             self.timer.set_time(int(step.value))
 
+        # WIP
+        # if step is Measurement type, tell user to do measure command when they've placed item on the scale
+        if(step.type == "Measurement"):
+            say("Please place the ingredient on the scale and say: Hey Raspitouille, measure ingredient! when you're ready.")
+    
+    # ------------------------------------------------------------------------
+    # END UTILITY FUNCTIONS
+    # ------------------------------------------------------------------------
+
+
+    # ------------------------------------------------------------------------
+    # COMMAND-MAPPED FUNCTIONS
+    # ------------------------------------------------------------------------
+    def nextStep(self):
+        self.incrementStepCounter()
+        say(self.getCurrentInstruction())
+        self.manageCurrentStep()
+
+    def currentStep(self):
+        say(self.getCurrentInstruction())
+        self.manageCurrentStep()
+
+    def previousStep(self):
+        self.decrementStepCounter()
+        say(self.getCurrentInstruction())
+        self.manageCurrentStep()
+
+    def timeRemaning(self):
+        say(str(round(self.timer.time_left())) + " seconds")
+    
+    def startTimer(self):
+        self.timer.start()
+    
+    def stopTimer(self):
+        self.timer.pause()
+
+    def resetTimer(self):
+        self.timer.reset()
+    
+    # ------------------------------------------------------------------------
+    # END COMMAND-MAPPED FUNCTIONS
+    # ------------------------------------------------------------------------
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-from text_to_speech import say
+
+
+
 
 # 13 steps
 test = "Quantity; 1; Prepare two 9-inch pie crusts and one 9-inch pie dish| Measurement; 150; Measure out 150 grams of white sugar| Measurement; 5.69; Measure out 5.69 grams of ground cinnamon| Quantity; 6; Prepare 6 cups of sliced apples| Measurement; 14; Measure out 14 grams of butter| Temperature; 450; Gather the ingredients. Preheat the oven to 450 degrees F (230 degrees C)| Untimed; None; Line your 9-inch pie dish with one pastry crust. Set other one to the side| Untimed; None; Combine 3/4 cup sugar and cinnamon in a small bowl. Add more sugar if your apples are tart| Untimed; None; Layer apple slices in the prepared pie dish, sprinkling each layer with cinnamon-sugar mixture| Untimed; None; Dot top layer with small pieces of butter. Cover with top crust| Timed; 600; Bake pie on the lowest rack of the preheated oven for 10 minutes| Timed; 1800; Reduce oven temperature to 350 degrees F (175 degrees C) and continue baking for about 30 minutes, until golden brown and filling bubbles| Finish; None; Serve!"
 
 recipe = Recipe(test)
 # jump to 10 min pie bake step
-for x in range(10):
-    recipe.incrementStepCounter()
-recipe.manageCurrentStep()
-print(recipe.timer.initial_duration)
-recipe.timer.start()
-time.sleep(5)
-print(recipe.timer.time_left())
-recipe.timer.pause()
-time.sleep(3)
-print(recipe.timer.time_left())
+# for x in range(10):
+#     recipe.incrementStepCounter()
+# recipe.currentStep()
+# recipe.nextStep()
+
+
+# print(recipe.timer.initial_duration)
+# recipe.timer.start()
+# time.sleep(5)
+# print(recipe.timer.time_left())
+# recipe.timer.pause()
+# time.sleep(3)
+# print(recipe.timer.time_left())
 
