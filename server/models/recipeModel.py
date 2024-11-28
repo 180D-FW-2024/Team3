@@ -4,18 +4,12 @@ from sqlalchemy.ext.declarative import declarative_base
 from .helpers import InstructionType
 from .Base import Base
 
-recipe_ingredients_association = Table(
-    'recipe_ingredients_association', Base.metadata,
-    Column('recipe_id', ForeignKey('recipes.id'), primary_key=True),
-    Column('ingredient_id', ForeignKey('recipe_ingredients.id'), primary_key=True)
-)
-
 class Recipe(Base):
     __tablename__ = 'recipes'
     id = Column(Integer, nullable=False, primary_key=True, autoincrement=True)
     title = Column(String, nullable=False)
     completion_time = Column(Integer, nullable=False)
-    ingredients = relationship('RecipeIngredient', secondary='recipe_ingredients_association', back_populates='recipes')
+    ingredients = relationship('RecipeIngredient', back_populates='recipe')
     recipe_text = Column(String, nullable=False)
     scale_needed = Column(Integer, nullable=False)
     thermometer_needed = Column(Integer, nullable=False)

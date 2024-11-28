@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import mapped_column, relationship
 from .helpers import MeasureType, standardize, getMeasureType
-from .recipeModel import Recipe, recipe_ingredients_association
+from .recipeModel import Recipe
 from .Base import Base
 
 user_allergy_association = Table(
@@ -18,7 +18,8 @@ class RecipeIngredient(Base):
     measureType = Column(Enum(MeasureType), nullable=False)
     quantity = Column(Integer, nullable=False)
 
-    recipes = relationship('Recipe', secondary='recipe_ingredients_association', back_populates='ingredients')
+    recipe_id = Column(Integer, ForeignKey('recipes.id'))
+    recipe = relationship('Recipe', back_populates='ingredients')
 
     def __init__(self, name="", measureType=MeasureType.WEIGHT, quantity=0):
         self.name = standardize(name)
@@ -26,8 +27,8 @@ class RecipeIngredient(Base):
         self.quantity = quantity
 
     def __repr__(self):
-        return f"""<id={self.id}, RecipeIngredient(name={self.name}, measureType={self.measureType}, 
-            recipes={self.recipes})>"""
+        return f"""<id={self.id}, RecipeIngredient(name={self.name}, quantity={self.quantity}, measureType={self.measureType}, 
+            recipe={self.recipe.title})>"""
 
     def __str__(self):
         if self.measureType == MeasureType.WEIGHT:
@@ -46,7 +47,8 @@ class RecipeIngredient(Base):
         return {
             "id": self.id,
             "name": self.name,
-            "measureType": str(self.measureType)
+            "measureType": str(self.measureType),
+            "quantity": self.quantity
         }
 
 class InventoryIngredient(Base):
@@ -61,6 +63,7 @@ class InventoryIngredient(Base):
 
     def __init__(self, user_id=None, user=None, name="", quantity=0, measureType=MeasureType.WEIGHT):
         mType = getMeasureType(measureType)
+        print("name", name, "mType", mType)
         self.measureType = mType[0]
         self.quantity = quantity*mType[1]
         if user is not None:

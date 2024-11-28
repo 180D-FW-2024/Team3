@@ -1,12 +1,12 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from models.userModel import User, Base  # Import the User model and Base from models.py
-from models.ingredientModel import Allergy, RecipeIngredient, InventoryIngredient, user_allergy_association, recipe_ingredients_association
+from models.ingredientModel import Allergy, RecipeIngredient, InventoryIngredient, user_allergy_association
 from models.recipeModel import Recipe
 from models.helpers import MeasureType
 
 # Set up the database engine and session
-engine = create_engine('sqlite:///raspitouille.db', echo=True)
+engine = create_engine('sqlite:///raspitouille.db')#, echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -42,15 +42,22 @@ testUser.addAllergy(testAllergy)
 testInventory = InventoryIngredient(
     user=testUser,
     quantity=100,
-    measureType=MeasureType.WEIGHT,
+    measureType="grams",
     name="sugar"
 )
 print(testInventory)
 
+testInventoryApple = InventoryIngredient(
+    user=testUser,
+    quantity=200,
+    measureType="count",
+    name="apple"
+)
+
 testInventory2 = InventoryIngredient(
     user=anotherUser,
     quantity=100,
-    measureType=MeasureType.WEIGHT,
+    measureType="g",
     name="salt"
 )
 
@@ -68,7 +75,7 @@ testRecipeIngredient = RecipeIngredient(
     quantity=100
 )
 testRecipeIngredient2 = RecipeIngredient(
-    name="apples",
+    name="apple",
     measureType=MeasureType.COUNT,
     quantity=3
 )

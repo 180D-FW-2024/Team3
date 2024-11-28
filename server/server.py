@@ -1,6 +1,6 @@
 # Flask script for handling incoming requests
 from flask import Flask, jsonify, request
-from sqlalchemy import create_engine, not_, or_
+from sqlalchemy import create_engine, not_, func, or_, and_, exists
 from sqlalchemy.orm import sessionmaker, aliased
 from .models.userModel import User
 from .models.recipeModel import Recipe
@@ -167,27 +167,69 @@ def suggest_recipes(user_id):
         userInventoryMap[ingredient.name] = ingredient.quantity
     print(userInventoryMap)
     userInventoryAlias = aliased(InventoryIngredient)
-    # BROKENNN
     validRecipes = (
-        session.query(Recipe)
-        .join(Recipe.ingredients)
+        session.query(Recipe, RecipeIngredient)
+        .outerjoin(RecipeIngredient, RecipeIngredient.recipe_id == Recipe.id)
         .outerjoin(
-            userInventoryAlias,
-            (RecipeIngredient.name == userInventoryAlias.name) & (userInventoryAlias.user_id == user.id),
-        ) 
+            InventoryIngredient,
+            (RecipeIngredient.name == InventoryIngredient.name) & (InventoryIngredient.user_id == user.id),
+        )
         .filter(
             not_(
                 Recipe.ingredients.any(RecipeIngredient.name.in_(userAllergyNames))
-            ), 
-            not_(
-                or_(
-                    userInventoryAlias.quantity.is_(None),  # No matching inventory row
-                    Recipe.ingredients.any(RecipeIngredient.quantity > userInventoryAlias.quantity)
-                )
             )
         )
-    .all()
+        .filter(
+            not_(
+                Recipe.ingredients.any( 
+                    InventoryIngredient.name.is_(None) 
+                )
+            )
+        ).all()
     )
+    print('Allergy + Missing Filter Results:' + str(validRecipes))
+
+    validRecipes = (
+        session.query(Recipe)
+        .outerjoin(RecipeIngredient, RecipeIngredient.recipe_id == Recipe.id)
+        .outerjoin(
+            InventoryIngredient,
+            and_((RecipeIngredient.name == InventoryIngredient.name), (InventoryIngredient.user_id == user.id)),
+        )
+        .filter(
+            not_(
+                Recipe.ingredients.any(RecipeIngredient.name.in_(userAllergyNames))
+            )
+        )
+        .group_by(Recipe)
+        .having(
+            func.count(InventoryIngredient.name) == func.count(RecipeIngredient.name)
+        )
+        .having(
+            func.min(InventoryIngredient.quantity - RecipeIngredient.quantity) >= 0
+        )
+        .all()
+    )
+
+    print('Filter results:' + str(validRecipes))
+
+    query = (session.query(Recipe, RecipeIngredient, InventoryIngredient)
+    .outerjoin(RecipeIngredient, RecipeIngredient.recipe_id == Recipe.id)
+    .outerjoin(
+        InventoryIngredient,
+        and_((RecipeIngredient.name == InventoryIngredient.name), (InventoryIngredient.user_id == user.id))
+    )
+    .filter(
+        not_(
+            Recipe.ingredients.any(RecipeIngredient.name.in_(userAllergyNames))
+        )
+    )
+    )
+    
+
+    # Print out the results to see what's happening
+    print('full rows' + str(query.all()))
+    
     return jsonify([recipe.to_dict() for recipe in validRecipes]), 200
 
 @app.route("/start-recipe/<recipe_id>/<user_id>", methods=['PUT'])
@@ -247,8 +289,11 @@ def modify_inventory(user_id, ingredient_name, quantity, measureTypeName, change
             return jsonify({"error": "Invalid quantity"}), 400
         newItem = InventoryIngredient(user=user, name=ingredient_name, quantity=quantity_n, measureType=measureType)
         user.addInventory(newItem)
+        session.commit()
     else:
-        inventoryItem.quantity = max( quantity_n+inventoryItem.quantity, 0 )
+        inventoryItem.quantity = quantity_n+inventoryItem.quantity
+        if inventoryItem.quantity <= 0:
+            user.removeInventory(inventoryItem)
         session.commit()
     return jsonify(user.to_dict()), 200
     

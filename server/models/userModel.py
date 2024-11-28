@@ -17,7 +17,7 @@ class User(Base):
     first_name = Column(String, nullable=False)
     username = Column(String, unique=True)
     allergies = relationship('Allergy', secondary=user_allergy_association, back_populates='users')
-    inventory = relationship('InventoryIngredient', back_populates='user')
+    inventory = relationship('InventoryIngredient', back_populates='user', cascade="all, delete-orphan")
     recipe_history = relationship('Recipe', secondary=user_history_association)
     has_scale = Column(Integer, nullable=False)
     has_thermometer = Column(Integer, nullable=False)
@@ -51,6 +51,12 @@ class User(Base):
         if inventoryItem in self.inventory:
             return False
         self.inventory.append(inventoryItem)
+        return True
+    
+    def removeInventory(self, inventoryItem):
+        if inventoryItem not in self.inventory:
+            return False
+        self.inventory.remove(inventoryItem)
         return True
     
     

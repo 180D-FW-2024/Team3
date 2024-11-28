@@ -23,27 +23,37 @@ measureTypeMapping = {
     # Mapping for weight input
     "mg": [ MeasureType.WEIGHT, 0.001 ],
     "milligram": [ MeasureType.WEIGHT, 0.001 ],
+    "milligrams": [ MeasureType.WEIGHT, 0.001 ],
     "g": [ MeasureType.WEIGHT, 1 ],
     "gram": [ MeasureType.WEIGHT, 1 ],  
+    "grams": [ MeasureType.WEIGHT, 1 ],
     "kg":[ MeasureType.WEIGHT, 1000 ],
     "kilogram": [ MeasureType.WEIGHT, 1000 ],
+    "kilograms": [ MeasureType.WEIGHT, 1000 ],
     "lb": [ MeasureType.WEIGHT, 453.592 ],
+    "lbs": [ MeasureType.WEIGHT, 453.592 ],
     "pound": [ MeasureType.WEIGHT, 453.592 ],
+    "pounds": [ MeasureType.WEIGHT, 453.592 ],
 
 
     # Mapping for volume input
     "ml": [ MeasureType.VOLUME, 1 ],
     "milliliter": [ MeasureType.VOLUME, 1 ],
+    "milliliters": [ MeasureType.VOLUME, 1 ],
     "l": [ MeasureType.VOLUME, 1000 ],
     "liter": [ MeasureType.VOLUME, 1000 ],
+    "liters": [ MeasureType.VOLUME, 1000 ],
     "fl oz": [ MeasureType.VOLUME, 29.5735 ],
     "fluid ounce": [ MeasureType.VOLUME, 29.5735 ],
+    "fluid ounces": [ MeasureType.VOLUME, 29.5735 ],
     "cup": [ MeasureType.VOLUME, 236.588 ],
     "cups": [ MeasureType.VOLUME, 236.588 ],
     "tsp": [ MeasureType.VOLUME, 5 ],
     "teaspoon": [ MeasureType.VOLUME, 5 ],
+    "teaspoons": [ MeasureType.VOLUME, 5 ],
     "tbsp": [ MeasureType.VOLUME, 15 ],
     "tablespoon": [ MeasureType.VOLUME, 15 ],
+    "tablespoons": [ MeasureType.VOLUME, 15 ],
 
     # Mapping for count input
     "count": [ MeasureType.COUNT, 1 ],
