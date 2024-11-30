@@ -1,4 +1,4 @@
-# Boilerplate code taken from geeksforgeeks.org
+# Boilerplate code taken from geeksforgeeks.org, modified in part by ChatGPT
 # pip install SpeechRecognition
 # sudo apt install python3-pyaudio
 # pip install typing-extensions -u
@@ -8,33 +8,52 @@
 
 import speech_recognition as sr
 
-def translate_and_print():
+import speech_recognition as sr
+
+def listen_and_respond():
     recognizer = sr.Recognizer()
     mic = sr.Microphone()
 
     print("Adjusting for ambient noise, please wait...")
     with mic as source:
         recognizer.adjust_for_ambient_noise(source)
-        print("Start speaking. Press Ctrl+C to stop.")
+        print("Listening for the wake word 'Hey Ratatouille'. Press Ctrl+C to stop.")
 
     try:
         while True:
             with mic as source:
-                print("Listening...")
-                audio = recognizer.listen(source, timeout=None)  # No timeout
-                
+                print("Waiting for 'Hey Ratatouille'...")
+                audio = recognizer.listen(source, timeout=None)  # Listen indefinitely
+
             try:
                 text = recognizer.recognize_google(audio, language="en")
-                print("You said:", text)
-                # Translation logic can be added here if needed
+                print(f"Heard: {text}")
+
+                # Check if the wake word "Hey Ratatouille" is spoken
+                if "hey ratatouille" in text.lower():  # Case insensitive check
+                    print("Wake word detected! Listening for your command...")
+                    
+                    # Listen for the command after the wake word
+                    with mic as source:
+                        audio_command = recognizer.listen(source, timeout=None)
+                    
+                    try:
+                        command = recognizer.recognize_google(audio_command, language="en")
+                        print(f"You said: {command}")
+                    except sr.UnknownValueError:
+                        print("Sorry, I couldn't understand the command.")
+                    except sr.RequestError as e:
+                        print(f"Error with the speech recognition service: {e}")
+                else:
+                    print("No wake word detected, ignoring...")
             except sr.UnknownValueError:
                 print("Could not understand audio, please try again.")
             except sr.RequestError as e:
-                print("Error with the speech recognition service:", e)
+                print(f"Error with the speech recognition service: {e}")
 
     except KeyboardInterrupt:
         print("\nListening stopped.")
         return
 
 # Call the function
-translate_and_print()
+listen_and_respond()
