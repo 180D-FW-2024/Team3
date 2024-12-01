@@ -12,7 +12,7 @@
 # each instruction class has type, value, string instruction
 
 # TTS import
-from text_to_speech import say
+from text_to_speech import tts as say
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Timer Class - courtesy of ChatGPT
@@ -165,7 +165,7 @@ class Recipe:
         say(self.getCurrentInstruction())
         self.manageCurrentStep()
 
-    def timeRemaning(self):
+    def timeRemaining(self):
         say(str(round(self.timer.time_left())) + " seconds")
     
     def startTimer(self):

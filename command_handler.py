@@ -1,6 +1,4 @@
 # imports here, so that this script can call the scripts it needs to
-import recipe_handler
-
 def handle_command(command, recipe_object):
     if(command == "next instruction"):
         recipe_object.nextStep()
@@ -21,5 +19,7 @@ def handle_command(command, recipe_object):
     elif(command == "add ingredient"):
         return
     elif(command == "remove ingredient"):
+        return
+    elif(command == "recommend recipe"):
         return
     

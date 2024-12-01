@@ -8,6 +8,17 @@
 
 import speech_recognition as sr
 from text_to_speech import tts as say
+from command_handler import handle_command
+from recipe_handler import Recipe
+
+# for testing; handle_command(recommend_recipe) should be called by listen_and_respond when the command is heard, and should return a Recipe object to replace the current Recipe object
+test = "Quantity; 1; Prepare two 9-inch pie crusts and one 9-inch pie dish| Measurement; 150; Measure out 150 grams of white sugar| Measurement; 5.69; Measure out 5.69 grams of ground cinnamon| Quantity; 6; Prepare 6 cups of sliced apples| Measurement; 14; Measure out 14 grams of butter| Temperature; 450; Gather the ingredients. Preheat the oven to 450 degrees F (230 degrees C)| Untimed; None; Line your 9-inch pie dish with one pastry crust. Set other one to the side| Untimed; None; Combine 3/4 cup sugar and cinnamon in a small bowl. Add more sugar if your apples are tart| Untimed; None; Layer apple slices in the prepared pie dish, sprinkling each layer with cinnamon-sugar mixture| Untimed; None; Dot top layer with small pieces of butter. Cover with top crust| Timed; 600; Bake pie on the lowest rack of the preheated oven for 10 minutes| Timed; 1800; Reduce oven temperature to 350 degrees F (175 degrees C) and continue baking for about 30 minutes, until golden brown and filling bubbles| Finish; None; Serve!"
+recipe = Recipe(test)
+# jump to 10 min pie bake step
+for x in range(10):
+    recipe.incrementStepCounter()
+
+# Looping listener
 def listen_and_respond():
     recognizer = sr.Recognizer()
     mic = sr.Microphone()
@@ -20,7 +31,6 @@ def listen_and_respond():
     try:
         while True:
             with mic as source:
-                print("Waiting for 'Hey Ratatouille'...")
                 audio = recognizer.listen(source, timeout=None)  # Listen indefinitely
 
             try:
@@ -29,7 +39,7 @@ def listen_and_respond():
 
                 # Check if the wake word "Hey Ratatouille" is spoken
                 if "hey ratatouille" in text.lower():  # Case insensitive check
-                    say("Hello! Listening for your command...")
+                    say("Listening for your command")
                     
                     # Listen for the command after the wake word
                     with mic as source:
@@ -38,7 +48,12 @@ def listen_and_respond():
                     try:
                         command = recognizer.recognize_google(audio_command, language="en")
                         print(f"You said: {command}")
+                        
+                        # Call LLM command mapper
+                        # FUNC CALL HERE
+
                         # Call command handler with command
+                        handle_command(command.lower(), recipe)
                     except sr.UnknownValueError:
                         print("Sorry, I couldn't understand the command.")
                     except sr.RequestError as e:
