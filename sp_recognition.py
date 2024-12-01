@@ -7,9 +7,7 @@
 # apt-get install flac
 
 import speech_recognition as sr
-
-import speech_recognition as sr
-
+from text_to_speech import tts as say
 def listen_and_respond():
     recognizer = sr.Recognizer()
     mic = sr.Microphone()
@@ -31,7 +29,7 @@ def listen_and_respond():
 
                 # Check if the wake word "Hey Ratatouille" is spoken
                 if "hey ratatouille" in text.lower():  # Case insensitive check
-                    print("Wake word detected! Listening for your command...")
+                    say("Hello! Listening for your command...")
                     
                     # Listen for the command after the wake word
                     with mic as source:
@@ -40,6 +38,7 @@ def listen_and_respond():
                     try:
                         command = recognizer.recognize_google(audio_command, language="en")
                         print(f"You said: {command}")
+                        # Call command handler with command
                     except sr.UnknownValueError:
                         print("Sorry, I couldn't understand the command.")
                     except sr.RequestError as e:
