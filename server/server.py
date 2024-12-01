@@ -6,7 +6,9 @@ from .models.userModel import User
 from .models.recipeModel import Recipe
 from .models.ingredientModel import Allergy, RecipeIngredient, InventoryIngredient
 from .models.helpers import MeasureType, standardize
+from .LLMAgent import send_command, options
 import subprocess
+import re
 
 # Run test_db.py to test database, remove on database completion
 subprocess.run(["python3", "test_db.py"])
@@ -17,7 +19,16 @@ engine = create_engine('sqlite:///raspitouille.db', echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-
+@app.route("/command/<command>", methods=['GET'])
+def map_command(command):
+    output = send_command(re.sub(r'[\_\s\-]+', ' ', command.strip()))
+    if output is None:
+        return jsonify({ "response": "No API Response" }), 500
+    outputString = " ".join([re.sub(r'[\W_]+', '', token) for token in output]).strip().lower()
+    if outputString not in options:
+        return jsonify({ "response": "Command Not Recognized" }), 400
+    else:
+        return jsonify({ "response": outputString }), 200
 
 @app.route("/create-user/<username>", methods=['POST'])
 def create_user(username):
@@ -52,7 +63,7 @@ def create_user(username):
     session.commit()
     return jsonify(session.query(User).filter_by(username=username).first().to_dict()), 201
 
-@app.route("/<username>", methods=['GET'])
+@app.route("/get-user/<username>", methods=['GET'])
 def get_user(username):
     """
     Handles a GET request to /<username>.  Returns the user with the given
