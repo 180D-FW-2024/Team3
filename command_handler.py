@@ -1,22 +1,23 @@
 # imports here, so that this script can call the scripts it needs to
+import recipe_handler
 
-def handle_command(command):
+def handle_command(command, recipe_object):
     if(command == "next instruction"):
-        return
+        recipe_object.nextStep()
     elif(command == "previous instruction"):
-        return
+        recipe_object.previousStep()
     elif(command == "repeat instruction"):
-        return
+        recipe_object.currentStep()
     elif(command == "list ingredients"):
         return
     elif(command == "current temperature"):
         return
     elif(command == "time remaining"):
-        return
+        recipe_object.timeRemaining()
     elif(command == "start timer"):
-        return
+        recipe_object.startTimer()
     elif(command == "stop timer"):
-        return
+        recipe_object.stopTimer()
     elif(command == "add ingredient"):
         return
     elif(command == "remove ingredient"):
