@@ -10,6 +10,10 @@ def handle_command(command, recipe_object):
         return
     elif(command == "current temperature"):
         return
+    elif(command == "measure ingredient"):
+        # get weight from bluetooth scale and compare it to the required weight
+        # if using a cup to hold ingredient, should calibrate scale using the cup such that with only the cup, the scale reads 0
+        return
     elif(command == "time remaining"):
         recipe_object.timeRemaining()
     elif(command == "start timer"):
