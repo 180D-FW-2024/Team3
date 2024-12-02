@@ -21,6 +21,30 @@ session = Session()
 
 @app.route("/command/<command>", methods=['GET'])
 def map_command(command):
+    """
+    Handles a GET request to /command/<command>.  Maps the given command to its
+    corresponding string in the list of possible commands, if it exists.
+    Otherwise, returns a 400 error with a JSON object containing the error
+    message "Command Not Recognized".  If the API does not respond, returns a
+    500 error with a JSON object containing the error message "No API Response".
+
+    Parameters
+    ----------
+    command : str
+        The command to map to its corresponding string
+
+    Returns
+    -------
+    JSON object
+        The mapped command string, or an error message if the command does not
+        exist or if the API does not respond
+
+    Status Codes
+    ------------
+    200 : The command was successfully mapped
+    400 : The command was not recognized
+    500 : The API did not respond
+    """
     output = send_command(re.sub(r'[\_\s\-]+', ' ', command.strip()))
     if output is None:
         return jsonify({ "response": "No API Response" }), 500
@@ -164,11 +188,50 @@ def remove_allergy(user_id, allergy_name):
 
 @app.route("/get-recipe/<recipe_id>", methods=['GET'])
 def get_recipe(recipe_id):
+    """
+    Handles a GET request to /get-recipe/<recipe_id>.  Returns a JSON object
+    containing the recipe with the given ID.
+
+    Parameters
+    ----------
+    recipe_id : int
+        The ID of the recipe to retrieve
+
+    Returns
+    -------
+    JSON object
+        The requested recipe as a JSON object
+
+    Status Codes
+    ------------
+    200 : The recipe exists in the database
+    404 : The recipe does not exist in the database
+    """
     recipe = session.query(Recipe).filter_by(id=recipe_id).first()
     return jsonify(recipe.to_dict()), 200
 
 @app.route("/suggest-recipes/<user_id>", methods=['GET'])
 def suggest_recipes(user_id):
+    """
+    Handles a GET request to /suggest-recipes/<user_id>.  Returns a JSON object
+    containing a list of recipes that are valid for the given user.
+
+    Parameters
+    ----------
+    user_id : int
+        The ID of the user to suggest recipes for
+
+    Returns
+    -------
+    JSON object
+        A list of recipes that are valid for the given user
+
+    Status Codes
+    ------------
+    200 : The user exists in the database and the recipes were suggested
+    404 : The user does not exist in the database
+    """
+    
     user = session.query(User).filter_by(id=user_id).first()
     if user is None:
         return jsonify({"error": "User not found"}), 404
@@ -176,29 +239,6 @@ def suggest_recipes(user_id):
     userInventoryMap = {} 
     for ingredient in user.inventory:
         userInventoryMap[ingredient.name] = ingredient.quantity
-    print(userInventoryMap)
-    userInventoryAlias = aliased(InventoryIngredient)
-    validRecipes = (
-        session.query(Recipe, RecipeIngredient)
-        .outerjoin(RecipeIngredient, RecipeIngredient.recipe_id == Recipe.id)
-        .outerjoin(
-            InventoryIngredient,
-            (RecipeIngredient.name == InventoryIngredient.name) & (InventoryIngredient.user_id == user.id),
-        )
-        .filter(
-            not_(
-                Recipe.ingredients.any(RecipeIngredient.name.in_(userAllergyNames))
-            )
-        )
-        .filter(
-            not_(
-                Recipe.ingredients.any( 
-                    InventoryIngredient.name.is_(None) 
-                )
-            )
-        ).all()
-    )
-    print('Allergy + Missing Filter Results:' + str(validRecipes))
 
     validRecipes = (
         session.query(Recipe)
@@ -223,23 +263,6 @@ def suggest_recipes(user_id):
     )
 
     print('Filter results:' + str(validRecipes))
-
-    query = (session.query(Recipe, RecipeIngredient, InventoryIngredient)
-    .outerjoin(RecipeIngredient, RecipeIngredient.recipe_id == Recipe.id)
-    .outerjoin(
-        InventoryIngredient,
-        and_((RecipeIngredient.name == InventoryIngredient.name), (InventoryIngredient.user_id == user.id))
-    )
-    .filter(
-        not_(
-            Recipe.ingredients.any(RecipeIngredient.name.in_(userAllergyNames))
-        )
-    )
-    )
-    
-
-    # Print out the results to see what's happening
-    print('full rows' + str(query.all()))
     
     return jsonify([recipe.to_dict() for recipe in validRecipes]), 200
 

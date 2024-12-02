@@ -14,6 +14,9 @@
 # TTS import
 from text_to_speech import tts as say
 
+# HTTP Request import
+import requests
+
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Timer Class - courtesy of ChatGPT
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -176,6 +179,11 @@ class Recipe:
 
     def resetTimer(self):
         self.timer.reset()
+
+    def suggestRecipes(self):
+        if self.userId is None:
+            return None
+        requests.get(BACKEND_URL + "/suggest-recipes", json={"user_id": self.userId})
     
     # ------------------------------------------------------------------------
     # END COMMAND-MAPPED FUNCTIONS
