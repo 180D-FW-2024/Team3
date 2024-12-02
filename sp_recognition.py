@@ -54,7 +54,6 @@ def listen_and_respond():
                     try:
                         command = recognizer.recognize_google(audio_command, language="en")
                         print(f"You said: {command}")
-                        
 
                         command = requests.get(backend_url + "/command/" + command)
                         if command.status_code != 200:
