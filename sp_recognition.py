@@ -118,8 +118,7 @@ def listen_and_respond():
                             elif additionalPrompt == 'recommend recipe':
                                 recipe_response = recommendRecipeHandler(recognizer, recipe, mic)
                                 if recipe_response is not None:
-                                    print("Recipe response: ", recipe_response)
-                                    recipe = Recipe(recipe_response)
+                                    recipe.__init__(recipe_response)
                         
                         # handle_command(command, recipe)
 
