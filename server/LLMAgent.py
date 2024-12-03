@@ -11,7 +11,9 @@ options = [
     "start timer",
     "stop timer",
     "add ingredient",
-    "remove ingredient"
+    "remove ingredient",
+    "recommend recipe",
+    "measure ingredient",
 ]
 
 client = Together()

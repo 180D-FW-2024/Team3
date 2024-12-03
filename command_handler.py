@@ -71,9 +71,9 @@ def loadRecipe(recipeId):
         return None
     return response.json()
 
-def recommendRecipeHandler(recognizer, recipe, mic):
+def recommendRecipeHandler(recognizer, recipe, mic, userId):
     say("Generating recipe recommendation...")
-    response = requests.get(backend_url + "/recommend-recipe/" + str(recipe.userId))
+    response = requests.get(backend_url + "/recommend-recipe/" + str(userId))
     if response.status_code != 200:
         print("Recommendation Failure")
         say("Recommendation Failure, Try again")

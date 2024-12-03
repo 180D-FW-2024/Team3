@@ -16,9 +16,50 @@ import dotenv
 import requests
 import os
 import sounddevice
+import random
+import string
 
 dotenv.load_dotenv()
 backend_url = os.getenv("BACKEND_URL")
+
+
+def getUsername(file_path):
+    # Open the file in read mode
+    with open(file_path, 'r') as file:
+        # Read the content of the file line by line
+        for line in file:
+            # Check if the line contains the string 'USERNAME:'
+            if line.startswith('USERNAME:'):
+                # Extract and return the part after 'USERNAME:'
+                return line.split(':', 1)[1].strip()  # Strip any extra spaces/newlines
+    return None
+
+def createUser(file_path):
+    # Open the file in read mode
+    with open(file_path, 'r') as file:
+        for line in file:
+            if line.startswith('USERNAME:'):
+                return None
+    
+    with open(file_path, 'a') as file:
+        while True:
+            randomString = ''.join(random.choices(string.ascii_letters, k=15))
+            if requests.get(backend_url + "/get-user/" + randomString).status_code != 200:
+                file.write("USERNAME:" + randomString + "\n")
+                return randomString
+
+def loadUserId(username):
+    response = requests.get(backend_url + "/get-user/" + username)
+    if response.status_code != 200:
+        return None
+    return response.json()
+
+username = getUsername("userConfig.txt")
+if username is None:
+    username = createUser("userConfig.txt")
+
+userId = loadUserId(username)
+
 
 # for testing; handle_command(recommend_recipe) should be called by listen_and_respond when the command is heard, and should return a Recipe object to replace the current Recipe object
 test = "Quantity; 1; Prepare two 9-inch pie crusts and one 9-inch pie dish| Measurement; 150; Measure out 150 grams of white sugar| Measurement; 5.69; Measure out 5.69 grams of ground cinnamon| Quantity; 6; Prepare 6 cups of sliced apples| Measurement; 14; Measure out 14 grams of butter| Temperature; 450; Gather the ingredients. Preheat the oven to 450 degrees F (230 degrees C)| Untimed; None; Line your 9-inch pie dish with one pastry crust. Set other one to the side| Untimed; None; Combine 3/4 cup sugar and cinnamon in a small bowl. Add more sugar if your apples are tart| Untimed; None; Layer apple slices in the prepared pie dish, sprinkling each layer with cinnamon-sugar mixture| Untimed; None; Dot top layer with small pieces of butter. Cover with top crust| Timed; 600; Bake pie on the lowest rack of the preheated oven for 10 minutes| Timed; 1800; Reduce oven temperature to 350 degrees F (175 degrees C) and continue baking for about 30 minutes, until golden brown and filling bubbles| Finish; None; Serve!"
@@ -116,7 +157,7 @@ def listen_and_respond():
                             if additionalPrompt == 'add ingredient':
                                 addIngredientHandler(recognizer, recipe, source)
                             elif additionalPrompt == 'recommend recipe':
-                                recipe_response = recommendRecipeHandler(recognizer, recipe, mic)
+                                recipe_response = recommendRecipeHandler(recognizer, recipe, mic, userId)
                                 if recipe_response is not None:
                                     print("Recipe response: ", recipe_response)
                                     recipe = Recipe(recipe_response)
