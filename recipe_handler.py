@@ -17,6 +17,12 @@ from text_to_speech import tts as say
 # HTTP Request import
 import requests
 
+import dotenv
+import os
+
+dotenv.load_dotenv()
+backend_url = os.getenv("BACKEND_URL")
+
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Timer Class - courtesy of ChatGPT
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -118,8 +124,6 @@ class Recipe:
         self.stepCounter = 0
         self.timer = CountdownTimer(0)
 
-    def restart(self, recipeObject):
-        self.__init__(recipeObject)
 
     def parseInstrString(self, recipeString):
         # Prepare step list to later append to
@@ -222,7 +226,7 @@ class Recipe:
     def suggestRecipes(self):
         if self.userId is None:
             return None
-        requests.get(BACKEND_URL + "/suggest-recipes", json={"user_id": self.userId})
+        requests.get(backend_url + "/suggest-recipes", json={"user_id": self.userId})
     
     # ------------------------------------------------------------------------
     # END COMMAND-MAPPED FUNCTIONS

@@ -9,7 +9,7 @@
 
 import speech_recognition as sr
 from text_to_speech import tts as say
-from command_handler import handle_command
+from command_handler import handle_command, addIngredientHandler, recommendRecipeHandler
 from recipe_handler import Recipe
 
 import dotenv
@@ -108,9 +108,15 @@ def listen_and_respond():
                         command = requests.get(backend_url + "/command/" + command)
                         if command.status_code != 200:
                             print("Command not recognized")
+                            continue
                         
                         # Call command handler with command
-                        handle_command(command.json()['response'].lower(), recipe)
+                        additionalPrompt = handle_command(command.json()['response'].lower(), recipe)
+                        if additionalPrompt is not None:
+                            if additionalPrompt == 'add ingredient':
+                                addIngredientHandler(recognizer, recipe, source)
+                            elif additionalPrompt == 'recommend recipe':
+                                recipe = recommendRecipeHandler(recognizer, recipe, mic)
 
                     except sr.UnknownValueError:
                         print("Sorry, I couldn't understand the command.")
