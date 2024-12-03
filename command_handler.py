@@ -67,6 +67,8 @@ def addIngredientHandler(recognizer, recipe, source):
 
 def loadRecipe(recipeId):
     response = requests.get(backend_url + "/get-recipe/" + str(recipeId))
+    if response.status_code != 200:
+        return None
     return Recipe(response.json())
 
 def recommendRecipeHandler(recognizer, recipe, mic) -> Recipe:
@@ -97,7 +99,12 @@ def recommendRecipeHandler(recognizer, recipe, mic) -> Recipe:
                     print(f"Error with the speech recognition service: {e}")
                     break
                 if command.lower() == "start":
-                    recipe = loadRecipe(recipe['id'])
+                    recipe_response = loadRecipe(recipe['id'])
+                    if recipe_response is None:
+                        say("Recipe select failure, try again")
+                        return recipe
+                    recipe = recipe_response
+                    print(recipe)
                     say("Recipe selected:", recipe.title)
                     selectedRecipe = True
                     return recipe

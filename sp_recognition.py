@@ -117,6 +117,8 @@ def listen_and_respond():
                                 addIngredientHandler(recognizer, recipe, source)
                             elif additionalPrompt == 'recommend recipe':
                                 recipe = recommendRecipeHandler(recognizer, recipe, mic)
+                        
+                        # handle_command(command, recipe)
 
                     except sr.UnknownValueError:
                         print("Sorry, I couldn't understand the command.")
