@@ -84,7 +84,6 @@ def recommendRecipeHandler(recognizer, recipe, mic) -> Recipe:
             return recipe
         data = response.json()
         say("Here is a list of recommended recipes, select 'Start' to begin or 'Next' to hear more")
-        selectedRecipe = False
         for recipe in data:
             say("Recipe title: ", recipe['title'], "Completion time: ", recipe['completion_time'])
             while True:
@@ -106,13 +105,11 @@ def recommendRecipeHandler(recognizer, recipe, mic) -> Recipe:
                     recipe = recipe_response
                     print(recipe)
                     say("Recipe selected:", recipe.title)
-                    selectedRecipe = True
                     return recipe
                 elif command.lower() == "next":
                     break
                 else:
                     say("Invalid Command, say either 'Start' or 'Next'")
 
-        if not selectedRecipe:
-            say("No recipe selected, returning to original recipe")
-            return recipe
+        say("No recipe selected, returning to original recipe")
+        return recipe
