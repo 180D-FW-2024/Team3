@@ -116,7 +116,10 @@ def listen_and_respond():
                             if additionalPrompt == 'add ingredient':
                                 addIngredientHandler(recognizer, recipe, source)
                             elif additionalPrompt == 'recommend recipe':
-                                recipe = recommendRecipeHandler(recognizer, recipe, mic)
+                                recipe_response = recommendRecipeHandler(recognizer, recipe, mic)
+                                if recipe_response is not None:
+                                    print("Recipe response: ", recipe_response)
+                                    recipe = Recipe(recipe_response)
                         
                         # handle_command(command, recipe)
 

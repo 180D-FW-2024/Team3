@@ -69,19 +69,19 @@ def loadRecipe(recipeId):
     response = requests.get(backend_url + "/get-recipe/" + str(recipeId))
     if response.status_code != 200:
         return None
-    return Recipe(response.json())
+    return response.json()
 
-def recommendRecipeHandler(recognizer, recipe, mic) -> Recipe:
+def recommendRecipeHandler(recognizer, recipe, mic):
     say("Generating recipe recommendation...")
     response = requests.get(backend_url + "/recommend-recipe/" + str(recipe.userId))
     if response.status_code != 200:
         print("Recommendation Failure")
         say("Recommendation Failure, Try again")
-        return recipe
+        return None
     else:
         if response.json() == []:
             say("No recipes found")
-            return recipe
+            return None
         data = response.json()
         say("Here is a list of recommended recipes, select 'Start' to begin or 'Next' to hear more")
         for recipe in data:
@@ -101,15 +101,14 @@ def recommendRecipeHandler(recognizer, recipe, mic) -> Recipe:
                     recipe_response = loadRecipe(recipe['id'])
                     if recipe_response is None:
                         say("Recipe select failure, try again")
-                        return recipe
-                    recipe = recipe_response
-                    print(recipe)
-                    say("Recipe selected:", recipe.title)
-                    return recipe
+                        return None
+                    print(recipe_response)
+                    say("Recipe selected:", recipe_response['title'])
+                    return recipe_response
                 elif command.lower() == "next":
                     break
                 else:
                     say("Invalid Command, say either 'Start' or 'Next'")
 
         say("No recipe selected, returning to original recipe")
-        return recipe
+        return None
