@@ -16,7 +16,6 @@ class ThermometerDelegate(btle.DefaultDelegate):
             return
         
         try:
-            # Check if data length is as expected
             # print(f"Raw data in hex: {data.hex()}")
             if len(data) == 8:
                 # Unpack four 16-bit unsigned integers
@@ -25,10 +24,8 @@ class ThermometerDelegate(btle.DefaultDelegate):
 
                 # Adjust the raw data
                 temperature_f = temperature_raw / 5.0
-
                 # Convert to Celsius
                 temperature_c = (temperature_f - 32) * 5.0 / 9.0
-
                 # Round the temperature to one decimal place
                 temperature_c = round(temperature_c, 1)
 
@@ -37,8 +34,7 @@ class ThermometerDelegate(btle.DefaultDelegate):
                     self.prev_temperature = temperature_c
                     print(f"Temperature changed: {temperature_f:.1f}°F ({temperature_c:.1f}°C)")
                 else:
-                    # Temperature hasn't changed; do not display output
-                    pass
+                    pass # Not changed
             else:
                 print("Unexpected data length for handle 31.")
                 

@@ -1,11 +1,8 @@
 from bluepy import btle
 import struct
 
-# Replace with your scale's MAC address
 SCALE_MAC_ADDRESS = "64:FB:01:1C:3E:82"
-
-# Replace with your scale's Weight Measurement Characteristic UUID
-WEIGHT_MEASUREMENT_UUID = "f000ffc2-0451-4000-b000-000000000000"  # Example Vendor-Specific UUID
+WEIGHT_MEASUREMENT_UUID = "f000ffc2-0451-4000-b000-000000000000"
 
 class ScaleDelegate(btle.DefaultDelegate):
     def __init__(self):
