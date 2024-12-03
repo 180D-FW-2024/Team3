@@ -9,6 +9,11 @@ from .models.helpers import MeasureType, standardize, getMeasureType
 from .LLMAgent import send_command, options, standardizeIngredient
 import subprocess
 import re
+import dotenv
+import os
+
+dotenv.load_dotenv()
+PORT_NUMBER = os.getenv("PORT_NUMBER")
 
 # Run test_db.py to test database, remove on database completion
 subprocess.run(["python3", "test_db.py"])
@@ -48,7 +53,7 @@ def map_command(command):
     output = send_command(re.sub(r'[\_\s\-]+', ' ', command.strip()))
     if output is None:
         return jsonify({ "response": "No API Response" }), 500
-    outputString = " ".join([re.sub(r'[\W_]+', '', token) for token in output]).strip().lower()
+    outputString = " ".join([re.sub(r'[^a-zA-Z\s]+', '', token) for token in output]).strip().lower()
     if outputString not in options:
         return jsonify({ "response": "Command Not Recognized" }), 400
     else:
@@ -351,4 +356,7 @@ def add_ingredient(user_id, ingredientString):
     except Exception as e:
         print(e)
         return jsonify({"error": "Addition Failure"}), 400
-    
+
+if __name__ == "__main__":
+   print("Starting server on port " + PORT_NUMBER)
+   app.run(port=int(PORT_NUMBER))
