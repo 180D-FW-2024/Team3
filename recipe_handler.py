@@ -80,6 +80,26 @@ class Step:
 
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Ingredient Class
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+class Ingredient:
+    def __init__(self, name, quantity, measureType):
+        self.name = name
+        self.quantity = quantity
+        self.measureType = measureType
+    def __str__(self):
+        if self.measureType == "Weight":
+            return f"{self.quantity} gram{'s' if self.quantity > 1 else ''} {self.name}"
+        elif self.measureType == "Volume":
+            return f"{self.quantity} milliliter{'s' if self.quantity > 1 else ''} {self.name}"
+        elif self.measureType == "Count":
+            if self.quantity == 1:
+                return f"{self.quantity} {self.name}"
+            else:
+                return f"{self.quantity} {self.name}s"
+        return f"{self.quantity} {self.measureType} {self.name}"
+
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Recipe Class
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 class Recipe:
@@ -88,10 +108,18 @@ class Recipe:
     # ------------------------------------------------------------------------
 
     # Initialize Recipe object with list of steps and counter = 0
-    def __init__(self, recipeString):
+    def __init__(self, recipeObject=None):
+        if recipeObject is None:
+            return
+        recipeString = recipeObject["recipe_text"]
+        recipeIngredients = recipeObject["ingredients"]
         self.steps = self.parseInstrString(recipeString)
+        self.ingredients = self.parseIngredientsString(recipeIngredients)
         self.stepCounter = 0
         self.timer = CountdownTimer(0)
+
+    def restart(self, recipeObject):
+        self.__init__(recipeObject)
 
     def parseInstrString(self, recipeString):
         # Prepare step list to later append to
@@ -112,7 +140,15 @@ class Recipe:
 
         # Return list of instruction objects
         return steps
-    
+
+    def parseIngredientsString(self, recipeIngredients):
+        ingredients = []
+        for ingredient in recipeIngredients:
+            if "measureType" not in ingredient or "quantity" not in ingredient or "name" not in ingredient:
+                continue
+            ingredients.append(Ingredient(ingredient["name"], ingredient["quantity"], ingredient["measureType"]))
+        return ingredients
+
     # get string instruction for current step
     def getCurrentInstruction(self):
         return self.steps[self.stepCounter].string
@@ -180,6 +216,9 @@ class Recipe:
     def resetTimer(self):
         self.timer.reset()
 
+    def listIngredients(self):
+        say("Ingredients: " + ", ".join([ing for ing in self.ingredients]))
+
     def suggestRecipes(self):
         if self.userId is None:
             return None
@@ -188,6 +227,7 @@ class Recipe:
     # ------------------------------------------------------------------------
     # END COMMAND-MAPPED FUNCTIONS
     # ------------------------------------------------------------------------
+
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

@@ -1,3 +1,20 @@
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+# Helper functions for Ingredient Management
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+from text_to_speech import tts as say
+import dotenv
+import os
+
+dotenv.load_dotenv()
+backend_url = os.getenv("BACKEND_URL")
+
+def addIngredient():
+    say("Adding ingredient to inventory.")
+    say("State ingredient type.")
+    say("State measure type from Weight, Volume, Count.")
+    say("State ingredient quantity.")
+    pass
+
 # imports here, so that this script can call the scripts it needs to
 def handle_command(command, recipe_object):
     if(command == "next instruction"):
@@ -7,7 +24,7 @@ def handle_command(command, recipe_object):
     elif(command == "repeat instruction"):
         recipe_object.currentStep()
     elif(command == "list ingredients"):
-        return
+        recipe_object.listIngredients() # UNTESTED
     elif(command == "current temperature"):
         return
     elif(command == "measure ingredient"):
@@ -21,7 +38,7 @@ def handle_command(command, recipe_object):
     elif(command == "stop timer"):
         recipe_object.stopTimer()
     elif(command == "add ingredient"):
-        return
+        addIngredient()
     elif(command == "remove ingredient"):
         return
     elif(command == "recommend recipe"):

@@ -47,3 +47,4 @@ def send_command(command) -> str:
     except Exception as e:
         print(f"Error: {e}")
         return None
+    
