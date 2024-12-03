@@ -5,6 +5,7 @@
 # apt-get install portaudio19-dev python-all-dev
 # pip install google-cloud-speech
 # apt-get install flac
+# pip install sounddevice
 
 import speech_recognition as sr
 from text_to_speech import tts as say
@@ -14,6 +15,7 @@ from recipe_handler import Recipe
 import dotenv
 import requests
 import os
+import sounddevice
 
 dotenv.load_dotenv()
 backend_url = os.getenv("BACKEND_URL")

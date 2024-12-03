@@ -7,7 +7,7 @@ import pyttsx3
 def tts(string):
     engine = pyttsx3.init()
 
-    engine.setProperty('rate', 150)  
+    engine.setProperty('rate', 110)  
 
     engine.say(string)
     engine.runAndWait()
