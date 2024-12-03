@@ -208,6 +208,8 @@ def get_recipe(recipe_id):
     404 : The recipe does not exist in the database
     """
     recipe = session.query(Recipe).filter_by(id=recipe_id).first()
+    if recipe is None:
+        return jsonify({"error": "Recipe not found"}), 404
     return jsonify(recipe.to_dict()), 200
 
 @app.route("/suggest-recipes/<user_id>", methods=['GET'])
@@ -321,15 +323,16 @@ def modify_inventory(user_id, ingredient_name, quantity, measureTypeName, change
     if inventoryItem is None:
         if quantity_n <= 0:
             return jsonify({"error": "Invalid quantity"}), 400
-        newItem = InventoryIngredient(user=user, name=ingredient_name, quantity=quantity_n, measureType=measureType)
-        user.addInventory(newItem)
+        inventoryItem = InventoryIngredient(user=user, name=ingredient_name, quantity=quantity_n, measureType=measureType)
+        user.addInventory(inventoryItem)
         session.commit()
     else:
         inventoryItem.quantity = quantity_n+inventoryItem.quantity
         if inventoryItem.quantity <= 0:
             user.removeInventory(inventoryItem)
         session.commit()
-    return jsonify(user.to_dict()), 200
+    print(inventoryItem.to_dict())
+    return jsonify(inventoryItem.to_dict()), 200
 
 '''
 Specialized route for adding an ingredient through user commands as natural language

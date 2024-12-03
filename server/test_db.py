@@ -64,10 +64,36 @@ testInventory2 = InventoryIngredient(
 testRecipe = Recipe(
     title="Test Recipe",
     recipe_text="This is a test recipe",
+    completion_time=30,
     scale_needed=False,
     thermometer_needed=False
 )
 print(testRecipe)
+
+testRecipe2 = Recipe(
+    title="Blueberry Pie",
+    recipe_text="This is an blueberry pie recipe",
+    completion_time=60,
+    scale_needed=False,
+    thermometer_needed=False
+)
+print(testRecipe2)
+
+blueberryIngredient = RecipeIngredient(
+    name="blueberry",
+    measureType=MeasureType.COUNT,
+    quantity=40
+)
+
+doughIngredient = RecipeIngredient(
+    name="flour",
+    measureType=MeasureType.WEIGHT,
+    quantity=400
+)
+
+
+testRecipe2.ingredients.append(blueberryIngredient)
+testRecipe2.ingredients.append(doughIngredient)
 
 testRecipeIngredient = RecipeIngredient(
     name="sugar",
@@ -90,6 +116,7 @@ session.add(testAllergy)
 session.add(testInventory)
 session.add(testInventory2)
 session.add(testRecipe)
+session.add(testRecipe2)
 session.commit()
 
 # Query the database to verify the insertion

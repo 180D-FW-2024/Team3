@@ -75,6 +75,19 @@ class InventoryIngredient(Base):
 
     def __repr__(self):
         return f"""<id={self.id}, InventoryIngredient(<user_id={self.user_id}, name={self.name}, quantity={self.quantity}, measureType={self.measureType})>"""
+    
+    def __str__(self):
+        if self.measureType == MeasureType.WEIGHT:
+            return f"""{self.name}, {self.quantity}_grams"""
+        elif self.measureType == MeasureType.VOLUME:
+            return f"""{self.name}, {self.quantity}_ml"""
+        elif self.measureType == MeasureType.COUNT:
+            if self.quantity == 1:
+                return f"""{self.quantity} {self.name}"""
+            else:
+                return f"""{self.quantity} {self.name}s"""
+            
+        return f"""{self.name}, {self.quantity}_{self.measureType}"""
 
     def to_dict(self):
         return {
@@ -82,7 +95,8 @@ class InventoryIngredient(Base):
             "userId": self.user_id,
             "ingredientName": self.name,
             "quantity": self.quantity,
-            "measureType": self.measureType
+            "measureType": self.measureType.__str__(),
+            "text": str(self)
         }
 
 
