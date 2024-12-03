@@ -42,7 +42,7 @@ testUser.addAllergy(testAllergy)
 testInventory = InventoryIngredient(
     user=testUser,
     quantity=100,
-    measureType="grams",
+    measureType=MeasureType.WEIGHT,
     name="sugar"
 )
 print(testInventory)
@@ -50,14 +50,14 @@ print(testInventory)
 testInventoryApple = InventoryIngredient(
     user=testUser,
     quantity=200,
-    measureType="count",
+    measureType=MeasureType.COUNT,
     name="apple"
 )
 
 testInventory2 = InventoryIngredient(
     user=anotherUser,
     quantity=100,
-    measureType="g",
+    measureType=MeasureType.WEIGHT,
     name="salt"
 )
 

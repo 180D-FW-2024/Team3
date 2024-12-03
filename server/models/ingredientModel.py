@@ -61,11 +61,9 @@ class InventoryIngredient(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship('User', back_populates='inventory')
 
-    def __init__(self, user_id=None, user=None, name="", quantity=0, measureType=MeasureType.WEIGHT):
-        mType = getMeasureType(measureType)
-        print("name", name, "mType", mType)
-        self.measureType = mType[0]
-        self.quantity = quantity*mType[1]
+    def __init__(self, user_id=None, user=None, name="", quantity=0, measureType=MeasureType.COUNT):
+        self.measureType = measureType
+        self.quantity = quantity
         if user is not None:
             self.user = user
         elif user_id is not None:

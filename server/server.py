@@ -5,8 +5,8 @@ from sqlalchemy.orm import sessionmaker, aliased
 from .models.userModel import User
 from .models.recipeModel import Recipe
 from .models.ingredientModel import Allergy, RecipeIngredient, InventoryIngredient
-from .models.helpers import MeasureType, standardize
-from .LLMAgent import send_command, options
+from .models.helpers import MeasureType, standardize, getMeasureType
+from .LLMAgent import send_command, options, standardizeIngredient
 import subprocess
 import re
 
@@ -330,4 +330,22 @@ def modify_inventory(user_id, ingredient_name, quantity, measureTypeName, change
             user.removeInventory(inventoryItem)
         session.commit()
     return jsonify(user.to_dict()), 200
+
+'''
+Specialized route for adding an ingredient through user commands as natural language
+'''
+@app.route("/add-ingredient/<user_id>/<ingredientString>", methods=['PUT'])
+def add_ingredient(user_id, ingredientString):
+    try:
+        ingredientDict = standardizeIngredient(re.sub(r'\%20', ' ', ingredientString))
+        if ingredientDict is None:
+            return jsonify({"error": "Invalid ingredient"}), 400
+        measureUnit = ingredientDict["measureUnit"]
+        ( measure, multiplier )= getMeasureType(measureUnit)
+        print("ingredientDict: " + str(ingredientDict), "measure:" + str(measure.name), "multiplier:" + str(multiplier))
+        additionJson = modify_inventory(user_id, ingredientDict["ingredient_name"], ingredientDict["quantity"]*multiplier, measure.name, "add")
+        return additionJson
+    except Exception as e:
+        print(e)
+        return jsonify({"error": "Addition Failure"}), 400
     
