@@ -78,10 +78,12 @@ jsonTest = {
     "thermometer_needed": 0,
     "title": "Test Recipe"
 }
-recipe = Recipe(jsonTest)
+recipe = Recipe(jsonTest) # Test recipe, turn to none for production
 # jump to 10 min pie bake step
 for x in range(10):
     recipe.incrementStepCounter()
+
+# recipe = None
 
 
 # Looping listener
@@ -131,9 +133,15 @@ def listen_and_respond():
                             elif additionalPrompt == 'recommend recipe':
                                 recipe_response = recommendRecipeHandler(recognizer, recipe, mic, userId)
                                 if recipe_response is not None:
-                                    recipe.__init__(recipe_response)
+                                    if recipe is not None:
+                                        recipe.__init__(recipe_response)
+                                    else:
+                                        recipe = Recipe(recipe_response)
                                     say("First step:")
                                     recipe.currentStep()
+                        
+                        if recipe.finished:
+                            recipe = None
                         
                         # handle_command(command, recipe)
 

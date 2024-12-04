@@ -129,6 +129,7 @@ class Recipe:
         self.ingredients = self.parseIngredientsString(recipeIngredients)
         self.stepCounter = 0
         self.timer = CountdownTimer(0)
+        self.finished = False
 
 
     def parseInstrString(self, recipeString):
@@ -191,6 +192,10 @@ class Recipe:
         # if step is Measurement type, tell user to do measure command when they've placed item on the scale
         if(step.type == "Measurement"):
             say("Please place the ingredient on the scale and say: Hey Raspitouille, measure ingredient! when you're ready.")
+        
+        if (step.type == "Finish"):
+            say("Recipe complete. Enjoy!")
+            self.finished = True
     
     # ------------------------------------------------------------------------
     # END UTILITY FUNCTIONS
