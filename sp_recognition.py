@@ -11,7 +11,7 @@ import speech_recognition as sr
 from text_to_speech import tts as say
 from command_handler import handle_command, addIngredientHandler, removeIngredientHandler, recommendRecipeHandler, addAllergyHandler, removeAllergyHandler
 from recipe_handler import Recipe
-from userSetup import getUsername, createUser, loadUserId
+from userSetup import loadUserId
 
 import dotenv
 import requests
