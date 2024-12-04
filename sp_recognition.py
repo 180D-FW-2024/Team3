@@ -86,79 +86,83 @@ for x in range(10):
 # recipe = None
 
 
-# Looping listener
-def listen_and_respond():
-    recognizer = sr.Recognizer()
-    mic = sr.Microphone()
+class RaspiSM:
+    def __init__(self):
+        self.recipe = None
+    # Looping listener
+    def listen_and_respond(self):
+        recognizer = sr.Recognizer()
+        mic = sr.Microphone()
 
-    print("Adjusting for ambient noise, please wait...")
-    with mic as source:
-        recognizer.adjust_for_ambient_noise(source)
-        print("Listening for the wake word 'Hey Ratatouille'. Press Ctrl+C to stop.")
+        print("Adjusting for ambient noise, please wait...")
+        with mic as source:
+            recognizer.adjust_for_ambient_noise(source)
+            print("Listening for the wake word 'Hey Ratatouille'. Press Ctrl+C to stop.")
 
-    try:
-        while True:
-            with mic as source:
-                audio = recognizer.listen(source, timeout=None)  # Listen indefinitely
+        try:
+            while True:
+                with mic as source:
+                    audio = recognizer.listen(source, timeout=None)  # Listen indefinitely
 
-            try:
-                text = recognizer.recognize_google(audio, language="en")
-                print(f"Heard: {text}")
+                try:
+                    text = recognizer.recognize_google(audio, language="en")
+                    print(f"Heard: {text}")
 
-                # Check if the wake word "Hey Ratatouille" is spoken
-                if "hey ratatouille" in text.lower():  # Case insensitive check
-                    say("Listening for your command")
-                    
-                    # Listen for the command after the wake word
-                    with mic as source:
-                        audio_command = recognizer.listen(source, timeout=None)
-                    
-                    try:
-                        command = recognizer.recognize_google(audio_command, language="en")
-                        print(f"You said: {command}")
-
-                        command = requests.get(backend_url + "/command/" + command)
-                        if command.status_code != 200:
-                            print("Command not recognized")
-                            say("Command not recognized")
-                            continue
+                    # Check if the wake word "Hey Ratatouille" is spoken
+                    if "hey ratatouille" in text.lower():  # Case insensitive check
+                        say("Listening for your command")
                         
-                        # Call command handler with command
-                        additionalPrompt = handle_command(command.json()['response'].lower(), recipe)
-                        if additionalPrompt is not None:
-                            if additionalPrompt == 'add ingredient':
-                                addIngredientHandler(recognizer, recipe, source, userId)
-                            elif additionalPrompt == 'remove ingredient':
-                                removeIngredientHandler(recognizer, recipe, source, userId)
-                            elif additionalPrompt == 'recommend recipe':
-                                recipe_response = recommendRecipeHandler(recognizer, recipe, mic, userId)
-                                if recipe_response is not None:
-                                    if recipe is not None:
-                                        recipe.__init__(recipe_response)
-                                    else:
-                                        recipe = Recipe(recipe_response)
-                                    say("First step:")
-                                    recipe.currentStep()
+                        # Listen for the command after the wake word
+                        with mic as source:
+                            audio_command = recognizer.listen(source, timeout=None)
                         
-                        if recipe.finished:
-                            recipe = None
-                        
-                        # handle_command(command, recipe)
+                        try:
+                            command = recognizer.recognize_google(audio_command, language="en")
+                            print(f"You said: {command}")
 
-                    except sr.UnknownValueError:
-                        print("Sorry, I couldn't understand the command.")
-                    except sr.RequestError as e:
-                        print(f"Error with the speech recognition service: {e}")
-                else:
-                    print("No wake word detected, ignoring...")
-            except sr.UnknownValueError:
-                print("Could not understand audio, please try again.")
-            except sr.RequestError as e:
-                print(f"Error with the speech recognition service: {e}")
+                            command = requests.get(backend_url + "/command/" + command)
+                            if command.status_code != 200:
+                                print("Command not recognized")
+                                say("Command not recognized")
+                                continue
+                            
+                            # Call command handler with command
+                            additionalPrompt = handle_command(command.json()['response'].lower(), self.recipe)
+                            if additionalPrompt is not None:
+                                if additionalPrompt == 'add ingredient':
+                                    addIngredientHandler(recognizer, self.recipe, source, userId)
+                                elif additionalPrompt == 'remove ingredient':
+                                    removeIngredientHandler(recognizer, self.recipe, source, userId)
+                                elif additionalPrompt == 'recommend recipe':
+                                    recipe_response = recommendRecipeHandler(recognizer, self.recipe, mic, userId)
+                                    if recipe_response is not None:
+                                        if self.recipe is not None:
+                                            self.recipe.__init__(recipe_response)
+                                        else:
+                                            self.recipe = Recipe(recipe_response)
+                                        say("First step:")
+                                        self.recipe.currentStep()
+                            
+                            if self.recipe.finished:
+                                self.recipe = None
+                            
+                            # handle_command(command, recipe)
 
-    except KeyboardInterrupt:
-        print("\nListening stopped.")
-        return
+                        except sr.UnknownValueError:
+                            print("Sorry, I couldn't understand the command.")
+                        except sr.RequestError as e:
+                            print(f"Error with the speech recognition service: {e}")
+                    else:
+                        print("No wake word detected, ignoring...")
+                except sr.UnknownValueError:
+                    print("Could not understand audio, please try again.")
+                except sr.RequestError as e:
+                    print(f"Error with the speech recognition service: {e}")
 
+        except KeyboardInterrupt:
+            print("\nListening stopped.")
+            return
+
+SM = RaspiSM()
+SM.listen_and_respond()
 # Call the function
-listen_and_respond()
