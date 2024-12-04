@@ -56,11 +56,50 @@ def handle_command(command, recipe_object) -> Optional[str]:
         return None
 
 def addAllergyHandler(recognizer, recipe, source, userId):
-    say("Adding allergy")
+    say("Adding allergy. State ingredient you are allergic to.")
+    recognizer = sr.Recognizer()
+    mic = sr.Microphone()
+    with mic as source:
+        audio_command = recognizer.listen(source, timeout=None)
+    try:
+        ingredientString = recognizer.recognize_google(audio_command, language="en")
+        print("You said: " + ingredientString)
+        response = requests.put(backend_url + "/add-allergy/" + str(userId) + "/" + ingredientString)
+        if response.status_code == 200:
+            say(f"{ingredientString} allergy was already added.")
+            return
+        elif response.status_code == 201:
+            say(f"{ingredientString} allergy added")
+        else:
+            say("Allergy addition failure.")
+        
+    except sr.UnknownValueError:
+        print("Sorry, I couldn't understand the ingredient.")
+    except sr.RequestError as e:
+        print(f"Error with the speech recognition service: {e}")
     return
 
+
 def removeAllergyHandler(recognizer, recipe, source, userId):
-    say("Removing allergy")
+    say("Removing allergy. State ingredient you are not allergic to.")
+    recognizer = sr.Recognizer()
+    mic = sr.Microphone()
+    with mic as source:
+        audio_command = recognizer.listen(source, timeout=None)
+    try:
+        ingredientString = recognizer.recognize_google(audio_command, language="en")
+        print("You said: " + ingredientString)
+        response = requests.put(backend_url + "/remove-allergy/" + str(userId) + "/" + ingredientString)
+        if response.status_code == 200:
+            say(f"{ingredientString} allergy was removed.")
+            return
+        else:
+            say("Allergy removal failure.")
+        
+    except sr.UnknownValueError:
+        print("Sorry, I couldn't understand the ingredient.")
+    except sr.RequestError as e:
+        print(f"Error with the speech recognition service: {e}")
     return
 
 def addIngredientHandler(recognizer, recipe, source, userId):

@@ -143,18 +143,22 @@ def add_allergy(user_id, allergy_name):
 
     Status Codes
     ------------
-    200 : The user exists in the database and the allergy was added
+    201 : The user exists in the database and the allergy was added
+    200 : The user exists in the database and the allergy was already added
     404 : The user does not exist in the database
     """
     user = session.query(User).filter_by(id=user_id).first()
     if user is None:
         return jsonify({"error": "User not found"}), 404
-    allergy = session.query(Allergy).filter_by(name=allergy_name).first()
+    allergy = session.query(Allergy).filter_by(name=standardize(allergy_name)).first()
     if allergy is None:
         allergy = Allergy(name=allergy_name)
-    user.addAllergy(allergy)
-    session.commit()
-    return jsonify(user.to_dict()), 200
+    if allergy not in user.allergies:
+        user.addAllergy(allergy)
+        session.commit()
+        return jsonify(user.to_dict()), 201
+    else:
+        return jsonify(user.to_dict()), 200
 
 @app.route("/remove-allergy/<user_id>/<allergy_name>", methods=['PUT'])
 def remove_allergy(user_id, allergy_name):
@@ -184,7 +188,7 @@ def remove_allergy(user_id, allergy_name):
     user = session.query(User).filter_by(id=user_id).first()
     if user is None:
         return jsonify({"error": "User not found"}), 404
-    allergy = session.query(Allergy).filter_by(name=allergy_name).first()
+    allergy = session.query(Allergy).filter_by(name=standardize(allergy_name)).first()
     if allergy is None:
         return jsonify({"error": "Allergy not found"}), 404
     user.removeAllergy(allergy)

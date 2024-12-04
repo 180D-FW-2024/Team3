@@ -62,7 +62,7 @@ testInventory2 = InventoryIngredient(
 )
 
 testRecipeText = """Quantity; 3; Cut up 3 apples| 
-Measurement; 150; Measure out 50 grams of white sugar| 
+Measurement; 50; Measure out 50 grams of white sugar| 
 Untimed; None; Mash apples and mix in sugar in bowl| 
 Temperature; 200; Gather the ingredients. Preheat the oven to 200 degrees F| 
 Timed; 1200; Place mix in oven in ceramic dish and bake for 20 minutes| 
