@@ -14,6 +14,9 @@ backend_url = os.getenv("BACKEND_URL")
 
 # imports here, so that this script can call the scripts it needs to
 def handle_command(command, recipe_object) -> Optional[str]:
+    if recipe_object is None:
+        say("No recipe currently selected, ask for recipe suggestions to start a new recipe.")
+        return None
     if(command == "next instruction"):
         recipe_object.nextStep()
         return None
