@@ -50,7 +50,10 @@ def handle_command(command, recipe_object) -> Optional[str]:
 
 def addIngredientHandler(recognizer, recipe, source, userId):
     say("Adding ingredient to inventory. State ingredient name, quantity, and measurement type.")
-    audio_command = recognizer.listen(source, timeout=None)
+    recognizer = sr.Recognizer()
+    mic = sr.Microphone()
+    with mic as source:
+        audio_command = recognizer.listen(source, timeout=None)
     try:
         ingredientString = recognizer.recognize_google(audio_command, language="en")
         print("You said: " + ingredientString)
@@ -59,7 +62,7 @@ def addIngredientHandler(recognizer, recipe, source, userId):
             print("Addition Failure")
             return
         else:
-            say("Ingredient added to inventory:", response.json()['text'])
+            say("Ingredient added to inventory: " + response.json()['text'])
     except sr.UnknownValueError:
         print("Sorry, I couldn't understand the command.")
     except sr.RequestError as e:
@@ -67,7 +70,10 @@ def addIngredientHandler(recognizer, recipe, source, userId):
 
 def removeIngredientHandler(recognizer, recipe, source, userId):
     say("Removing ingredient from inventory. State ingredient name, quantity, and measurement type.")
-    audio_command = recognizer.listen(source, timeout=None)
+    recognizer = sr.Recognizer()
+    mic = sr.Microphone()
+    with mic as source:
+        audio_command = recognizer.listen(source, timeout=None)
     try:
         ingredientString = recognizer.recognize_google(audio_command, language="en")
         print("You said: " + ingredientString)
@@ -76,7 +82,7 @@ def removeIngredientHandler(recognizer, recipe, source, userId):
             print("Removal Failure")
             return
         else:
-            say("Ingredient removed from inventory:", response.json()['text'])
+            say("Ingredient removed from inventory: " + response.json()['text'])
     except sr.UnknownValueError:
         print("Sorry, I couldn't understand the command.")
     except sr.RequestError as e:
