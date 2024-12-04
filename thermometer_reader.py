@@ -8,7 +8,7 @@ TEMPERATURE_MEASUREMENT_UUID = "7edda774-045e-4bbf-909b-45d1991a2876"
 class ThermometerDelegate(btle.DefaultDelegate):
     def __init__(self):
         super().__init__()
-        self.prev_temperature = None
+        self.temperature_readings = []  # List to store temperature readings
 
     def handleNotification(self, cHandle, data):
         if cHandle != 31:
@@ -28,13 +28,10 @@ class ThermometerDelegate(btle.DefaultDelegate):
                 temperature_c = (temperature_f - 32) * 5.0 / 9.0
                 # Round the temperature to one decimal place
                 temperature_c = round(temperature_c, 1)
+                
+                # Append the temperature to the readings list
+                self.temperature_readings.append(temperature_f)
 
-                # Check if temperature has changed
-                if self.prev_temperature != temperature_c:
-                    self.prev_temperature = temperature_c
-                    print(f"Temperature changed: {temperature_f:.1f}°F ({temperature_c:.1f}°C)")
-                else:
-                    pass # Not changed
             else:
                 print("Unexpected data length for handle 31.")
                 
@@ -44,16 +41,16 @@ class ThermometerDelegate(btle.DefaultDelegate):
 
 def main():
     device = None  # Initialize device to None
+    delegate = ThermometerDelegate()
     try:
         print("Connecting to the thermometer...")
         device = btle.Peripheral(THERMOMETER_MAC_ADDRESS)
-        device.setDelegate(ThermometerDelegate())
+        device.setDelegate(delegate)
         print("Connected. Setting up notifications for temperature measurement...")
 
         # Enable notifications for the Temperature Measurement Characteristic
         temp_char = device.getCharacteristics(uuid=TEMPERATURE_MEASUREMENT_UUID)[0]
         descriptors = temp_char.getDescriptors(forUUID=0x2902)
-        
         if not descriptors:
             print("No Client Characteristic Configuration Descriptor (CCCD) found.")
             return
@@ -64,12 +61,22 @@ def main():
 
         print("Listening for temperature measurements... Press Ctrl+C to exit.")
 
+        start_time = time.time()
         while True:
-            if device.waitForNotifications(5.0):
+            if device.waitForNotifications(1.0):
                 # Notification handled in callback
-                continue
-            # No notification received within timeout
-            print("Waiting for data...")
+                pass
+            # Check if 10 seconds have passed
+            current_time = time.time()
+            if current_time - start_time >= 10:
+                if delegate.temperature_readings:
+                    max_temp = max(delegate.temperature_readings)
+                    print(f"Highest temperature in the last 10 seconds: {max_temp:.1f} °F")
+                else:
+                    print("No temperature readings received in the last 10 seconds.")
+                # Reset readings and start time
+                delegate.temperature_readings = []
+                start_time = current_time
             
     except btle.BTLEException as e:
         print(f"Bluetooth error: {e}")
