@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from .helpers import InstructionType
 from .Base import Base
+import re
 
 class Recipe(Base):
     __tablename__ = 'recipes'
@@ -16,7 +17,7 @@ class Recipe(Base):
 
 
     def __init__(self, title="", recipe_text="", scale_needed=False, thermometer_needed=False, completion_time=0):
-        self.recipe_text = recipe_text
+        self.recipe_text = re.sub(r'\n+', '', recipe_text)
         self.title = title
         self.scale_needed = scale_needed
         self.thermometer_needed = thermometer_needed
