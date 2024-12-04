@@ -9,7 +9,7 @@
 
 import speech_recognition as sr
 from text_to_speech import tts as say
-from command_handler import handle_command, addIngredientHandler, removeIngredientHandler, recommendRecipeHandler
+from command_handler import handle_command, addIngredientHandler, removeIngredientHandler, recommendRecipeHandler, addAllergyHandler, removeAllergyHandler
 from recipe_handler import Recipe
 from userSetup import getUsername, createUser, loadUserId
 
@@ -23,11 +23,7 @@ import string
 dotenv.load_dotenv()
 backend_url = os.getenv("BACKEND_URL")
 
-username = getUsername("userConfig.txt")
-if username is None:
-    username = createUser("userConfig.txt")
-
-userId = loadUserId(username)
+userId = loadUserId("userConfig.txt")
 
 
 # for testing; handle_command(recommend_recipe) should be called by listen_and_respond when the command is heard, and should return a Recipe object to replace the current Recipe object
@@ -142,6 +138,10 @@ class RaspiSM:
                                             self.recipe = Recipe(recipe_response)
                                         say("First step:")
                                         self.recipe.currentStep()
+                                elif additionalPrompt == 'add allergy':
+                                    addAllergyHandler(recognizer, self.recipe, source, userId)
+                                elif additionalPrompt == 'remove allergy':
+                                    removeAllergyHandler(recognizer, self.recipe, source, userId)
                             
                             if self.recipe and self.recipe.finished:
                                 self.recipe = None

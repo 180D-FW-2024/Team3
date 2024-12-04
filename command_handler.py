@@ -20,6 +20,10 @@ def handle_command(command, recipe_object) -> Optional[str]:
         return 'remove ingredient'
     elif(command == "recommend recipe"):
         return 'recommend recipe'
+    elif(command == "add allergy"):
+        return 'add allergy'
+    elif(command == "remove allergy"):
+        return 'remove allergy'
     elif recipe_object is None:
         say("No recipe currently selected, ask for recipe suggestions to start a new recipe.")
         return None
@@ -50,6 +54,14 @@ def handle_command(command, recipe_object) -> Optional[str]:
     elif(command == "stop timer"):
         recipe_object.stopTimer()
         return None
+
+def addAllergyHandler(recognizer, recipe, source, userId):
+    say("Adding allergy")
+    return
+
+def removeAllergyHandler(recognizer, recipe, source, userId):
+    say("Removing allergy")
+    return
 
 def addIngredientHandler(recognizer, recipe, source, userId):
     say("Adding ingredient to inventory. State ingredient name, quantity, and measurement type.")
