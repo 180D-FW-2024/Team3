@@ -61,9 +61,17 @@ testInventory2 = InventoryIngredient(
     name="salt"
 )
 
+testRecipeText = """Quantity; 3; Cut up 3 apples| 
+Measurement; 150; Measure out 50 grams of white sugar| 
+Untimed; None; Mash apples and mix in sugar in bowl| 
+Temperature; 200; Gather the ingredients. Preheat the oven to 200 degrees F| 
+Timed; 1200; Place mix in oven in ceramic dish and bake for 20 minutes| 
+Finish; None; Serve!"""
+
+
 testRecipe = Recipe(
-    title="Test Recipe",
-    recipe_text="This is a test recipe",
+    title="Apple Custard",
+    recipe_text=testRecipeText,
     completion_time=30,
     scale_needed=False,
     thermometer_needed=False

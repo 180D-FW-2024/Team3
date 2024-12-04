@@ -42,11 +42,11 @@ def handle_command(command, recipe_object) -> Optional[str]:
         recipe_object.stopTimer()
         return None
     elif(command == "add ingredient"):
-        return 'add ingredient' # UNTESTED
+        return 'add ingredient'
     elif(command == "remove ingredient"):
-        return None
+        return 'remove ingredient'
     elif(command == "recommend recipe"):
-        return 'recommend recipe' # UNTESTED
+        return 'recommend recipe'
 
 def addIngredientHandler(recognizer, recipe, source, userId):
     say("Adding ingredient to inventory. State ingredient name, quantity, and measurement type.")
@@ -60,6 +60,23 @@ def addIngredientHandler(recognizer, recipe, source, userId):
             return
         else:
             say("Ingredient added to inventory:", response.json()['text'])
+    except sr.UnknownValueError:
+        print("Sorry, I couldn't understand the command.")
+    except sr.RequestError as e:
+        print(f"Error with the speech recognition service: {e}")
+
+def removeIngredientHandler(recognizer, recipe, source, userId):
+    say("Removing ingredient from inventory. State ingredient name, quantity, and measurement type.")
+    audio_command = recognizer.listen(source, timeout=None)
+    try:
+        ingredientString = recognizer.recognize_google(audio_command, language="en")
+        print("You said: " + ingredientString)
+        response = requests.put(backend_url + "/remove-ingredient/" + str(userId) + "/" + ingredientString)
+        if response.status_code != 200:
+            print("Removal Failure")
+            return
+        else:
+            say("Ingredient removed from inventory:", response.json()['text'])
     except sr.UnknownValueError:
         print("Sorry, I couldn't understand the command.")
     except sr.RequestError as e:
