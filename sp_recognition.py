@@ -9,7 +9,7 @@
 
 import speech_recognition as sr
 from text_to_speech import tts as say
-from command_handler import handle_command, addIngredientHandler, recommendRecipeHandler
+from command_handler import handle_command, addIngredientHandler, removeIngredientHandler, recommendRecipeHandler
 from recipe_handler import Recipe
 
 import dotenv
@@ -52,7 +52,7 @@ def loadUserId(username):
     response = requests.get(backend_url + "/get-user/" + username)
     if response.status_code != 200:
         return None
-    return response.json()['id']
+    return response.json()["id"]
 
 username = getUsername("userConfig.txt")
 if username is None:
@@ -157,6 +157,8 @@ def listen_and_respond():
                         if additionalPrompt is not None:
                             if additionalPrompt == 'add ingredient':
                                 addIngredientHandler(recognizer, recipe, source, userId)
+                            elif additionalPrompt == 'remove ingredient':
+                                removeIngredientHandler(recognizer, recipe, source, userId)
                             elif additionalPrompt == 'recommend recipe':
                                 recipe_response = recommendRecipeHandler(recognizer, recipe, mic, userId)
                                 if recipe_response is not None:

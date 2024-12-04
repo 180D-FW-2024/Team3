@@ -357,6 +357,24 @@ def add_ingredient(user_id, ingredientString):
         print(e)
         return jsonify({"error": "Addition Failure"}), 400
 
+'''
+Specialized route for removing an ingredient through user commands as natural language
+'''
+@app.route("/remove-ingredient/<user_id>/<ingredientString>", methods=['PUT'])
+def remove_ingredient(user_id, ingredientString):
+    try:
+        ingredientDict = standardizeIngredient(re.sub(r'\%20', ' ', ingredientString))
+        if ingredientDict is None:
+            return jsonify({"error": "Invalid ingredient"}), 400
+        measureUnit = ingredientDict["measureUnit"]
+        ( measure, multiplier )= getMeasureType(measureUnit)
+        print("ingredientDict: " + str(ingredientDict), "measure:" + str(measure.name), "multiplier:" + str(multiplier))
+        removalJson = modify_inventory(user_id, ingredientDict["ingredient_name"], ingredientDict["quantity"]*multiplier, measure.name, "remove")
+        return removalJson
+    except Exception as e:
+        print(e)
+        return jsonify({"error": "Removal Failure"}), 400
+
 if __name__ == "__main__":
    print("Starting server on port " + PORT_NUMBER)
    app.run(port=int(PORT_NUMBER))
