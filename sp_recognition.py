@@ -78,12 +78,12 @@ jsonTest = {
     "thermometer_needed": 0,
     "title": "Test Recipe"
 }
-recipe = Recipe(jsonTest) # Test recipe, turn to none for production
-# jump to 10 min pie bake step
-for x in range(10):
-    recipe.incrementStepCounter()
+# recipe = Recipe(jsonTest) # Test recipe, turn to none for production
+# # jump to 10 min pie bake step
+# for x in range(10):
+#     recipe.incrementStepCounter()
 
-# recipe = None
+recipe = None
 
 
 class RaspiSM:

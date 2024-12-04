@@ -4,6 +4,7 @@
 from text_to_speech import tts as say
 from typing import Optional
 from recipe_handler import Recipe
+from scale_reader import get_weight_in_grams
 import requests
 import speech_recognition as sr
 import dotenv
@@ -40,6 +41,14 @@ def handle_command(command, recipe_object) -> Optional[str]:
     elif(command == "measure ingredient"):
         # get weight from bluetooth scale and compare it to the required weight
         # if using a cup to hold ingredient, should calibrate scale using the cup such that with only the cup, the scale reads 0
+        if(recipe_object.steps[recipe_object.stepCounter].type == "Measurement"):
+            scaleMeasurement = get_weight_in_grams()
+            if(0.95 < scaleMeasurement/int(recipe_object.steps[recipe_object.stepCounter].value) < 1.05):
+                say("Your measurement, " + str(scaleMeasurement) + " grams, is within 5 percent of the expected measurement. Feel free to move to the next step.")
+            else:
+                say("Your measurement, " + str(scaleMeasurement) + " grams, is not within 5 percent of the expected measurement. Try again.")
+        else:
+            say("This step does not need a measurement.")
         return
     elif(command == "time remaining"):
         recipe_object.timeRemaining()

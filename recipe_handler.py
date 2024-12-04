@@ -191,7 +191,7 @@ class Recipe:
         # WIP
         # if step is Measurement type, tell user to do measure command when they've placed item on the scale
         if(step.type == "Measurement"):
-            say("Please place the ingredient on the scale and say: Hey Raspitouille, measure ingredient! when you're ready.")
+            say("Please place the ingredient on the scale and say: Hey Ratatouille, measure ingredient! when you're ready.")
         
         if (step.type == "Finish"):
             say("Recipe complete. Enjoy!")
