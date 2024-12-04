@@ -1,5 +1,6 @@
 from bluepy import btle
 import struct
+import time
 
 SCALE_MAC_ADDRESS = "64:FB:01:1C:3E:82"
 WEIGHT_MEASUREMENT_UUID = "f000ffc2-0451-4000-b000-000000000000"
@@ -27,7 +28,19 @@ def get_weight_in_grams():
     delegate = ScaleDelegate()
     try:
         print("Connecting to the scale...")
-        device = btle.Peripheral(SCALE_MAC_ADDRESS)
+
+        # Attempt connection with a timeout of 20 seconds
+        start_time = time.time()
+        while True:
+            try:
+                device = btle.Peripheral(SCALE_MAC_ADDRESS)
+                break  # Exit loop if connection is successful
+            except btle.BTLEException:
+                if time.time() - start_time > 20:
+                    print("Failed to connect within 20 seconds.")
+                    return None  # Return None if connection fails
+                time.sleep(1)  # Wait before retrying
+
         device.setDelegate(delegate)
         print("Connected. Setting up notifications for weight measurement...")
 
@@ -47,10 +60,12 @@ def get_weight_in_grams():
                     return delegate.weight_g  # Return the weight in grams
             print("No data yet, retrying...")
         
-        raise TimeoutError("Failed to get weight measurement within timeout.")
+        print("Failed to get weight measurement within timeout.")
+        return None  # Return None if no measurement is received
 
     except btle.BTLEException as e:
-        raise ConnectionError(f"Bluetooth error: {e}")
+        print(f"Bluetooth error: {e}")
+        return None  # Return None on Bluetooth error
     finally:
         if device:
             try:

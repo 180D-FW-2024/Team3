@@ -5,6 +5,7 @@ from text_to_speech import tts as say
 from typing import Optional
 from recipe_handler import Recipe
 from scale_reader import get_weight_in_grams
+from thermometer_reader import get_current_temperature_f
 import requests
 import speech_recognition as sr
 import dotenv
@@ -41,16 +42,24 @@ def handle_command(command, recipe_object) -> Optional[str]:
         recipe_object.listIngredients() # UNTESTED
         return None
     elif(command == "current temperature"):
+        temperature = get_current_temperature_f()
+        if(temperature is not None):
+            say("The thermometer currently reads " + str(temperature) + " degrees fahrenheit.")
+        else:
+            say("Error with measurement. Try again")
         return
     elif(command == "measure ingredient"):
         # get weight from bluetooth scale and compare it to the required weight
         # if using a cup to hold ingredient, should calibrate scale using the cup such that with only the cup, the scale reads 0
         if(recipe_object.steps[recipe_object.stepCounter].type == "Measurement"):
             scaleMeasurement = get_weight_in_grams()
-            if(0.95 < scaleMeasurement/int(recipe_object.steps[recipe_object.stepCounter].value) < 1.05):
-                say("Your measurement, " + str(scaleMeasurement) + " grams, is within 5 percent of the expected measurement. Feel free to move to the next step.")
+            if(scaleMeasurement is not None):
+                if(0.95 < scaleMeasurement/int(recipe_object.steps[recipe_object.stepCounter].value) < 1.05):
+                    say("Your measurement, " + str(scaleMeasurement) + " grams, is within 5 percent of the expected measurement. Feel free to move to the next step.")
+                else:
+                    say("Your measurement, " + str(scaleMeasurement) + " grams, is not within 5 percent of the expected measurement. Try again.")
             else:
-                say("Your measurement, " + str(scaleMeasurement) + " grams, is not within 5 percent of the expected measurement. Try again.")
+                say("Error with measurement. Try again")
         else:
             say("This step does not need a measurement.")
         return
