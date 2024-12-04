@@ -73,7 +73,7 @@ def loadRecipe(recipeId):
 
 def recommendRecipeHandler(recognizer, recipe, mic, userId):
     say("Generating recipe recommendation...")
-    response = requests.get(backend_url + "/recommend-recipe/" + str(userId))
+    response = requests.get(backend_url + "/suggest-recipes/" + str(userId))
     if response.status_code != 200:
         print("Recommendation Failure")
         say("Recommendation Failure, Try again")
@@ -85,7 +85,7 @@ def recommendRecipeHandler(recognizer, recipe, mic, userId):
         data = response.json()
         say("Here is a list of recommended recipes, select 'Start' to begin or 'Next' to hear more")
         for recipe in data:
-            say("Recipe title: ", recipe['title'], "Completion time: ", recipe['completion_time'])
+            say("Recipe title: " + recipe['title'] + ". Completion time: " + str(recipe['completion_time']) + " minutes")
             while True:
                 with mic as source:
                     audio_command = recognizer.listen(source, timeout=None)
@@ -103,7 +103,7 @@ def recommendRecipeHandler(recognizer, recipe, mic, userId):
                         say("Recipe select failure, try again")
                         return None
                     print(recipe_response)
-                    say("Recipe selected:", recipe_response['title'])
+                    say("Recipe selected: " + recipe_response['title'])
                     return recipe_response
                 elif command.lower() == "next":
                     break

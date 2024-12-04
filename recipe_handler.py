@@ -47,13 +47,19 @@ class CountdownTimer:
         if not self.running:
             # Calculate the end time from now using the remaining time
             self.end_time = time.time() + self.remaining_time
+            say("Timer started")
             self.running = True
+        elif self.running:
+            say("Timer already running")
 
     def pause(self):
         # Pause the countdown and save the remaining time.
         if self.running:
             self.remaining_time = max(0, self.end_time - time.time())
+            say("Timer paused")
             self.running = False
+        elif not self.running:
+            say("Timer not running")
 
     def reset(self):
         # Reset the countdown to the initial duration.
@@ -209,7 +215,7 @@ class Recipe:
         self.manageCurrentStep()
 
     def timeRemaining(self):
-        say(str(round(self.timer.time_left())) + " seconds")
+        say(str(round((self.timer.time_left())//60)) + " minutes and " + str(round(self.timer.time_left()) % 60) + " seconds remaining")
     
     def startTimer(self):
         self.timer.start()
@@ -221,7 +227,7 @@ class Recipe:
         self.timer.reset()
 
     def listIngredients(self):
-        say("Ingredients: " + ", ".join([ing for ing in self.ingredients]))
+        say("Ingredients: " + ", ".join([ing.__str__() for ing in self.ingredients]))
 
     def suggestRecipes(self):
         if self.userId is None:

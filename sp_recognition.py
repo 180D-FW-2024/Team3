@@ -52,7 +52,7 @@ def loadUserId(username):
     response = requests.get(backend_url + "/get-user/" + username)
     if response.status_code != 200:
         return None
-    return response.json()
+    return response.json()['id']
 
 username = getUsername("userConfig.txt")
 if username is None:
@@ -160,6 +160,8 @@ def listen_and_respond():
                                 recipe_response = recommendRecipeHandler(recognizer, recipe, mic, userId)
                                 if recipe_response is not None:
                                     recipe.__init__(recipe_response)
+                                    say("First step:")
+                                    recipe.currentStep()
                         
                         # handle_command(command, recipe)
 
