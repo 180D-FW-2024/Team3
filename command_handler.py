@@ -48,13 +48,13 @@ def handle_command(command, recipe_object) -> Optional[str]:
     elif(command == "recommend recipe"):
         return 'recommend recipe' # UNTESTED
 
-def addIngredientHandler(recognizer, recipe, source):
+def addIngredientHandler(recognizer, recipe, source, userId):
     say("Adding ingredient to inventory. State ingredient name, quantity, and measurement type.")
     audio_command = recognizer.listen(source, timeout=None)
     try:
         ingredientString = recognizer.recognize_google(audio_command, language="en")
         print("You said: " + ingredientString)
-        response = requests.put(backend_url + "/add-ingredient/" + str(recipe.userId) + "/" + ingredientString)
+        response = requests.put(backend_url + "/add-ingredient/" + str(userId) + "/" + ingredientString)
         if response.status_code != 200:
             print("Addition Failure")
             return

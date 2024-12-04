@@ -149,13 +149,14 @@ def listen_and_respond():
                         command = requests.get(backend_url + "/command/" + command)
                         if command.status_code != 200:
                             print("Command not recognized")
+                            say("Command not recognized")
                             continue
                         
                         # Call command handler with command
                         additionalPrompt = handle_command(command.json()['response'].lower(), recipe)
                         if additionalPrompt is not None:
                             if additionalPrompt == 'add ingredient':
-                                addIngredientHandler(recognizer, recipe, source)
+                                addIngredientHandler(recognizer, recipe, source, userId)
                             elif additionalPrompt == 'recommend recipe':
                                 recipe_response = recommendRecipeHandler(recognizer, recipe, mic, userId)
                                 if recipe_response is not None:
