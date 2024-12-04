@@ -143,7 +143,7 @@ class RaspiSM:
                                         say("First step:")
                                         self.recipe.currentStep()
                             
-                            if self.recipe.finished:
+                            if self.recipe and self.recipe.finished:
                                 self.recipe = None
                             
                             # handle_command(command, recipe)
