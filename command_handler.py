@@ -14,10 +14,16 @@ backend_url = os.getenv("BACKEND_URL")
 
 # imports here, so that this script can call the scripts it needs to
 def handle_command(command, recipe_object) -> Optional[str]:
-    if recipe_object is None:
+    if(command == "add ingredient"):
+        return 'add ingredient'
+    elif(command == "remove ingredient"):
+        return 'remove ingredient'
+    elif(command == "recommend recipe"):
+        return 'recommend recipe'
+    elif recipe_object is None:
         say("No recipe currently selected, ask for recipe suggestions to start a new recipe.")
         return None
-    if(command == "next instruction"):
+    elif(command == "next instruction"):
         recipe_object.nextStep()
         return None
     elif(command == "previous instruction"):
@@ -44,12 +50,6 @@ def handle_command(command, recipe_object) -> Optional[str]:
     elif(command == "stop timer"):
         recipe_object.stopTimer()
         return None
-    elif(command == "add ingredient"):
-        return 'add ingredient'
-    elif(command == "remove ingredient"):
-        return 'remove ingredient'
-    elif(command == "recommend recipe"):
-        return 'recommend recipe'
 
 def addIngredientHandler(recognizer, recipe, source, userId):
     say("Adding ingredient to inventory. State ingredient name, quantity, and measurement type.")
