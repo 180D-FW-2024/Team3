@@ -53,7 +53,8 @@ def map_command(command):
     output = send_command(re.sub(r'[\_\s\-]+', ' ', command.strip()))
     if output is None:
         return jsonify({ "response": "No API Response" }), 500
-    outputString = " ".join([re.sub(r'[^a-zA-Z\s]+', '', token) for token in output]).strip().lower()
+    outputString = " ".join([re.sub(r'[^a-zA-Z]+', '', token) for token in output]).strip().lower()
+    print("OUTPUT STRING COMMAND: " + outputString)
     if outputString not in options:
         return jsonify({ "response": "Command Not Recognized" }), 400
     else:
