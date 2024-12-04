@@ -13,7 +13,7 @@ options = [
     "add ingredient",
     "remove ingredient",
     "recommend recipe",
-    "measure ingredient",
+    "measure ingredient"
 ]
 
 client = Together()
