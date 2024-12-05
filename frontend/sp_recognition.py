@@ -26,7 +26,7 @@ import string
 dotenv.load_dotenv()
 backend_url = os.getenv("BACKEND_URL")
 
-userId = loadUserId("userConfig.txt")
+userId = loadUserId("../userConfig.txt")
 
 
 # for testing; handle_command(recommend_recipe) should be called by listen_and_respond when the command is heard, and should return a Recipe object to replace the current Recipe object
