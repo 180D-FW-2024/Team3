@@ -121,7 +121,7 @@ def get_current_temperature_f():
 
 if __name__ == "__main__":
     try:
-        temperature_data = get_current_temperature_f()
+        temperature_data = round(get_current_temperature_f())
         print("Current Temperature (F):", temperature_data)
     except requests.exceptions.RequestException as e:
         print("Error:", e)
