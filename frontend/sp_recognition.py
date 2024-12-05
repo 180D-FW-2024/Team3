@@ -100,12 +100,15 @@ class RaspiSM:
             print('Found in cache' + parsedInput)
             return self.commandCache[parsedInput]
         
-        output = send_command(parsedInput)
-        if output is None:
-            return None
-        
-        outputString = " ".join([re.sub(r'[^a-zA-Z]+', '', token) for token in output]).strip().lower()
-        print("Command " + inputString + " mapped to " + outputString)
+        outputString = ""
+        while outputString == "":
+            output = send_command(parsedInput)
+            if output is None:
+                return None
+            
+            outputString = " ".join([re.sub(r'[^a-zA-Z]+', '', token) for token in output]).strip().lower()
+            print("Command " + inputString + " mapped to " + outputString)
+            
         if outputString not in options:
             return None
         else:
