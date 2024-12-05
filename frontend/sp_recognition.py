@@ -9,13 +9,16 @@
 
 import speech_recognition as sr
 from text_to_speech import tts as say
-from command_handler import handle_command, addIngredientHandler, removeIngredientHandler, recommendRecipeHandler, addAllergyHandler, removeAllergyHandler
+from command_handler import ( 
+    handle_command, addIngredientHandler, removeIngredientHandler, 
+    recommendRecipeHandler, addAllergyHandler, removeAllergyHandler,)
 from recipe_handler import Recipe
 from userSetup import loadUserId
-
+from ..LLM.LLMAgent import send_command, options
 import dotenv
 import requests
 import os
+import re
 import sounddevice
 import random
 import string
@@ -85,6 +88,30 @@ recipe = None
 class RaspiSM:
     def __init__(self):
         self.recipe = None
+
+        # Setup for cache
+        self.commandCache = {}
+        for option in options:
+            self.commandCache[option] = option
+
+    def mapCommand(self, inputString):
+        parsedInput = re.sub(r'[\_\s\-]+', ' ', inputString.strip()).lower()
+        if parsedInput in self.commandCache:
+            print('Found in cache' + parsedInput)
+            return self.commandCache[parsedInput]
+        
+        output = send_command(parsedInput)
+        if output is None:
+            return None
+        
+        outputString = " ".join([re.sub(r'[^a-zA-Z]+', '', token) for token in output]).strip().lower()
+        print("Command " + inputString + " mapped to " + outputString)
+        if outputString not in options:
+            return None
+        else:
+            self.commandCache[parsedInput] = outputString
+            return self.commandCache[parsedInput]
+        
     # Looping listener
     def listen_and_respond(self):
         recognizer = sr.Recognizer()
@@ -93,7 +120,7 @@ class RaspiSM:
         print("Adjusting for ambient noise, please wait...")
         with mic as source:
             recognizer.adjust_for_ambient_noise(source)
-            print("Listening for the wake word 'Hey Ratatouille'. Press Ctrl+C to stop.")
+            print("Listening for the wake word 'Hey raspy'. Press Ctrl+C to stop.")
 
         try:
             while True:
@@ -105,8 +132,8 @@ class RaspiSM:
                     print(f"Heard: {text}")
 
                     # Check if the wake word "Hey Ratatouille" is spoken
-                    if "hey ratatouille" in text.lower():  # Case insensitive check
-                        say("Listening for your command")
+                    if "hey raspy" in text.lower():  # Case insensitive check
+                        say("Listening...")
                         
                         # Listen for the command after the wake word
                         with mic as source:
@@ -116,14 +143,14 @@ class RaspiSM:
                             command = recognizer.recognize_google(audio_command, language="en")
                             print(f"You said: {command}")
 
-                            command = requests.get(backend_url + "/command/" + command)
-                            if command.status_code != 200:
+                            mappedCommand = self.mapCommand(command)
+                            if mappedCommand is None:
                                 print("Command not recognized")
                                 say("Command not recognized")
                                 continue
                             
                             # Call command handler with command
-                            additionalPrompt = handle_command(command.json()['response'].lower(), self.recipe)
+                            additionalPrompt = handle_command(mappedCommand, self.recipe)
                             if additionalPrompt is not None:
                                 if additionalPrompt == 'add ingredient':
                                     addIngredientHandler(recognizer, self.recipe, source, userId)

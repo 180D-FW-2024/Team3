@@ -9,5 +9,5 @@ To set up backend server, first set up the conda environment from the file serve
 
 Then, source the appropriate Flask environment variables, and make sure the root folder contains the `.env` file
 (not in github), before running the server through flask:
-4) source FlaskExports.sh
-5) flask run
+1) source FlaskExports.sh
+2) flask run

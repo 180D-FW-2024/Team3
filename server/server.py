@@ -6,7 +6,7 @@ from .models.userModel import User
 from .models.recipeModel import Recipe
 from .models.ingredientModel import Allergy, RecipeIngredient, InventoryIngredient
 from .models.helpers import MeasureType, standardize, getMeasureType
-from .LLMAgent import send_command, options, standardizeIngredient
+from ..LLM.LLMAgent import send_command, options, standardizeIngredient
 import subprocess
 import re
 import dotenv
