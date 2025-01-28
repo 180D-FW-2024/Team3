@@ -7,6 +7,7 @@ from .models.recipeModel import Recipe
 from .models.ingredientModel import Allergy, RecipeIngredient, InventoryIngredient
 from .models.helpers import MeasureType, standardize, getMeasureType
 from ..LLM.LLMAgent import send_command, options, standardizeIngredient
+from ..LLM.LangChainAgent import mapCommand
 import subprocess
 import re
 import dotenv
@@ -50,10 +51,12 @@ def map_command(command):
     400 : The command was not recognized
     500 : The API did not respond
     """
-    output = send_command(re.sub(r'[\_\s\-]+', ' ', command.strip()))
+    # output = send_command(re.sub(r'[\_\s\-]+', ' ', command.strip()))
+    # outputString = " ".join([re.sub(r'[^a-zA-Z]+', '', token) for token in output]).strip().lower()
+    output = mapCommand(re.sub(r'[\_\s\-]+', ' ', command.strip()))
     if output is None:
         return jsonify({ "response": "No API Response" }), 500
-    outputString = " ".join([re.sub(r'[^a-zA-Z]+', '', token) for token in output]).strip().lower()
+    outputString = output.strip().lower()
     print("OUTPUT STRING COMMAND: " + outputString)
     if outputString not in options:
         return jsonify({ "response": "Command Not Recognized" }), 400

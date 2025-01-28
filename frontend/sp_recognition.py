@@ -15,6 +15,7 @@ from command_handler import (
 from recipe_handler import Recipe
 from userSetup import loadUserId
 from ..LLM.LLMAgent import send_command, options
+from ..LLM.LangChainAgent import mapCommand
 import dotenv
 import requests
 import os
@@ -102,7 +103,8 @@ class RaspiSM:
         
         outputString = ""
         while outputString == "":
-            output = send_command(parsedInput)
+            # output = send_command(parsedInput), Old LLM-based mapping code
+            output = mapCommand(parsedInput)
             if output is None:
                 return None
             
