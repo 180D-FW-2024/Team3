@@ -6,4 +6,5 @@ __pycache__
 *.db
 llama-agentic-system/
 userConfig.txt
+components/ui/
 node_modules/
