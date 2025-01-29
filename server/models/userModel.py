@@ -33,6 +33,7 @@ class User(Base):
     id = Column(Integer, nullable=False, primary_key=True, autoincrement=True)
     first_name = Column(String, nullable=False)
     username = Column(String, unique=True)
+    phone_number = Column(String, unique=True)
     allergies = relationship('Allergy', secondary=user_allergy_association, back_populates='users')
     inventory = relationship('InventoryIngredient', back_populates='user', cascade="all, delete-orphan")
     recipe_history = relationship('Recipe', secondary=user_history_association)
@@ -41,11 +42,12 @@ class User(Base):
 
 
     def __init__(
-            self, first_name="", username="", hasScale=False, hasThermometer=False):
+            self, first_name="", username="", phone_number="", hasScale=False, hasThermometer=False):
         self.first_name = first_name
         self.username = username
         self.has_scale = hasScale
         self.has_thermometer = hasThermometer
+        self.phone_number = phone_number
     
     def __repr__(self):
         return f"""<id={self.id}, User(<first_name={self.first_name}, username={self.username},
