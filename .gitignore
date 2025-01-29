@@ -6,3 +6,5 @@ __pycache__
 *.db
 llama-agentic-system/
 userConfig.txt
+node_modules/
+.next/

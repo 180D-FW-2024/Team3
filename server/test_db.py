@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
-from models.userModel import User, Base  # Import the User model and Base from models.py
+from models.userModel import User, TelegramRegistration, Base  # Import the User model and Base from models.py
 from models.ingredientModel import Allergy, RecipeIngredient, InventoryIngredient, user_allergy_association
 from models.recipeModel import Recipe
 from models.helpers import MeasureType

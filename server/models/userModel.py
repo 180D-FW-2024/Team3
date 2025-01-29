@@ -1,14 +1,31 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Table
+from sqlalchemy import Column, Integer, String, ForeignKey, Table, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from .ingredientModel import user_allergy_association, Allergy
 from .Base import Base
+from sqlalchemy.sql import func
 
 user_history_association = Table(
     'user_history', Base.metadata,
     Column('user_id', ForeignKey('users.id'), primary_key=True),
     Column('recipe_id', ForeignKey('recipes.id'), primary_key=True)
 )
+
+
+class TelegramRegistration(Base):
+    __tablename__ = 'telegram_registration'
+
+    user_code = Column(String, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    generation_time = Column(Date, nullable=False)
+
+    def __init__(self, user_code, user_id):
+        self.user_code = user_code
+        self.user_id = user_id
+        self.generation_time = func.now()
+    
+    def __repr__(self):
+        return f"""<user_code={self.user_code}, user_id={self.user_id}, generation_time={self.generation_time}>"""
 
 class User(Base):
     __tablename__ = 'users'
