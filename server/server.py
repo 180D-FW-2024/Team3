@@ -7,6 +7,8 @@ from .models.recipeModel import Recipe
 from .models.ingredientModel import Allergy, RecipeIngredient, InventoryIngredient
 from .models.helpers import MeasureType, standardize, getMeasureType
 from ..LLM.LLMAgent import send_command, options, standardizeIngredient
+from telegram import Bot, Update
+from telegram.ext import CommandHandler, MessageHandler, Filters, Dispatcher
 import subprocess
 import re
 import dotenv
@@ -16,6 +18,9 @@ import os
 
 dotenv.load_dotenv()
 PORT_NUMBER = os.getenv("PORT_NUMBER")
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+bot = Bot(token=BOT_TOKEN)
+
 
 # Run test_db.py to test database, remove on database completion
 subprocess.run(["python3", "test_db.py"])
@@ -25,6 +30,47 @@ app = Flask(__name__)
 engine = create_engine('sqlite:///raspitouille.db', echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
+
+def start(update, context):
+    joinCode = update.message.text.split(' ')[-1]
+    joinRelation = session.query(TelegramRegistration).filter_by(joinCode=joinCode).first()
+    if joinRelation is None:
+        bot.send_message(chat_id=update.message.chat_id, text="Invalid join code")
+        return
+    rows = session.query(User).filter_by(id=joinRelation.user_id).update({"telegram_id": update.message.chat_id})
+    if rows == 0:
+        bot.send_message(chat_id=update.message.chat_id, text="No matching user found")
+        return
+    bot.send_message(chat_id=update.message.chat_id, text="Congratulations! Your account has been successfully linked")
+
+
+def help(update, context):
+    update.message.reply_text("Hello! I am Raspitouille's notification service. Use Raspitouille to ")
+    
+# Add handlers for various commands or messages
+def setup_dispatcher():
+    dispatcher = Dispatcher(bot, update_queue=None, workers=0, job_queue=None)
+    
+    # Handle /start and /help commands
+    dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(CommandHandler("help", help))
+    
+    # Handle all messages and echo them back
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+
+    return dispatcher
+@app.route('/' + BOT_TOKEN, methods=['POST'])
+def webhook():
+    # Get the update
+    update = Update.de_json(request.get_json(), bot)
+
+    # Set up the dispatcher to handle the update
+    dispatcher = setup_dispatcher()
+    
+    # Process the update
+    dispatcher.process_update(update)
+
+    return 'ok', 200
 
 @app.route("/command/<command>", methods=['GET'])
 def map_command(command):
@@ -75,8 +121,11 @@ When the request is made, add to the registration table and keep a datetime valu
 just overwrite already existing telegram id on response
 
 '''
-@app.route("/connect-telegram/<phone_number>", methods=['GET'])
+@app.route("/connect-telegram", methods=['GET'])
 def connect_telegram(phone_number):
+    phone_number = request.args.get('phone_number')
+    if phone_number is None:
+        return jsonify({"error": "Phone number not provided"}), 400
     """
     Handles a GET request to /connect-telegram/<phone_number>.  Generates a
     random 15-character alphanumeric code and associates it with the given

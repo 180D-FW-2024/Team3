@@ -39,15 +39,17 @@ class User(Base):
     recipe_history = relationship('Recipe', secondary=user_history_association)
     has_scale = Column(Integer, nullable=False)
     has_thermometer = Column(Integer, nullable=False)
+    telegram_id = Column(String)
 
 
     def __init__(
-            self, first_name="", username="", phone_number="", hasScale=False, hasThermometer=False):
+            self, first_name="", username="", phone_number="", hasScale=False, hasThermometer=False, telegram_id=""):
         self.first_name = first_name
         self.username = username
         self.has_scale = hasScale
         self.has_thermometer = hasThermometer
         self.phone_number = phone_number
+        self.telegram_id = telegram_id
     
     def __repr__(self):
         return f"""<id={self.id}, User(<first_name={self.first_name}, username={self.username},

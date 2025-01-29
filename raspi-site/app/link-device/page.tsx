@@ -7,9 +7,13 @@ import { QrCode as QrCodeIcon, ArrowLeft } from "lucide-react"
 import QRCode from "react-qr-code";
 import Link from "next/link";
 
+import axios from "axios";
+
+const BACKEND_URL = 'https://suitable-kangaroo-immensely.ngrok-free.app'
 
 export default function LinkDevice() {
   const [qrValue, setQrValue] = useState("")
+  const [telegramQR, setTelegramQR] = useState("")
 
   useEffect(() => {
     // In a real application, you would generate this value server-side
@@ -17,6 +21,14 @@ export default function LinkDevice() {
     // const deviceId = Math.random().toString(36).substring(7)
     const phoneNumber = localStorage.getItem("phoneNumber") || ""
     setQrValue(JSON.stringify({ phoneNumber }))
+
+    axios.get(`${BACKEND_URL}/connect-telegram`, { params: { phoneNumber } })
+      .then((response) => {
+        setTelegramQR(response.data.join_code)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
   }, [])
 
   return (
@@ -28,17 +40,9 @@ export default function LinkDevice() {
         className="bg-white rounded-3xl shadow-xl p-8 w-full max-w-md"
       >
         <h2 className="text-2xl font-semibold text-gray-700 mb-6 text-center flex items-center justify-center">
-          <div style={{ height: "auto", margin: "0 auto", maxWidth: 64, width: "100%" }}>
-          <QRCode
-            size={256}
-            style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-            value={qrValue}
-            viewBox={`0 0 256 256`}
-          />
-        </div>
           Link Your Device
         </h2>
-
+  
         <div className="flex flex-col items-center space-y-6">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
@@ -50,6 +54,28 @@ export default function LinkDevice() {
 
           <p className="text-center text-gray-600">
             Scan this QR code with your cooking device to link it with your account.
+          </p>
+        </div>
+
+        <h2 className="text-2xl font-semibold text-gray-700 mb-6 text-center flex items-center justify-center">
+          <Link href="telegramQR">
+          <Button variant="ghost" size="xlg">
+            Link Your Telegram
+          </Button>
+
+          </Link>
+        </h2>
+        <div className="flex flex-col items-center space-y-6">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            <QRCode value={telegramQR} size={200} />
+          </motion.div>
+
+          <p className="text-center text-gray-600">
+            Scan this QR code with your phone to link telegram with your account for notifications.
           </p>
 
           <Link href="/">
