@@ -1,5 +1,6 @@
 # Flask script for handling incoming requests
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from sqlalchemy import create_engine, not_, func, or_, and_, exists, text
 from sqlalchemy.orm import sessionmaker, aliased
 from .models.userModel import User, TelegramRegistration
@@ -8,7 +9,7 @@ from .models.ingredientModel import Allergy, RecipeIngredient, InventoryIngredie
 from .models.helpers import MeasureType, standardize, getMeasureType
 from ..LLM.LLMAgent import send_command, options, standardizeIngredient
 from telegram import Bot, Update
-from telegram.ext import CommandHandler, MessageHandler, Filters, Dispatcher
+from telegram.ext import CommandHandler, MessageHandler, filters, Application
 import subprocess
 import re
 import dotenv
@@ -19,13 +20,15 @@ import os
 dotenv.load_dotenv()
 PORT_NUMBER = os.getenv("PORT_NUMBER")
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-bot = Bot(token=BOT_TOKEN)
+
+botApp = Application.builder().token(BOT_TOKEN).build()
 
 
 # Run test_db.py to test database, remove on database completion
 subprocess.run(["python3", "test_db.py"])
 
 app = Flask(__name__)
+CORS(app)
 
 engine = create_engine('sqlite:///raspitouille.db', echo=True)
 Session = sessionmaker(bind=engine)
@@ -35,40 +38,31 @@ def start(update, context):
     joinCode = update.message.text.split(' ')[-1]
     joinRelation = session.query(TelegramRegistration).filter_by(joinCode=joinCode).first()
     if joinRelation is None:
-        bot.send_message(chat_id=update.message.chat_id, text="Invalid join code")
+        botApp.send_message(chat_id=update.message.chat_id, text="Invalid join code")
         return
     rows = session.query(User).filter_by(id=joinRelation.user_id).update({"telegram_id": update.message.chat_id})
     if rows == 0:
-        bot.send_message(chat_id=update.message.chat_id, text="No matching user found")
+        botApp.send_message(chat_id=update.message.chat_id, text="No matching user found")
         return
-    bot.send_message(chat_id=update.message.chat_id, text="Congratulations! Your account has been successfully linked")
+    botApp.send_message(chat_id=update.message.chat_id, text="Congratulations! Your account has been successfully linked")
 
+def echo(update, context):
+    update.message.reply_text(update.message.text)
 
 def help(update, context):
     update.message.reply_text("Hello! I am Raspitouille's notification service. Use Raspitouille to ")
-    
-# Add handlers for various commands or messages
-def setup_dispatcher():
-    dispatcher = Dispatcher(bot, update_queue=None, workers=0, job_queue=None)
-    
-    # Handle /start and /help commands
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("help", help))
-    
-    # Handle all messages and echo them back
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
 
-    return dispatcher
+botApp.add_handler(CommandHandler("start", start))
+botApp.add_handler(CommandHandler("help", help))
+botApp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+
 @app.route('/' + BOT_TOKEN, methods=['POST'])
 def webhook():
     # Get the update
-    update = Update.de_json(request.get_json(), bot)
-
-    # Set up the dispatcher to handle the update
-    dispatcher = setup_dispatcher()
+    update = Update.de_json(request.get_json(), botApp.bot)
     
     # Process the update
-    dispatcher.process_update(update)
+    botApp.process_update(update)
 
     return 'ok', 200
 
@@ -122,47 +116,51 @@ just overwrite already existing telegram id on response
 
 '''
 @app.route("/connect-telegram", methods=['GET'])
-def connect_telegram(phone_number):
-    phone_number = request.args.get('phone_number')
-    if phone_number is None:
-        return jsonify({"error": "Phone number not provided"}), 400
-    """
-    Handles a GET request to /connect-telegram/<phone_number>.  Generates a
-    random 15-character alphanumeric code and associates it with the given
-    phone number in the TelegramRegistration table.  If the phone number does
-    not exist in the database, returns a 404 error with a JSON object
-    containing the error message "User not found".  If the phone number is
-    associated with a valid telegram id, still go through with the process,
-    just overwrite already existing telegram id on response.
+def connect_telegram():
+    try:
+        phone_number = re.sub(r'[^0-9]', '',request.args.get('phone_number'))
+        print("PHONE NUMBER: " + phone_number)
+        if phone_number is None:
+            return jsonify({"error": "Phone number not provided"}), 400
+        """
+        Handles a GET request to /connect-telegram/<phone_number>.  Generates a
+        random 15-character alphanumeric code and associates it with the given
+        phone number in the TelegramRegistration table.  If the phone number does
+        not exist in the database, returns a 404 error with a JSON object
+        containing the error message "User not found".  If the phone number is
+        associated with a valid telegram id, still go through with the process,
+        just overwrite already existing telegram id on response.
 
-    Parameters
-    ----------
-    phone_number : str
-        The phone number to associate with the generated code
+        Parameters
+        ----------
+        phone_number : str
+            The phone number to associate with the generated code
 
-    Returns
-    -------
-    JSON object
-        The generated code, or an error message if the phone number does not
-        exist in the database
+        Returns
+        -------
+        JSON object
+            The generated code, or an error message if the phone number does not
+            exist in the database
 
-    Status Codes
-    ------------
-    200 : The code was successfully generated and associated with the given phone number
-    404 : The phone number does not exist in the database
-    """
-    connectingUser = session.query(User).filter_by(phone_number=phone_number).first()
-    if connectingUser is None:
-        return jsonify({"error": "User not found"}), 404
-    
-    joinCode = ''.join(random.choices(string.ascii_letters, k=15))
-    while session.query(TelegramRegistration).filter_by(join_code=joinCode).first() is not None:
+        Status Codes
+        ------------
+        200 : The code was successfully generated and associated with the given phone number
+        404 : The phone number does not exist in the database
+        """
+        connectingUser = session.query(User).filter_by(phone_number=phone_number).first()
+        if connectingUser is None:
+            return jsonify({"error": "User not found"}), 404
+        
         joinCode = ''.join(random.choices(string.ascii_letters, k=15))
+        while session.query(TelegramRegistration).filter_by(user_code=joinCode).first() is not None:
+            joinCode = ''.join(random.choices(string.ascii_letters, k=15))
 
-    session.add(TelegramRegistration(user_id=connectingUser.id, join_code=joinCode))
-    session.commit()
+        session.add(TelegramRegistration(user_id=connectingUser.id, user_code=joinCode))
+        session.commit()
 
-    return jsonify({"join_code": joinCode}), 200
+        return jsonify({"join_code": joinCode}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/register-telegram/<join_code>/<telegram_id>", methods=['GET'])
 def register_telegram(join_code, telegram_id):

@@ -1,5 +1,9 @@
 from together import Together
 import re
+import dotenv
+import os
+
+dotenv.load_dotenv()
 
 options = [
     "next instruction",

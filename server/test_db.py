@@ -21,7 +21,8 @@ testUser = User(
     first_name="Test",
     username="testuser",
     hasScale=False,
-    hasThermometer=False
+    hasThermometer=False,
+    phone_number="1234567890"
 )
 print(testUser)
 

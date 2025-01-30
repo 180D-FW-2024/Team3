@@ -11,3 +11,6 @@ Then, source the appropriate Flask environment variables, and make sure the root
 (not in github), before running the server through flask:
 1) source FlaskExports.sh
 2) flask run
+
+To run ngrok
+ngrok http --url=<static-site> 5001

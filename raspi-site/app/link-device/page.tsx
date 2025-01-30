@@ -12,24 +12,32 @@ import axios from "axios";
 const BACKEND_URL = 'https://suitable-kangaroo-immensely.ngrok-free.app'
 
 export default function LinkDevice() {
-  const [qrValue, setQrValue] = useState("")
-  const [telegramQR, setTelegramQR] = useState("")
+  const [qrValue, setQrValue] = useState<string>("")
+  const [telegramQR, setTelegramQR] = useState<string>("")
+
+  interface ConnectTelegramResponse {
+    join_code: string;
+  }
 
   useEffect(() => {
     // In a real application, you would generate this value server-side
     // and possibly include a timestamp or other security measures
     // const deviceId = Math.random().toString(36).substring(7)
-    const phoneNumber = localStorage.getItem("phoneNumber") || ""
+    const phoneNumber = localStorage.getItem("phoneNumber") as string || ""
     setQrValue(JSON.stringify({ phoneNumber }))
 
-    axios.get(`${BACKEND_URL}/connect-telegram`, { params: { phoneNumber } })
+    console.log("Getting code for phone number " + phoneNumber + " at " + `${BACKEND_URL}/connect-telegram`)
+
+    axios.get<ConnectTelegramResponse>(`${BACKEND_URL}/connect-telegram`, { params: { phone_number: phoneNumber } })
       .then((response) => {
+        console.log("Response data: " + JSON.stringify(response.data))
         setTelegramQR(response.data.join_code)
+        console.log('Got code ' + response.data.join_code)
       })
       .catch((error) => {
         console.error(error)
       })
-  }, [])
+  }, [location.pathname])
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-yellow-200 to-orange-300 flex flex-col items-center justify-center p-4">
