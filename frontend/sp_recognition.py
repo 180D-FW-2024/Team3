@@ -14,7 +14,8 @@ from command_handler import (
     recommendRecipeHandler, addAllergyHandler, removeAllergyHandler,)
 from recipe_handler import Recipe
 from userSetup import loadUserId
-from ..LLM.LLMAgent import send_command, options
+# from ..LLM.LLMAgent import send_command, options
+from LLM.LLMAgent import send_command, options
 import dotenv
 import requests
 import os
@@ -26,7 +27,7 @@ import string
 dotenv.load_dotenv()
 backend_url = os.getenv("BACKEND_URL")
 
-userId = loadUserId("../userConfig.txt")
+userId = loadUserId("userConfig.txt")
 
 
 # for testing; handle_command(recommend_recipe) should be called by listen_and_respond when the command is heard, and should return a Recipe object to replace the current Recipe object
@@ -97,7 +98,7 @@ class RaspiSM:
     def mapCommand(self, inputString):
         parsedInput = re.sub(r'[\_\s\-]+', ' ', inputString.strip()).lower()
         if parsedInput in self.commandCache:
-            print('Found in cache' + parsedInput)
+            print('Found in cache: ' + parsedInput)
             return self.commandCache[parsedInput]
         
         outputString = ""
@@ -123,7 +124,7 @@ class RaspiSM:
         print("Adjusting for ambient noise, please wait...")
         with mic as source:
             recognizer.adjust_for_ambient_noise(source)
-            print("Listening for the wake word 'Hey raspy'. Press Ctrl+C to stop.")
+            print("Listening for the wake word 'Hey Ratatouille'. Press Ctrl+C to stop.")
 
         try:
             while True:
@@ -135,7 +136,7 @@ class RaspiSM:
                     print(f"Heard: {text}")
 
                     # Check if the wake word "Hey Ratatouille" is spoken
-                    if "hey raspy" in text.lower():  # Case insensitive check
+                    if "hey ratatouille" in text.lower():  # Case insensitive check
                         say("Listening...")
                         
                         # Listen for the command after the wake word
