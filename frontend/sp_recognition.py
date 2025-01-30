@@ -14,7 +14,6 @@ from command_handler import (
     recommendRecipeHandler, addAllergyHandler, removeAllergyHandler,)
 from recipe_handler import Recipe
 from userSetup import loadUserId
-# from ..LLM.LLMAgent import send_command, options
 from LLM.LLMAgent import send_command, options
 import dotenv
 import requests
