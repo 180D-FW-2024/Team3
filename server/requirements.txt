@@ -1,0 +1,6 @@
+flask
+sqlalchemy
+together
+flask_cors
+python-dotenv
+python-telegram-bot

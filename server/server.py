@@ -7,7 +7,8 @@ from .models.userModel import User, TelegramRegistration
 from .models.recipeModel import Recipe
 from .models.ingredientModel import Allergy, RecipeIngredient, InventoryIngredient
 from .models.helpers import MeasureType, standardize, getMeasureType
-from ..LLM.LLMAgent import send_command, options, standardizeIngredient
+# from ..LLM.LLMAgent import send_command, options, standardizeIngredient
+from .LLMAgent import send_command, options, standardizeIngredient
 from telegram import Bot, Update
 from telegram.ext import CommandHandler, MessageHandler, filters, Application
 import subprocess
@@ -16,10 +17,12 @@ import dotenv
 import random
 import string
 import os
+import requests
 
 dotenv.load_dotenv()
 PORT_NUMBER = os.getenv("PORT_NUMBER")
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+BACKEND_URL = os.getenv("BACKEND_URL")
 
 botApp = Application.builder().token(BOT_TOKEN).build()
 
@@ -34,7 +37,11 @@ engine = create_engine('sqlite:///raspitouille.db', echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 
+requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/deleteWebhook")
+requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/setWebhook", data={"url": f"https://{BACKEND_URL}/webhook"})
+
 def start(update, context):
+    print("Processing start command: " + str(update))
     joinCode = update.message.text.split(' ')[-1]
     joinRelation = session.query(TelegramRegistration).filter_by(joinCode=joinCode).first()
     if joinRelation is None:
@@ -60,6 +67,7 @@ botApp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 def webhook():
     # Get the update
     update = Update.de_json(request.get_json(), botApp.bot)
+    print("Received update: " + str(update))
     
     # Process the update
     botApp.process_update(update)

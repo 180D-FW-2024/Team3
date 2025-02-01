@@ -33,7 +33,7 @@ class User(Base):
     id = Column(Integer, nullable=False, primary_key=True, autoincrement=True)
     first_name = Column(String, nullable=False)
     username = Column(String, unique=True)
-    phone_number = Column(String, unique=True)
+    phone_number = Column(String)#, unique=True)
     allergies = relationship('Allergy', secondary=user_allergy_association, back_populates='users')
     inventory = relationship('InventoryIngredient', back_populates='user', cascade="all, delete-orphan")
     recipe_history = relationship('Recipe', secondary=user_history_association)

@@ -12,5 +12,5 @@ Then, source the appropriate Flask environment variables, and make sure the root
 1) source FlaskExports.sh
 2) flask run
 
-To run ngrok
-ngrok http --url=<static-site> 5001
+To run ngrok use:
+`ngrok http --url=<static-site> 5001`
