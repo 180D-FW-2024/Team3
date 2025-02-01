@@ -22,7 +22,11 @@ options = [
     "remove allergy"
 ]
 
-client = Together()
+together_api_key = os.getenv("TOGETHER_API_KEY")
+
+print(f"[DEBUG] API Key: {'***' if together_api_key else 'NOT FOUND'}")
+
+client = Together(api_key=together_api_key)
 def send_command(command) -> str:
     response = client.chat.completions.create(
         model="meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo",

@@ -10,7 +10,7 @@ COPY ../. .
 RUN pip install --no-input --no-cache-dir -r requirements.txt
 
 # Install system packages
-RUN apt-get update && apt-get install -y procps net-tools
+RUN apt-get update && apt-get install -y procps net-tools tzdata 
 
 # Ensure FlaskExports.sh is executable (optional but good practice)
 RUN chmod +x /app/FlaskExports.sh
