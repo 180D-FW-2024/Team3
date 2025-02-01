@@ -5,44 +5,37 @@
 # https://rhasspy.github.io/piper-samples/
 # Piper could be a good option to upgrade text to speech voice; currently sounds like it's from 2002
 
-# import pyttsx3
-
-# def tts(string):
-#     # engine = pyttsx3.init()
-
-#     # voices = engine.getProperty('voices')
-#     # for voice in voices:
-#     #     print(voice)
-
-#     # engine.setProperty('rate', 150)
-#     # engine.setProperty('voice', 'english+f3')
-
-
-#     # engine.say(string)
-#     # engine.runAndWait()
-#     # engine.stop()
-
-
-from piper.voice import PiperVoice
-import simpleaudio as sa
-import tempfile
+import wave
 import os
+import simpleaudio as sa
+from piper import PiperVoice  # Assuming PiperVoice is imported from piper
 
-def tts(string):
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_wav:
-        temp_wav_path = temp_wav.name
+import io
+import simpleaudio as sa
+import wave
+from piper import PiperVoice  # Assuming PiperVoice is imported from piper
 
+def say(string):
     model = "en_GB-alan-medium.onnx"
     voice = PiperVoice.load(model)
-    audio = voice.synthesize(string, temp_wav)
+    wav_filename = "output.wav"
 
-    # Play audio synchronously
-    wave_obj = sa.WaveObject.from_wave_file(temp_wav_path)
-    play_obj = wave_obj.play()
-    play_obj.wait_done()
+    # Use an in-memory buffer instead of writing to a file
+    wav_buffer = io.BytesIO()
+    
+    with wave.open(wav_buffer, "wb") as wav_file:
+        voice.synthesize(string, wav_file)
+    
+    # Extract raw audio data for playback
+    wav_buffer.seek(0)  # Reset buffer position
+    with wave.open(wav_buffer, "rb") as wav_file:
+        audio_data = wav_file.readframes(wav_file.getnframes())
+        sample_rate = wav_file.getframerate()
+        num_channels = wav_file.getnchannels()
+        sample_width = wav_file.getsampwidth()
 
-    os.remove(temp_wav_path)
+    # Play audio directly from memory
+    play_obj = sa.play_buffer(audio_data, num_channels, sample_width, sample_rate)
+    play_obj.wait_done()  # Wait until playback finishes
 
-# Example
-tts("Hello, world!")
-
+    os.remove(wav_filename)
