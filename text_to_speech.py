@@ -11,7 +11,7 @@ import wave
 from piper import PiperVoice  # Assuming PiperVoice is imported from piper
 import os
 
-def say(string):
+def tts(string):
 
     dictionary = {
         "No recipe currently selected, ask for recipe suggestions to start a new recipe." : "no_recipe_selected.wav",
