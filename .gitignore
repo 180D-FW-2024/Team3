@@ -6,3 +6,6 @@ __pycache__
 *.db
 llama-agentic-system/
 userConfig.txt
+__pycache__
+.env
+
