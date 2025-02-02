@@ -4,13 +4,15 @@ import random
 import tensorflow as tf
 from picamera2 import Picamera2
 import time
-
 from sklearn.cluster import KMeans
 
 import numpy as np
 import scipy
 import cv2
 from PIL import Image
+
+# note to Justin: refactor code such that it calls take_picture.py to get output.py, then uses output.py for ML
+
 image_cat = ['apple', 'banana', 'beetroot', 'bell pepper', 'cabbage', 'capsicum', 'carrot', 'cauliflower', 'chilli pepper', 'corn', 'cucumber', 'eggplant', 'garlic', 'ginger', 'grapes', 'jalepeno', 'kiwi', 'lemon', 'lettuce', 'mango', 'onion', 'orange', 'paprika', 'pear', 'peas', 'pineapple', 'pomegranate', 'potato', 'raddish', 'soy beans', 'spinach', 'sweetcorn', 'sweetpotato', 'tomato', 'turnip', 'watermelon'] 
 
 class IngredientRecog:
