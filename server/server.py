@@ -37,8 +37,17 @@ engine = create_engine('sqlite:///raspitouille.db', echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/deleteWebhook")
-requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/setWebhook", data={"url": f"https://{BACKEND_URL}/webhook"})
+delete_response = requests.post(
+    f"https://api.telegram.org/bot{BOT_TOKEN}/deleteWebhook"
+)
+print("DELETE WEBHOOK RESPONSE:", delete_response.json())
+
+# Set new webhook
+set_response = requests.post(
+    f"https://api.telegram.org/bot{BOT_TOKEN}/setWebhook",
+    data={"url": f"{BACKEND_URL}/webhook"}
+)
+print("SET WEBHOOK RESPONSE:", set_response.json(), " for url ", f"{BACKEND_URL}/webhook")
 
 def start(update, context):
     print("Processing start command: " + str(update))

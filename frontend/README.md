@@ -18,10 +18,12 @@ Then, source the appropriate Flask environment variables, and make sure the root
 2) flask run
 
 To run ngrok use:
-`ngrok http --url=<static-site> 5001`
+`ngrok http --url=<static-site> 443`
 
 ### Backend Server (Docker)
 We got it dockerized! To build use the below command
 `docker build --no-cache -t flask-server .`
 Then run using 
-`docker run --env-file ../.env --name raspitouille-server -p 5001:5001 flask-server`
+`docker run --env-file ../.env --name raspitouille-server -p 443:443 flask-server`
+
+Keep in mind that in docker the .env file variables must have no quotes, while it may work locally (MacOS).

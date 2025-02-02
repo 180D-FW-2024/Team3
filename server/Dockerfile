@@ -17,7 +17,7 @@ RUN chmod +x /app/FlaskExports.sh
 
 # Use ENTRYPOINT to source the exports before running Flask
 ENTRYPOINT ["/bin/bash", "-c"]
-CMD ["source /app/FlaskExports.sh && exec flask run --host=0.0.0.0 --port=5001"]
+CMD ["source /app/FlaskExports.sh && exec flask run --host=0.0.0.0 --port=80"]
 
 # Expose the Flask port
-EXPOSE 5001
+EXPOSE 80
