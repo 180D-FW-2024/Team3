@@ -9,7 +9,9 @@ import Link from "next/link";
 
 import axios from "axios";
 
-const BACKEND_URL = 'https://suitable-kangaroo-immensely.ngrok-free.app'
+const BACKEND_URL = 'http://localhost:5001'// 'https://suitable-kangaroo-immensely.ngrok-free.app'
+
+const BOTNAME = "RaspitouilleBot"
 
 export default function LinkDevice() {
   const [qrValue, setQrValue] = useState<string>("")
@@ -31,7 +33,7 @@ export default function LinkDevice() {
     axios.get<ConnectTelegramResponse>(`${BACKEND_URL}/connect-telegram`, { params: { phone_number: phoneNumber } })
       .then((response) => {
         console.log("Response data: " + JSON.stringify(response.data))
-        setTelegramQR(response.data.join_code)
+        setTelegramQR(`https://telegram.me/${BOTNAME}?start=${response.data.join_code}`)
         console.log('Got code ' + response.data.join_code)
       })
       .catch((error) => {
@@ -66,7 +68,7 @@ export default function LinkDevice() {
         </div>
 
         <h2 className="text-2xl font-semibold text-gray-700 mb-6 text-center flex items-center justify-center">
-          <Link href="telegramQR">
+          <Link href={telegramQR}>
           <Button variant="ghost" size="xlg">
             Link Your Telegram
           </Button>

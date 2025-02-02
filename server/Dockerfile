@@ -1,17 +1,23 @@
-FROM continuumio/miniconda3
+FROM python:3.11-slim
 
-WORKDIR /
+# Set working directory
+WORKDIR /app
 
-COPY / /
+# Copy necessary files (including FlaskExports.sh)
+COPY ../. .
 
-RUN conda config --add channels conda-forge
+# Install dependencies
+RUN pip install --no-input --no-cache-dir -r requirements.txt
 
-RUN conda env create -f environment.yaml
+# Install system packages
+RUN apt-get update && apt-get install -y procps net-tools tzdata 
 
-RUN conda init bash
+# Ensure FlaskExports.sh is executable (optional but good practice)
+RUN chmod +x /app/FlaskExports.sh
 
-RUN conda activate Raspitouille
+# Use ENTRYPOINT to source the exports before running Flask
+ENTRYPOINT ["/bin/bash", "-c"]
+CMD ["source /app/FlaskExports.sh && exec flask run --host=0.0.0.0 --port=5001"]
 
-RUN ./flaskexports.sh
-
-RUN flask run
+# Expose the Flask port
+EXPOSE 5001
