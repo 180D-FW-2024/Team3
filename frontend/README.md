@@ -24,6 +24,6 @@ To run ngrok use:
 We got it dockerized! To build use the below command
 `docker build --no-cache -t flask-server .`
 Then run using 
-`docker run --env-file ../.env --name raspitouille-server -p 443:443 flask-server`
+`docker run --rm --env-file ../.env --name raspitouille-server -p 80:80 flask-server`
 
 Keep in mind that in docker the .env file variables must have no quotes, while it may work locally (MacOS).

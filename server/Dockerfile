@@ -7,7 +7,7 @@ WORKDIR /app
 COPY ../. .
 
 # Install dependencies
-RUN pip install --no-input --no-cache-dir -r requirements.txt
+RUN pip install --no-input --no-cache-dir -r ./app/requirements.txt
 
 # Install system packages
 RUN apt-get update && apt-get install -y procps net-tools tzdata 
@@ -17,7 +17,7 @@ RUN chmod +x /app/FlaskExports.sh
 
 # Use ENTRYPOINT to source the exports before running Flask
 ENTRYPOINT ["/bin/bash", "-c"]
-CMD ["source /app/FlaskExports.sh && exec flask run --host=0.0.0.0 --port=80"]
+CMD ["source /app/FlaskExports.sh && exec quart run --host=0.0.0.0 --port=80"]
 
-# Expose the Flask port
+# Expose the port
 EXPOSE 80

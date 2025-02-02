@@ -9,7 +9,7 @@ import Link from "next/link";
 
 import axios from "axios";
 
-const BACKEND_URL = 'http://localhost:443'// 'https://suitable-kangaroo-immensely.ngrok-free.app'
+const BACKEND_URL = 'http://localhost:80'// 'https://suitable-kangaroo-immensely.ngrok-free.app'
 
 const BOTNAME = "RaspitouilleBot"
 

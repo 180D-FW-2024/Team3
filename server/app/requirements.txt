@@ -1,6 +1,6 @@
-flask
+quart
 sqlalchemy
 together
-flask_cors
+quart-cors
 python-dotenv
 python-telegram-bot

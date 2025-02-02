@@ -1,6 +1,6 @@
 # Flask script for handling incoming requests
-from flask import Flask, jsonify, request
-from flask_cors import CORS
+from quart import Quart, jsonify, request
+from quart_cors import cors
 from sqlalchemy import create_engine, not_, func, or_, and_, exists, text
 from sqlalchemy.orm import sessionmaker, aliased
 from .models.userModel import User, TelegramRegistration
@@ -28,10 +28,10 @@ botApp = Application.builder().token(BOT_TOKEN).build()
 
 
 # Run test_db.py to test database, remove on database completion
-subprocess.run(["python3", "test_db.py"])
+subprocess.run(["python3", "/app/app/test_db.py"])
 
-app = Flask(__name__)
-CORS(app)
+app = Quart(__name__)
+cors(app)
 
 engine = create_engine('sqlite:///raspitouille.db', echo=True)
 Session = sessionmaker(bind=engine)
@@ -72,8 +72,9 @@ botApp.add_handler(CommandHandler("start", start))
 botApp.add_handler(CommandHandler("help", help))
 botApp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
-@app.route('/' + BOT_TOKEN, methods=['POST'])
+@app.route('/webhook', methods=['POST'])
 def webhook():
+    print("Received webhook update")
     # Get the update
     update = Update.de_json(request.get_json(), botApp.bot)
     print("Received update: " + str(update))
