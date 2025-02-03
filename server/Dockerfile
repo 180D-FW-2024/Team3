@@ -1,5 +1,8 @@
 FROM python:3.11-slim
 
+# Clean up APT cache to reduce image size
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* && apt-get update
+
 # Set working directory
 WORKDIR /app
 
@@ -10,7 +13,7 @@ COPY ../. .
 RUN pip install --no-input --no-cache-dir -r ./app/requirements.txt
 
 # Install system packages
-RUN apt-get update && apt-get install -y procps net-tools tzdata 
+RUN apt-get install -y procps net-tools tzdata 
 
 # Ensure FlaskExports.sh is executable (optional but good practice)
 RUN chmod +x /app/FlaskExports.sh

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Table, Date
+from sqlalchemy import Column, Integer, String, ForeignKey, Table, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from .ingredientModel import user_allergy_association, Allergy
@@ -17,12 +17,12 @@ class TelegramRegistration(Base):
 
     user_code = Column(String, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    generation_time = Column(Date, nullable=False)
+    generation_time = Column(DateTime, nullable=False, default=func.now())
 
     def __init__(self, user_code, user_id):
         self.user_code = user_code
         self.user_id = user_id
-        self.generation_time = func.now()
+        # self.generation_time = datetime.utcnow().date()
     
     def __repr__(self):
         return f"""<user_code={self.user_code}, user_id={self.user_id}, generation_time={self.generation_time}>"""
@@ -54,7 +54,7 @@ class User(Base):
     def __repr__(self):
         return f"""<id={self.id}, User(<first_name={self.first_name}, username={self.username},
                 allergies={self.allergies}, inventory={self.inventory},
-                has_scale={self.has_scale}, has_thermometer={self.has_thermometer})>"""
+                has_scale={self.has_scale}, has_thermometer={self.has_thermometer}, telegram_id={self.telegram_id})>"""
 
     def addAllergy(self, allergy):
         if allergy in self.allergies:

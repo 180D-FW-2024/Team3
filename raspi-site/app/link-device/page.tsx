@@ -9,7 +9,7 @@ import Link from "next/link";
 
 import axios from "axios";
 
-const BACKEND_URL = 'http://localhost:80'// 'https://suitable-kangaroo-immensely.ngrok-free.app'
+const BACKEND_URL = "http://localhost:80" // 'https://suitable-kangaroo-immensely.ngrok-free.app'
 
 const BOTNAME = "RaspitouilleBot"
 
@@ -30,11 +30,11 @@ export default function LinkDevice() {
 
     console.log("Getting code for phone number " + phoneNumber + " at " + `${BACKEND_URL}/connect-telegram`)
 
-    axios.get<ConnectTelegramResponse>(`${BACKEND_URL}/connect-telegram`, { params: { phone_number: phoneNumber } })
+    axios.get<ConnectTelegramResponse>(`${BACKEND_URL}/connect-telegram?phoneNumber=${phoneNumber}`)
       .then((response) => {
         console.log("Response data: " + JSON.stringify(response.data))
         setTelegramQR(`https://telegram.me/${BOTNAME}?start=${response.data.join_code}`)
-        console.log('Got code ' + response.data.join_code)
+        console.log('Got code ' + response.data.join_code + ' from ' + response.data)
       })
       .catch((error) => {
         console.error(error)

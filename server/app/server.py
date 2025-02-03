@@ -1,5 +1,5 @@
 # Flask script for handling incoming requests
-from quart import Quart, jsonify, request
+from quart import Quart, jsonify, request, current_app
 from quart_cors import cors
 from sqlalchemy import create_engine, not_, func, or_, and_, exists, text
 from sqlalchemy.orm import sessionmaker, aliased
@@ -10,7 +10,7 @@ from .models.helpers import MeasureType, standardize, getMeasureType
 # from ..LLM.LLMAgent import send_command, options, standardizeIngredient
 from .LLMAgent import send_command, options, standardizeIngredient
 from telegram import Bot, Update
-from telegram.ext import CommandHandler, MessageHandler, filters, Application
+from telegram.ext import CommandHandler, MessageHandler, filters, ApplicationBuilder
 import subprocess
 import re
 import dotenv
@@ -24,43 +24,68 @@ PORT_NUMBER = os.getenv("PORT_NUMBER")
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 BACKEND_URL = os.getenv("BACKEND_URL")
 
-botApp = Application.builder().token(BOT_TOKEN).build()
-
-
 # Run test_db.py to test database, remove on database completion
 subprocess.run(["python3", "/app/app/test_db.py"])
-
-app = Quart(__name__)
-cors(app)
 
 engine = create_engine('sqlite:///raspitouille.db', echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-delete_response = requests.post(
-    f"https://api.telegram.org/bot{BOT_TOKEN}/deleteWebhook"
-)
-print("DELETE WEBHOOK RESPONSE:", delete_response.json())
+app = Quart(__name__)
+cors(app)
 
-# Set new webhook
-set_response = requests.post(
-    f"https://api.telegram.org/bot{BOT_TOKEN}/setWebhook",
-    data={"url": f"{BACKEND_URL}/webhook"}
-)
-print("SET WEBHOOK RESPONSE:", set_response.json(), " for url ", f"{BACKEND_URL}/webhook")
+bot_app = ApplicationBuilder().token(BOT_TOKEN).build()
 
-def start(update, context):
+
+@app.before_serving
+async def setup():
+    # Initialize bot application
+    await bot_app.initialize()
+
+    bot_app.add_handler(CommandHandler("start", start))
+    bot_app.add_handler(CommandHandler("help", help))
+    bot_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+
+    # Teardown previous webhook
+    await bot_app.bot.delete_webhook()
+    print("DELETE WEBHOOK")
+    
+    # Webhook setup
+    await bot_app.bot.set_webhook(
+        url=f"{BACKEND_URL}/webhook",
+        allowed_updates=Update.ALL_TYPES
+    )
+    print("SET WEBHOOK")
+
+async def send_message(chat_id, text):
+    return requests.get(f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage?chat_id={chat_id}&text={text}").json()
+
+async def start(update, context):
     print("Processing start command: " + str(update))
-    joinCode = update.message.text.split(' ')[-1]
-    joinRelation = session.query(TelegramRegistration).filter_by(joinCode=joinCode).first()
-    if joinRelation is None:
-        botApp.send_message(chat_id=update.message.chat_id, text="Invalid join code")
+    try:
+        joinCode = update.message.text.split(' ')[-1]
+        print('Filtering for join code: ' + joinCode)
+        joinRelation = session.query(TelegramRegistration).filter_by(user_code=joinCode).first()
+        print("Join relation: " + str(joinRelation))
+        if joinRelation is None:
+            await send_message(chat_id=update.message.chat_id, text="Invalid join code")
+            return
+    except Exception as e:
+        print(e)
+        await send_message(chat_id=update.message.chat_id, text="Invalid join code")
         return
-    rows = session.query(User).filter_by(id=joinRelation.user_id).update({"telegram_id": update.message.chat_id})
-    if rows == 0:
-        botApp.send_message(chat_id=update.message.chat_id, text="No matching user found")
+    
+    try:
+        rows = session.query(User).filter_by(id=joinRelation.user_id).update({"telegram_id": update.message.chat_id})
+        if rows == 0:
+            await send_message(chat_id=update.message.chat_id, text="No matching user found")
+            return
+        print("Updated user: " + str(session.query(User).filter_by(id=joinRelation.user_id).first()))
+        await send_message(chat_id=update.message.chat_id, text="Congratulations! Your account has been successfully linked")
+    except Exception as e:
+        print(e)
+        await send_message(chat_id=update.message.chat_id, text="Error linking account")
         return
-    botApp.send_message(chat_id=update.message.chat_id, text="Congratulations! Your account has been successfully linked")
 
 def echo(update, context):
     update.message.reply_text(update.message.text)
@@ -68,21 +93,22 @@ def echo(update, context):
 def help(update, context):
     update.message.reply_text("Hello! I am Raspitouille's notification service. Use Raspitouille to ")
 
-botApp.add_handler(CommandHandler("start", start))
-botApp.add_handler(CommandHandler("help", help))
-botApp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
 @app.route('/webhook', methods=['POST'])
-def webhook():
+async def webhook():
     print("Received webhook update")
     # Get the update
-    update = Update.de_json(request.get_json(), botApp.bot)
+    json_data = await request.get_json() 
+    update = Update.de_json(json_data, bot_app.bot)
     print("Received update: " + str(update))
     
     # Process the update
-    botApp.process_update(update)
+    await bot_app.process_update(update)
 
     return 'ok', 200
+
+
+
 
 @app.route("/command/<command>", methods=['GET'])
 def map_command(command):
@@ -136,12 +162,13 @@ just overwrite already existing telegram id on response
 @app.route("/connect-telegram", methods=['GET'])
 def connect_telegram():
     try:
-        phone_number = re.sub(r'[^0-9]', '',request.args.get('phone_number'))
+        print("Request args: " + str(request.args))
+        phone_number = re.sub(r'[^0-9]', '',request.args.get('phoneNumber', default=''))
         print("PHONE NUMBER: " + phone_number)
-        if phone_number is None:
+        if not phone_number:
             return jsonify({"error": "Phone number not provided"}), 400
         """
-        Handles a GET request to /connect-telegram/<phone_number>.  Generates a
+        Handles a GET request to /connect-telegram?phoneNumber=<phone_number>.  Generates a
         random 15-character alphanumeric code and associates it with the given
         phone number in the TelegramRegistration table.  If the phone number does
         not exist in the database, returns a 404 error with a JSON object
@@ -175,6 +202,7 @@ def connect_telegram():
 
         session.add(TelegramRegistration(user_id=connectingUser.id, user_code=joinCode))
         session.commit()
+        print("SUCCESS generating join code: " + joinCode)
 
         return jsonify({"join_code": joinCode}), 200
     except Exception as e:
