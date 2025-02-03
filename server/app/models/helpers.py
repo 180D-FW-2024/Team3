@@ -72,5 +72,5 @@ def getMeasureType(rawType: str) -> Tuple[ MeasureType, float ]:
 def standardize(rawName: str) -> str:
     if rawName is None:
         return None
-    rawName = re.sub(r'[^a-zA-Z\s]', '', rawName).strip()
+    rawName = re.sub(r'[^a-zA-Z\s0-9]', '', rawName).strip()
     return re.sub(r'[\s\_]+', '_', rawName).lower()

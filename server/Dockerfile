@@ -13,7 +13,7 @@ COPY ../. .
 RUN pip install --no-input --no-cache-dir -r ./app/requirements.txt
 
 # Install system packages
-RUN apt-get install -y procps net-tools tzdata 
+RUN apt-get install -y procps net-tools tzdata sqlite3
 
 # Ensure FlaskExports.sh is executable (optional but good practice)
 RUN chmod +x /app/FlaskExports.sh

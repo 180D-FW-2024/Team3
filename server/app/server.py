@@ -112,6 +112,20 @@ async def webhook():
 
 @app.route('/send-alert', methods=['POST'])
 async def send_alert():
+    """
+    Send an alert to the user with the given ID
+
+    Parameters:
+        userId (int): The ID of the user to send the alert to
+        message (str): The message to send
+
+    Returns:
+        A JSON object with a status code and a message
+
+    Raises:
+        404: The user was not found
+        400: The user is not registered with Telegram
+    """
     print("Received alert update")
     userId = request.args.get('userId')
     message = re.sub(r'\%20', ' ', request.args.get('message', default=''))
@@ -260,9 +274,32 @@ def register_telegram(join_code, telegram_id):
     return jsonify({"response": "Registration successful"}), 200
     
 
+'''
+USER FLOW FOR ACCOUNT CREATION / LOGIN 
 
-@app.route("/create-user/<username>", methods=['POST'])
-def create_user(username):
+
+
+CASE 1: User is already logged in with phone number on device
+
+This really doesn't do anything new FOR LOGIN.
+
+FOR TELEGRAM we can have the user input phone number (registered on the raspi) and then link their account as normal.
+
+User can logout through a logout command.
+
+
+CASE 2: User is not logged in with phone number on device
+
+Originally, this triggers the random username creation process on Raspi (OLD INVALID LOGIC)
+
+1) Raspi goes into a cycle for looking for QR code, and upon scanning it loads as the username directly into the user_config file
+
+*If the username already exists in the database, logging in with phone number will function as normal, otherwise we generate a user associated with the phone number
+
+
+'''
+@app.route("/create-user", methods=['POST'])
+def create_user():
     """
     Handles a POST request to /create-user/<username>.  Creates a new user in
     the database with the given username.  If the user already exists, returns a
@@ -284,13 +321,18 @@ def create_user(username):
     Status Codes
     ------------
     201 : The user was successfully created
-    400 : The user already exists in the database
+    200 : The user already exists in the database
+    404 : No username provided
     """
+    username = request.args.get('username')
+    if username is None:
+        return jsonify({"error": "No username provided"}), 404
+    phoneNumber = re.sub(r'[^0-9]','',request.args.get('phone_number', ''))
     username = standardize(username)
     if session.query(User).filter_by(username=username).first() is not None:
-        return jsonify({"error": "User already exists"}), 400
+        return jsonify({"message": "User already exists"}), 200
     firstName = request.args.get('firstName')
-    session.add(User(username=username, first_name=(firstName if firstName is not None else "")))
+    session.add(User(username=username, first_name=(firstName if firstName is not None else ""), phone_number=phoneNumber))
     session.commit()
     return jsonify(session.query(User).filter_by(username=username).first().to_dict()), 201
 

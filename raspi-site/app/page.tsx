@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Utensils, Wifi } from "lucide-react"
 import Link from "next/link"
+import axios from "axios";
+
+const BACKEND_URL = "http://localhost:80"
 
 export default function Home() {
   const [phoneNumber, setPhoneNumber] = useState("")
@@ -24,11 +27,26 @@ export default function Home() {
     setTimeout(() => setIsScanning(false), 3000)
   }
 
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (validatePhoneNumber(phoneNumber)) {
-      localStorage.setItem("phoneNumber", phoneNumber)
-      window.location.href = "/link-device"
+      const digitPhoneNumber = phoneNumber.replace(/[^0-9]/g, '')
+
+      axios.post(`${BACKEND_URL}/create-user?username=${digitPhoneNumber}&phone_number=${digitPhoneNumber}`)
+      .then((response) => {
+        console.log("Response data: " + JSON.stringify(response.data))
+        localStorage.setItem("phoneNumber", phoneNumber)
+        window.location.href = "/link-device"
+      })
+      .catch((error) => {
+        if (error.response.status === 400){
+          console.log("User already exists")
+        }
+        else{
+          console.error(error)
+        }
+      })
     } else {
       setIsValidPhoneNumber(false)
     }
@@ -93,24 +111,6 @@ export default function Home() {
             className="w-full py-6 text-lg rounded-2xl bg-orange-500 hover:bg-orange-600 transition-colors"
           >
             Link Device
-          </Button>
-
-          <Button
-            onClick={handleScan}
-            disabled={isScanning}
-            className="w-full py-6 text-lg rounded-2xl bg-blue-500 hover:bg-blue-600 transition-colors"
-          >
-            {isScanning ? (
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-              >
-                <Wifi className="mr-2 h-6 w-6" />
-              </motion.div>
-            ) : (
-              <Wifi className="mr-2 h-6 w-6" />
-            )}
-            {isScanning ? "Scanning..." : "Scan for Devices"}
           </Button>
         </form>
       </motion.div>
