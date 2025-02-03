@@ -94,6 +94,8 @@ def help(update, context):
     update.message.reply_text("Hello! I am Raspitouille's notification service. Use Raspitouille to ")
 
 
+    return 'ok', 200
+
 @app.route('/webhook', methods=['POST'])
 async def webhook():
     print("Received webhook update")
@@ -108,7 +110,19 @@ async def webhook():
     return 'ok', 200
 
 
-
+@app.route('/send-alert', methods=['POST'])
+async def send_alert():
+    print("Received alert update")
+    userId = request.args.get('userId')
+    message = re.sub(r'\%20', ' ', request.args.get('message', default=''))
+    print("Sending alert to user " + userId + " with message " + message)
+    row = session.query(User).filter_by(id=userId).first()
+    if row is None:
+        return jsonify({"error": "User not found"}), 404
+    if row.telegram_id is None:
+        return jsonify({"error": "User is not registered with Telegram"}), 400
+    await send_message(chat_id=row.telegram_id, text=message)
+    return jsonify({"response": "Alert sent"}), 200
 
 @app.route("/command/<command>", methods=['GET'])
 def map_command(command):
