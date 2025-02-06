@@ -21,7 +21,7 @@ To run ngrok use:
 `ngrok http --url=<static-site> 443`
 
 ### Backend Server (Docker)
-We got it dockerized! To build and run use the below command
+We got it dockerized! First, enter the server folder using `cd server`. To build and run use the below command
 `docker build --no-cache -t flask-server . && docker run --rm --env-file ../.env --name raspitouille-server -p 80:80 flask-server`
 
 Keep in mind that in docker the .env file variables must have no quotes, while it may work locally (MacOS).
