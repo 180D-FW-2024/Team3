@@ -17,11 +17,21 @@ from text_to_speech import tts as say
 # HTTP Request import
 import requests
 
+from threading import Timer
+
 import dotenv
 import os
 
 dotenv.load_dotenv()
 backend_url = os.getenv("BACKEND_URL")
+
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Timeout definiton - what to do when the timer runs out
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+def timeout():
+    # call text api
+    return
+
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Timer Class - courtesy of ChatGPT
@@ -34,6 +44,7 @@ class CountdownTimer:
         self.remaining_time = duration
         self.end_time = None
         self.running = False
+        self.t = Timer(self.remaining_time, timeout)
 
     def set_time(self, seconds):
         # Set the countdown to start with a specific duration (in seconds).
@@ -47,17 +58,25 @@ class CountdownTimer:
         if not self.running:
             # Calculate the end time from now using the remaining time
             self.end_time = time.time() + self.remaining_time
-            say("Timer started")
             self.running = True
+            
+            # Start thread
+            self.t = Timer(self.remaining_time, timeout)
+            self.t.start()
+            
+            say("Timer started")
         elif self.running:
             say("Timer already running")
+        else:
+            say("Timer not needed")
 
     def pause(self):
         # Pause the countdown and save the remaining time.
         if self.running:
             self.remaining_time = max(0, self.end_time - time.time())
-            say("Timer paused")
+            self.t.cancel()
             self.running = False
+            say("Timer paused")
         elif not self.running:
             say("Timer not running")
 
@@ -66,6 +85,7 @@ class CountdownTimer:
         self.remaining_time = self.initial_duration
         self.end_time = None
         self.running = False
+        self.t.cancel()
 
     def time_left(self):
         # Return the remaining time in the countdown.
