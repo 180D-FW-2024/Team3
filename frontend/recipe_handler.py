@@ -131,6 +131,10 @@ class Recipe:
         self.timer = CountdownTimer(0)
         self.finished = False
 
+    # Destructor to remove timer if new recipe is started
+    def __del__(self):
+        if(self.timer.running):
+            self.timer.reset()
 
     def parseInstrString(self, recipeString):
         # Prepare step list to later append to
