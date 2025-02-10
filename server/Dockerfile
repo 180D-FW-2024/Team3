@@ -1,17 +1,26 @@
-FROM continuumio/miniconda3
+FROM python:3.11-slim
 
-WORKDIR /
+# Clean up APT cache to reduce image size
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* && apt-get update
 
-COPY / /
+# Set working directory
+WORKDIR /app
 
-RUN conda config --add channels conda-forge
+# Copy necessary files (including FlaskExports.sh)
+COPY ../. .
 
-RUN conda env create -f environment.yaml
+# Install dependencies
+RUN pip install --no-input --no-cache-dir -r ./app/requirements.txt
 
-RUN conda init bash
+# Install system packages
+RUN apt-get install -y procps net-tools tzdata sqlite3
 
-RUN conda activate Raspitouille
+# Ensure FlaskExports.sh is executable (optional but good practice)
+RUN chmod +x /app/FlaskExports.sh
 
-RUN ./flaskexports.sh
+# Use ENTRYPOINT to source the exports before running Flask
+ENTRYPOINT ["/bin/bash", "-c"]
+CMD ["source /app/FlaskExports.sh && exec quart run --host=0.0.0.0 --port=80"]
 
-RUN flask run
+# Expose the port
+EXPOSE 80
