@@ -47,7 +47,7 @@ def createUser(file_path):
     with open(file_path, 'a') as file:
         while True:
             randomString = ''.join(random.choices(string.ascii_letters, k=15))
-            response = requests.post(backend_url + "/create-user/" + randomString)
+            response = requests.post(backend_url + "/create-user?username=" + randomString)
             if response.status_code == 201:
                 file.write("USERNAME:" + randomString + "\n")
                 return response.json()["id"]

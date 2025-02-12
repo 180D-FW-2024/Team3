@@ -92,8 +92,6 @@ def echo(update, context):
 
 def help(update, context):
     update.message.reply_text("Hello! I am Raspitouille's notification service. Use Raspitouille to ")
-
-
     return 'ok', 200
 
 @app.route('/webhook', methods=['POST'])
@@ -298,10 +296,15 @@ Originally, this triggers the random username creation process on Raspi (OLD INV
 
 
 '''
+
+@app.route("/", methods=['GET'])
+def ping():
+    return jsonify({"response": "pong"}), 200
+
 @app.route("/create-user", methods=['POST'])
 def create_user():
     """
-    Handles a POST request to /create-user/<username>.  Creates a new user in
+    Handles a POST request to /create-user?username=<username>.  Creates a new user in
     the database with the given username.  If the user already exists, returns a
     400 error with a JSON object containing the error message "User already
     exists".  Otherwise, returns the newly created user as a JSON object with a
