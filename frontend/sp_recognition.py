@@ -126,6 +126,7 @@ class RaspiSM:
         with mic as source:
             recognizer.adjust_for_ambient_noise(source)
             print("Listening for the wake word 'Hey Ratatouille'. Press Ctrl+C to stop.")
+            say("Hello, and welcome! Take a look at our user manual and say 'Hey Ratatouille' to start!")
 
         try:
             while True:
