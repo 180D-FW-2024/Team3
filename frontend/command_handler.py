@@ -140,6 +140,7 @@ def addIngredientHandler(recognizer, recipe, source, userId):
             say("Ingredient added to inventory: " + response.json()['text'])
     except sr.UnknownValueError:
         print("Sorry, I couldn't understand the command.")
+        say("Sorry, I couldn't understand the command.")
     except sr.RequestError as e:
         print(f"Error with the speech recognition service: {e}")
 
@@ -159,7 +160,10 @@ def addIngredientCamHandler(recognizer, image_recognizer, recipe, source, userId
             if(type(return_val) == tuple):
                 if(return_val[0] == 6):
                     missing_corners = return_val[1]
-                    say("The following corners are not within the camera's frame: " + missing_corners + ". Realign the paper and ingredient and try again.")
+                    missing_str = ""
+                    for corner in missing_corners:
+                        missing_str += 'corner ' + str(corner) + ', '
+                    say("The following corners are not within thecamera's frame: " + missing_str + ". Realign the paper and ingredient and try again.")
                 else:
                     say("Error with image recognition. Please try again.")
             else:
@@ -185,6 +189,7 @@ def addIngredientCamHandler(recognizer, image_recognizer, recipe, source, userId
                     say("Ingredient added to inventory: " + response.json()['text'])  
     except sr.UnknownValueError:
         print("Sorry, I couldn't understand the command.")
+        say("Sorry, I couldn't understand the command.")
     except sr.RequestError as e:
         print(f"Error with the speech recognition service: {e}")
 
