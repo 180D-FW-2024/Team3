@@ -9,9 +9,7 @@
 
 import speech_recognition as sr
 from text_to_speech import tts as say
-from command_handler import ( 
-    handle_command, addIngredientHandler, addIngredientCamHandler, removeIngredientHandler, 
-    recommendRecipeHandler, addAllergyHandler, removeAllergyHandler,)
+from command_handler import handle_command, addIngredientHandler, addIngredientCamHandler, removeIngredientHandler, recommendRecipeHandler, addAllergyHandler, removeAllergyHandler
 from recipe_handler import Recipe
 from userSetup import loadUserId
 from LLM.LLMAgent import send_command, options

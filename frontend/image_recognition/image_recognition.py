@@ -15,6 +15,8 @@ import scipy
 import cv2
 from PIL import Image
 image_cat = ['apple', 'banana', 'beetroot', 'bell pepper', 'cabbage', 'capsicum', 'carrot', 'cauliflower', 'chilli pepper', 'corn', 'cucumber', 'eggplant', 'garlic', 'ginger', 'grapes', 'jalepeno', 'kiwi', 'lemon', 'lettuce', 'mango', 'onion', 'orange', 'paprika', 'pear', 'peas', 'pineapple', 'pomegranate', 'potato', 'raddish', 'soy beans', 'spinach', 'sweetcorn', 'sweetpotato', 'tomato', 'turnip', 'watermelon'] 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(script_dir, "trained_model.h5")
 
 #methods can call: scan_qr_login, take_pic (have to call before predict_img), predict_img
 #1 = intializing didn't work : error code of camera
@@ -31,7 +33,7 @@ image_cat = ['apple', 'banana', 'beetroot', 'bell pepper', 'cabbage', 'capsicum'
 class IngredientRecog:
     def __init__(self):
         try:
-            self.cnn = tf.keras.models.load_model("trained_model.h5")
+            self.cnn = tf.keras.models.load_model(model_path)
             # self.picam2 = Picamera2()
             # config = self.picam2.create_preview_configuration(main={"size": (1640, 1232)})
             # self.picam2.configure(config)

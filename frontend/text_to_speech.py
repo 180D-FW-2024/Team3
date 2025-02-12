@@ -11,6 +11,8 @@ import wave
 from piper import PiperVoice  # Assuming PiperVoice is imported from piper
 import os
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
 def tts(string):
 
     dictionary = {
@@ -43,19 +45,22 @@ def tts(string):
 
     # Use prerecorded line if exists
     if string in dictionary:
-        path = "voice_lines/" + dictionary[string]
-        wave_obj = sa.WaveObject.from_wave_file(path)
+        local_path = "voice_lines/" + dictionary[string]
+        full_path = os.path.join(script_dir, local_path)
+        wave_obj = sa.WaveObject.from_wave_file(full_path)
         play_obj = wave_obj.play()
         play_obj.wait_done()
         return
 
     # Else tell user to wait while you create new voice clip using model
-    path = "voice_lines/please_wait.wav"
-    wave_obj = sa.WaveObject.from_wave_file(path)
+    wait_path = "voice_lines/please_wait.wav"
+    full_wait_path = os.path.join(script_dir, wait_path)
+    wave_obj = sa.WaveObject.from_wave_file(full_wait_path)
     play_obj = wave_obj.play()
 
     model = "en_GB-alan-medium.onnx"
-    voice = PiperVoice.load(model)
+    full_model_path = os.path.join(script_dir, model)
+    voice = PiperVoice.load(full_model_path)
 
     # Use an in-memory buffer instead of writing to a file
     wav_buffer = io.BytesIO()
