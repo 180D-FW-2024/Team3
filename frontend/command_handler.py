@@ -18,6 +18,8 @@ backend_url = os.getenv("BACKEND_URL")
 def handle_command(command, recipe_object) -> Optional[str]:
     if(command == "add ingredient"):
         return 'add ingredient'
+    if(command == "add ingredient with camera"):
+        return 'add ingredient with camera'
     elif(command == "remove ingredient"):
         return 'remove ingredient'
     elif(command == "recommend recipe"):
@@ -131,6 +133,7 @@ def addIngredientHandler(recognizer, recipe, source, userId):
         print("You said: " + ingredientString)
         response = requests.put(backend_url + "/add-ingredient/" + str(userId) + "/" + ingredientString)
         if response.status_code != 200:
+            say("Addition Failure")
             print("Addition Failure")
             return
         else:
@@ -139,6 +142,53 @@ def addIngredientHandler(recognizer, recipe, source, userId):
         print("Sorry, I couldn't understand the command.")
     except sr.RequestError as e:
         print(f"Error with the speech recognition service: {e}")
+
+def addIngredientCamHandler(recognizer, image_recognizer, recipe, source, userId):
+    say("Place ingredient on the provided placement paper. When you have done so, say: Ready!")
+    recognizer = sr.Recognizer()
+    mic = sr.Microphone()
+    with mic as source:
+        audio = recognizer.listen(source, timeout=None)
+    try:
+        # Wait for user to ready their ingredient
+        response = recognizer.recognize_google(audio, language="en")
+        print("You said: " + response)
+        if "ready" in response.lower():
+            image_recognizer.take_pic()
+            return_val = image_recognizer.predict_img()
+            if(type(return_val) == tuple):
+                if(return_val[0] == 6):
+                    missing_corners = return_val[1]
+                    say("The following corners are not within the camera's frame: " + missing_corners + ". Realign the paper and ingredient and try again.")
+                else:
+                    say("Error with image recognition. Please try again.")
+            else:
+                # if not tuple, no error
+                # Ask user for how many of the ingredient they want to add
+                ingredientScalar = ""
+                say("How much of this ingredient would you like to add?")
+                with mic as source:
+                    secondAudio = recognizer.listen(source, timeout=None)
+                try:
+                    ingredientScalar = recognizer.recognize_google(secondAudio, language="en")
+                except sr.UnknownValueError:
+                    print("Sorry, I couldn't understand the command.")
+
+                # Add ingredient to database
+                ingredientString = ingredientScalar + " " + return_val
+                response = requests.put(backend_url + "/add-ingredient/" + str(userId) + "/" + ingredientString)
+                if response.status_code != 200:
+                    say("Ingredient addition failure")
+                    print("Addition Failure")
+                    return      
+                else:
+                    say("Ingredient added to inventory: " + response.json()['text'])  
+    except sr.UnknownValueError:
+        print("Sorry, I couldn't understand the command.")
+    except sr.RequestError as e:
+        print(f"Error with the speech recognition service: {e}")
+
+
 
 def removeIngredientHandler(recognizer, recipe, source, userId):
     say("Removing ingredient from inventory. State ingredient name, quantity, and measurement type.")

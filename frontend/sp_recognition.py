@@ -10,11 +10,12 @@
 import speech_recognition as sr
 from text_to_speech import tts as say
 from command_handler import ( 
-    handle_command, addIngredientHandler, removeIngredientHandler, 
+    handle_command, addIngredientHandler, addIngredientCamHandler, removeIngredientHandler, 
     recommendRecipeHandler, addAllergyHandler, removeAllergyHandler,)
 from recipe_handler import Recipe
 from userSetup import loadUserId
 from LLM.LLMAgent import send_command, options
+from image_recognition.image_recognition import IngredientRecog
 import dotenv
 import requests
 import os
@@ -88,6 +89,7 @@ recipe = None
 class RaspiSM:
     def __init__(self):
         self.recipe = None
+        self.image_recognizer = IngredientRecog()
 
         # Setup for cache
         self.commandCache = {}
@@ -157,6 +159,8 @@ class RaspiSM:
                             if additionalPrompt is not None:
                                 if additionalPrompt == 'add ingredient':
                                     addIngredientHandler(recognizer, self.recipe, source, userId)
+                                elif additionalPrompt == "add ingredient with camera":
+                                    addIngredientCamHandler(recognizer, self.image_recognizer, self.recipe, source, userId)
                                 elif additionalPrompt == 'remove ingredient':
                                     removeIngredientHandler(recognizer, self.recipe, source, userId)
                                 elif additionalPrompt == 'recommend recipe':

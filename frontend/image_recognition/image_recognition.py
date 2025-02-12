@@ -65,7 +65,7 @@ class IngredientRecog:
                     except Exception as err:
                         return (9, err) #error code and dcoument
                 else:
-                    cam.close()
+                    # cam.close()
                     return (10, None)
         return (8, None)
 
@@ -140,7 +140,7 @@ class IngredientRecog:
         prediction = self.cnn.predict(prediction_image)
         prediction_position = np.argmax(prediction)
         os.remove("./test.jpg")
-        return prediction_position
+        return image_cat[prediction_position]
 
     def __crop_img_qr (self):
         try:
@@ -186,28 +186,28 @@ class IngredientRecog:
 
 
 
-if __name__ == '__main__':
-    cnn = tf.keras.models.load_model("trained_model.h5")
-    #test_image = opencv image
-    #go through label index
-    # picam2 = Picamera2()
-    # picam2.configure(picam2.create_preview_configuration())
-    # picam2.start()
-    # frame = picam2.capture_array() #what the
-    # cap = cv2.VideoCapture(0)
-    # ret, frame = cap.read()
-    recognizer = IngredientRecog()
-    # recognizer.wake()
-    print("take pic")
-    recognizer.take_pic()
-    recognizer.predict_img()
-    print("qr login")
-    print(recognizer.scan_qr_login())
-    print("take pic")
-    recognizer.take_pic()
-    recognizer.predict_img()
-    print("qr login")
-    print(recognizer.scan_qr_login())
+# if __name__ == '__main__':
+#     cnn = tf.keras.models.load_model("trained_model.h5")
+#     #test_image = opencv image
+#     #go through label index
+#     # picam2 = Picamera2()
+#     # picam2.configure(picam2.create_preview_configuration())
+#     # picam2.start()
+#     # frame = picam2.capture_array() #what the
+#     # cap = cv2.VideoCapture(0)
+#     # ret, frame = cap.read()
+#     recognizer = IngredientRecog()
+#     # recognizer.wake()
+#     print("take pic")
+#     recognizer.take_pic()
+#     recognizer.predict_img()
+#     print("qr login")
+#     print(recognizer.scan_qr_login())
+#     print("take pic")
+#     recognizer.take_pic()
+#     recognizer.predict_img()
+#     print("qr login")
+#     print(recognizer.scan_qr_login())
    
    
    
