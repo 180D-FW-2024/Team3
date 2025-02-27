@@ -243,7 +243,12 @@ class Recipe:
         say(str(round((self.timer.time_left())//60)) + " minutes and " + str(round(self.timer.time_left()) % 60) + " seconds remaining")
     
     def startTimer(self):
-        self.timer.start()
+        step = self.steps[self.stepCounter]
+        if(step.type == "Timed"):
+            self.timer.start()
+        else:
+            say("Timer not needed.")
+        
     
     def stopTimer(self):
         self.timer.pause()
@@ -257,7 +262,15 @@ class Recipe:
     def suggestRecipes(self):
         if self.userId is None:
             return None
-        requests.get(backend_url + "/suggest-recipes", json={"user_id": self.userId})
+        
+        while True:
+            try:
+                print("Retrying...")
+                response = requests.get(backend_url + "/suggest-recipes", json={"user_id": self.userId}, timeout=2)
+                if 200 <= response.status_code < 300:  # Check if response is successful
+                    break
+            except requests.exceptions.RequestException:  # Catches timeout and other request errors
+                pass  
     
     # ------------------------------------------------------------------------
     # END COMMAND-MAPPED FUNCTIONS

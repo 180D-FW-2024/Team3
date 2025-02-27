@@ -14,7 +14,7 @@ import numpy as np
 import scipy
 import cv2
 from PIL import Image
-image_cat = ['apple', 'banana', 'beetroot', 'bell pepper', 'cabbage', 'capsicum', 'carrot', 'cauliflower', 'chilli pepper', 'corn', 'cucumber', 'eggplant', 'garlic', 'ginger', 'grapes', 'jalepeno', 'kiwi', 'lemon', 'lettuce', 'mango', 'onion', 'orange', 'paprika', 'pear', 'peas', 'pineapple', 'pomegranate', 'potato', 'raddish', 'soy beans', 'spinach', 'sweetcorn', 'sweetpotato', 'tomato', 'turnip', 'watermelon'] 
+image_cat = ['apple', 'banana', 'beetroot', 'bell pepper', 'cabbage', 'capsicum', 'carrot', 'cauliflower', 'chilli pepper', 'corn', 'banana', 'eggplant', 'garlic', 'ginger', 'grapes', 'jalepeno', 'kiwi', 'lemon', 'lettuce', 'mango', 'onion', 'orange', 'paprika', 'pear', 'peas', 'pineapple', 'pomegranate', 'potato', 'raddish', 'soy beans', 'spinach', 'sweetcorn', 'sweetpotato', 'tomato', 'turnip', 'watermelon'] 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 model_path = os.path.join(script_dir, "trained_model.h5")
 
@@ -51,15 +51,27 @@ class IngredientRecog:
         duration = 10  # seconds
         while(time.time() - start_time < duration):
             self.take_pic(file_name = "qrcode.jpg")
-            frame = cv2.imread("./qrcode.jpg")
+            qr_path = os.path.join(script_dir, "qrcode.jpg")
+            frame = cv2.imread(qr_path)
             decoded_qrs = decode(frame)
             for obj in decoded_qrs:
                 data = obj.data.decode('utf-8')
                 print('data: ' + str(data))
-                response = requests.get("https://suitable-kangaroo-immensely.ngrok-free.app/add-ser-phone/" + data)
+                dataString = f"username={data}&phone_number={data}"
+
+                while True:
+                    try:
+                        print("Retrying...")
+                        response = requests.get("https://raspitouille.xyz/api/create-user?" + dataString, timeout=2)
+                        if 200 <= response.status_code < 300:  # Check if response is successful
+                            break
+                    except requests.exceptions.RequestException:  # Catches timeout and other request errors
+                        pass  
+
                 if response.status_code == 200:
-                    try: 
-                        file = open("../config.txt", "w")
+                    try:
+                        config_path = os.path.join(script_dir, "../config.txt")
+                        file = open("config_path", "w")
                         user_id = "USERNAME:" + response.json()["user_id"]
                         file.write(user_id)
                         file.close()
@@ -114,26 +126,30 @@ class IngredientRecog:
 
     def take_pic(self, file_name = "test.jpg"):
         # Capture an image
+        pic_path = os.path.join(script_dir, "test.jpg")
         try:
             subprocess.run([
         "libcamera-still",
         "--width", "1920",
         "--height", "1080",
-        "-o", file_name,
+        "-o", pic_path,
         "--immediate"
         ])
         except:
             return(2, None)
 
     def predict_img(self):
-        if not os.path.exists("./test.jpg"):
+        test_path = os.path.join(script_dir, "test.jpg")
+        if not os.path.exists(test_path):
             return(3, None) #some exit message
         test_image = self.__crop_img_qr()
         if(type(test_image) == tuple):
             return test_image
-        cropped_image = self.__crop_image(test_image)
-        cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2RGB)
-        prediction_image = Image.fromarray(cropped_image, 'RGB')
+        # cropped_image = self.__crop_image(test_image)
+        # cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2RGB)
+        cropped_path = os.path.join(script_dir, "test.jpg")
+        cv2.imwrite(cropped_path, test_image)
+        prediction_image = Image.fromarray(test_image, 'RGB')
         prediction_image = prediction_image.resize((64,64))
         prediction_image = np.array(prediction_image)
         prediction_image = np.expand_dims(prediction_image, axis=0)
@@ -141,13 +157,14 @@ class IngredientRecog:
         # image = tf.keras.preprocessing.image.img_to_array(image)
         prediction = self.cnn.predict(prediction_image)
         prediction_position = np.argmax(prediction)
-        os.remove("./test.jpg")
+        # os.remove("./test.jpg")
         return image_cat[prediction_position]
 
     def __crop_img_qr (self):
         try:
             # Capture frame from camera
-            frame = cv2.imread('./test.jpg')
+            test_path = os.path.join(script_dir, "test.jpg")
+            frame = cv2.imread(test_path)
             H, W, _ = frame.shape
             H /= 2
             W /= 2

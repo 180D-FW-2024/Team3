@@ -11,7 +11,7 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 
 def removeUsername(file_path):
     foundLine = False
-    with open(file_path, "w") as file:
+    with open(file_path, "r+") as file:
         for line in file:
             if "USERNAME" not in line:
                 file.write(line)
@@ -32,7 +32,14 @@ def getUserId(file_path):
             if line.startswith('USERNAME:'):
                 # Extract and return the part after 'USERNAME:'
                 username = line.split(':', 1)[1].strip()  # Strip any extra spaces/newlines
-                response = requests.get(backend_url + "/get-user/" + username)
+                while True:
+                    try:
+                        print("Retrying...")
+                        response = requests.get(backend_url + "/get-user/" + username, timeout=2)
+                        if 200 <= response.status_code < 300:  # Check if response is successful
+                            break
+                    except requests.exceptions.RequestException:  # Catches timeout and other request errors
+                        pass  
                 if response.status_code != 200:
                     removeUsername(real_file_path)
                     return None
@@ -51,10 +58,18 @@ def createUser(file_path):
     with open(real_file_path, 'a') as file:
         while True:
             randomString = ''.join(random.choices(string.ascii_letters, k=15))
-            response = requests.post(backend_url + "/create-user?username=" + randomString)
-            if response.status_code == 201:
-                file.write("USERNAME:" + randomString + "\n")
-                return response.json()["id"]
+            print(randomString)
+            while True:
+                try:
+                    print("Retrying...")
+                    response = requests.post(backend_url + "/create-user?username=" + randomString, timeout=2)  
+                    if 200 <= response.status_code < 300:  # Check if response is successful
+                        if response.status_code == 201:
+                            file.write("USERNAME:" + randomString + "\n")
+                            return response.json()["id"]
+                        break
+                except requests.exceptions.RequestException:  # Catches timeout and other request errors
+                    pass  
 
 def loadUserId(file_path):
     userId = getUserId(file_path)

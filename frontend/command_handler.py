@@ -84,7 +84,15 @@ def addAllergyHandler(recognizer, recipe, source, userId):
     try:
         ingredientString = recognizer.recognize_google(audio_command, language="en")
         print("You said: " + ingredientString)
-        response = requests.put(backend_url + "/add-allergy/" + str(userId) + "/" + ingredientString)
+        while True:
+            try:
+                print("Retrying...")
+                response = requests.put(backend_url + "/add-allergy/" + str(userId) + "/" + ingredientString, timeout=2)
+                if 200 <= response.status_code < 300:  # Check if response is successful
+                    break
+            except requests.exceptions.RequestException:  # Catches timeout and other request errors
+                pass  
+        
         if response.status_code == 200:
             say(f"{ingredientString} allergy was already added.")
             return
@@ -109,7 +117,15 @@ def removeAllergyHandler(recognizer, recipe, source, userId):
     try:
         ingredientString = recognizer.recognize_google(audio_command, language="en")
         print("You said: " + ingredientString)
-        response = requests.put(backend_url + "/remove-allergy/" + str(userId) + "/" + ingredientString)
+        while True:
+            try:
+                print("Retrying...")
+                response = requests.put(backend_url + "/remove-allergy/" + str(userId) + "/" + ingredientString, timeout=2)
+                if 200 <= response.status_code < 300:  # Check if response is successful
+                    break
+            except requests.exceptions.RequestException:  # Catches timeout and other request errors
+                pass  
+        
         if response.status_code == 200:
             say(f"{ingredientString} allergy was removed.")
             return
@@ -131,13 +147,21 @@ def addIngredientHandler(recognizer, recipe, source, userId):
     try:
         ingredientString = recognizer.recognize_google(audio_command, language="en")
         print("You said: " + ingredientString)
-        response = requests.put(backend_url + "/add-ingredient/" + str(userId) + "/" + ingredientString)
+        while True:
+            try:
+                print("Retrying...")
+                response = requests.put(backend_url + "/add-ingredient/" + str(userId) + "/" + ingredientString, timeout=2)
+                if 200 <= response.status_code < 300:  # Check if response is successful
+                    break
+            except requests.exceptions.RequestException:  # Catches timeout and other request errors
+                pass  
+        
         if response.status_code != 200:
             say("Addition Failure")
             print("Addition Failure")
             return
         else:
-            say("Ingredient added to inventory: " + response.json()['text'])
+            say("Ingredient added to inventory. You now have " + response.json()['text'])
     except sr.UnknownValueError:
         print("Sorry, I couldn't understand the command.")
         say("Sorry, I couldn't understand the command.")
@@ -180,13 +204,20 @@ def addIngredientCamHandler(recognizer, image_recognizer, recipe, source, userId
 
                 # Add ingredient to database
                 ingredientString = ingredientScalar + " " + return_val
-                response = requests.put(backend_url + "/add-ingredient/" + str(userId) + "/" + ingredientString)
+                while True:
+                    try:
+                        print("Retrying...")
+                        response = requests.put(backend_url + "/add-ingredient/" + str(userId) + "/" + ingredientString, timeout=2)
+                        if 200 <= response.status_code < 300:  # Check if response is successful
+                            break
+                    except requests.exceptions.RequestException:  # Catches timeout and other request errors
+                        pass  
                 if response.status_code != 200:
                     say("Ingredient addition failure")
                     print("Addition Failure")
                     return      
                 else:
-                    say("Ingredient added to inventory: " + response.json()['text'])  
+                    say("Ingredient added to inventory. You now have " + response.json()['text'])  
     except sr.UnknownValueError:
         print("Sorry, I couldn't understand the command.")
         say("Sorry, I couldn't understand the command.")
@@ -204,26 +235,49 @@ def removeIngredientHandler(recognizer, recipe, source, userId):
     try:
         ingredientString = recognizer.recognize_google(audio_command, language="en")
         print("You said: " + ingredientString)
-        response = requests.put(backend_url + "/remove-ingredient/" + str(userId) + "/" + ingredientString)
+        while True:
+            try:
+                print("Retrying...")
+                response = requests.put(backend_url + "/remove-ingredient/" + str(userId) + "/" + ingredientString, timeout=2)
+                if 200 <= response.status_code < 300:  # Check if response is successful
+                    break
+            except requests.exceptions.RequestException:  # Catches timeout and other request errors
+                pass  
+        
         if response.status_code != 200:
             print("Removal Failure")
             return
         else:
-            say("Ingredient removed from inventory: " + response.json()['text'])
+            say("Ingredient removed from inventory. You now have: " + response.json()['text'])
     except sr.UnknownValueError:
         print("Sorry, I couldn't understand the command.")
     except sr.RequestError as e:
         print(f"Error with the speech recognition service: {e}")
 
 def loadRecipe(recipeId):
-    response = requests.get(backend_url + "/get-recipe/" + str(recipeId))
+    while True:
+        try:
+            print("Retrying...")
+            response = requests.get(backend_url + "/get-recipe/" + str(recipeId), timeout=2)
+            if 200 <= response.status_code < 300:  # Check if response is successful
+                break
+        except requests.exceptions.RequestException:  # Catches timeout and other request errors
+            pass  
+    
     if response.status_code != 200:
         return None
     return response.json()
 
 def recommendRecipeHandler(recognizer, recipe, mic, userId):
     say("Generating recipe recommendation...")
-    response = requests.get(backend_url + "/suggest-recipes/" + str(userId))
+    while True:
+        try:
+            print("Retrying...")
+            response = requests.get(backend_url + "/suggest-recipes/" + str(userId), timeout=2)
+            if 200 <= response.status_code < 300:  # Check if response is successful
+                break
+        except requests.exceptions.RequestException:  # Catches timeout and other request errors
+            pass  
     if response.status_code != 200:
         print("Recommendation Failure")
         say("Recommendation Failure, Try again")
