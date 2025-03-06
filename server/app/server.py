@@ -303,7 +303,7 @@ Originally, this triggers the random username creation process on Raspi (OLD INV
 def ping():
     return jsonify({"response": "pong"}), 200
 
-@app.rout("/get-allergies-ingredients", methods=['GET']) # "/get-allergies-ingredients?userId="
+@app.route("/get-allergies-ingredients", methods=['GET']) # "/get-allergies-ingredients?userId="
 def get_allergies_ingredients():
     userId = request.args.get('userId')
     user = session.query(User).filter_by(id=userId).first()
@@ -611,7 +611,7 @@ def add_ingredient(user_id, ingredientString):
         if ingredientDict is None:
             return jsonify({"error": "Invalid ingredient"}), 400
         measureUnit = ingredientDict["measureUnit"]
-        ( measure, multiplier )= getMeasureType(measureUnit)
+        ( measure, multiplier ) = getMeasureType(measureUnit)
         print("ingredientDict: " + str(ingredientDict), "measure:" + str(measure.name), "multiplier:" + str(multiplier))
         additionJson = modify_inventory(user_id, ingredientDict["ingredient_name"], ingredientDict["quantity"]*multiplier, measure.name, "add")
         return additionJson

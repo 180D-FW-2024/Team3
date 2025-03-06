@@ -78,9 +78,9 @@ class InventoryIngredient(Base):
     
     def __str__(self):
         if self.measureType == MeasureType.WEIGHT:
-            return f"""{self.name}, {self.quantity}_grams"""
+            return f"""{self.quantity} grams {self.name}"""
         elif self.measureType == MeasureType.VOLUME:
-            return f"""{self.name}, {self.quantity}_ml"""
+            return f"""{self.quantity} ml {self.name}"""
         elif self.measureType == MeasureType.COUNT:
             if self.quantity == 1:
                 return f"""{self.quantity} {self.name}"""

@@ -91,7 +91,7 @@ class User(Base):
             "first_name": self.first_name,
             "username": self.username,
             "allergies": [allergy.name for allergy in self.allergies],
-            "inventory": [(item.name+""+str(item.quantity)) for item in self.inventory],
+            "inventory": [str(item) for item in self.inventory],
             "hasScale": self.has_scale,
             "phone_number": self.phone_number,
             "hasThermometer": self.has_thermometer
