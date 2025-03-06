@@ -1,0 +1,76 @@
+{
+    "completion_time": 2280,
+    "id": 4,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "ground beef",
+            "quantity": 454
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "water",
+            "quantity": 240
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "tomato sauce",
+            "quantity": 480
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "kidney beans",
+            "quantity": 400
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "pinto beans",
+            "quantity": 400
+        },
+        {
+            "id": 6,
+            "measureType": "Count",
+            "name": "onion",
+            "quantity": 1
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "chili powder",
+            "quantity": 5
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        },
+        {
+            "id": 10,
+            "measureType": "Weight",
+            "name": "garlic powder",
+            "quantity": 2
+        },
+        {
+            "id": 11,
+            "measureType": "Weight",
+            "name": "hot pepper sauce",
+            "quantity": 5
+        }
+    ],
+    "recipe_text": "Quantity; 454; Prepare 454 grams of ground beef| Measurement; 240; Measure out 240 grams of water| Measurement; 480; Measure out 480 grams of tomato sauce| Measurement; 400; Measure out 400 grams of kidney beans| Measurement; 400; Measure out 400 grams of pinto beans| Quantity; 1; Prepare 1 onion, chopped| Measurement; 5; Measure out 5 grams of chili powder| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Measurement; 2; Measure out 2 grams of garlic powder| Measurement; 5; Measure out 5 grams of hot pepper sauce| Untimed; None; Brown the ground beef in a large skillet over medium heat| Untimed; None; Drain excess fat from the skillet| Untimed; None; Add chopped onion to the skillet and cook until softened| Untimed; None; Stir in chili powder, salt, black pepper, garlic powder, and hot pepper sauce| Untimed; None; Add tomato sauce and water to the skillet| Untimed; None; Stir in kidney beans and pinto beans| Timed; 1200; Simmer the chili for 20 minutes, stirring occasionally| Finish; None; Serve hot!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Quick Chili II"
+}

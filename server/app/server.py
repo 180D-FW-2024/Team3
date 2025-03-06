@@ -19,13 +19,15 @@ import string
 import os
 import requests
 
+
+
 dotenv.load_dotenv()
 PORT_NUMBER = os.getenv("PORT_NUMBER")
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 BACKEND_URL = os.getenv("BACKEND_URL")
 
 # Run test_db.py to test database, remove on database completion
-subprocess.run(["python3", "/app/app/test_db.py"])
+subprocess.run(["python3", "/app/app/setup_db.py"])
 
 engine = create_engine('sqlite:///raspitouille.db', echo=True)
 Session = sessionmaker(bind=engine)
@@ -300,6 +302,15 @@ Originally, this triggers the random username creation process on Raspi (OLD INV
 @app.route("/", methods=['GET'])
 def ping():
     return jsonify({"response": "pong"}), 200
+
+@app.route("/get-allergies-ingredients", methods=['GET']) # "/get-allergies-ingredients?userId="
+def get_allergies_ingredients():
+    userId = request.args.get('userId')
+    user = session.query(User).filter_by(id=userId).first()
+    if user is None:
+        return jsonify({"error": "User not found"}), 404
+    userDict = user.to_dict()
+    return jsonify({"allergies": ", ".join(userDict["allergies"]), "ingredients": ", ".join(userDict["inventory"])}), 200
 
 @app.route("/create-user", methods=['POST'])
 def create_user():
@@ -600,7 +611,7 @@ def add_ingredient(user_id, ingredientString):
         if ingredientDict is None:
             return jsonify({"error": "Invalid ingredient"}), 400
         measureUnit = ingredientDict["measureUnit"]
-        ( measure, multiplier )= getMeasureType(measureUnit)
+        ( measure, multiplier ) = getMeasureType(measureUnit)
         print("ingredientDict: " + str(ingredientDict), "measure:" + str(measure.name), "multiplier:" + str(multiplier))
         additionJson = modify_inventory(user_id, ingredientDict["ingredient_name"], ingredientDict["quantity"]*multiplier, measure.name, "add")
         return additionJson

@@ -1,0 +1,52 @@
+{
+    "completion_time": 0,
+    "id": 2,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "steak",
+            "quantity": 680
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "olive oil",
+            "quantity": 15
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "butter",
+            "quantity": 28
+        },
+        {
+            "id": 6,
+            "measureType": "Count",
+            "name": "garlic cloves",
+            "quantity": 2
+        },
+        {
+            "id": 7,
+            "measureType": "Count",
+            "name": "rosemary sprigs",
+            "quantity": 2
+        }
+    ],
+    "recipe_text": "Quantity; 680; Prepare 680 grams of steak (ribeye, New York strip, or filet mignon)| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Measurement; 15; Measure out 15 ml of olive oil| Measurement; 28; Measure out 28 grams of butter| Quantity; 2; Prepare 2 garlic cloves| Quantity; 2; Prepare 2 rosemary sprigs| Untimed; None; Pat the steak dry with paper towels and season generously with salt and pepper| Temperature; 120; Preheat a heavy skillet (preferably cast iron) over medium-high heat until it reaches 120 degrees C (248 degrees F)| Timed; 180; Add olive oil to the skillet and sear the steak for 3 minutes on one side| Timed; 180; Flip the steak and sear for another 3 minutes| Untimed; None; Add butter, garlic cloves, and rosemary sprigs to the skillet| Timed; 120; Tilt the skillet and baste the steak with the melted butter for 2 minutes| Timed; 300; Remove the steak from the skillet and let it rest for 5 minutes before serving| Finish; None; Serve the steak with your favorite sides!",
+    "scale_needed": 1,
+    "thermometer_needed": 1,
+    "title": "Pan-Seared Steak"
+}

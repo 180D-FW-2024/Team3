@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/input"
 import { Utensils, Wifi } from "lucide-react"
 import Link from "next/link"
 import axios from "axios";
+import getConfig from 'next/config';
 
-const BACKEND_URL = "http://localhost:80"
+const BACKEND_URL = "https://raspitouille.xyz/api";
 
 export default function Home() {
   const [phoneNumber, setPhoneNumber] = useState("")
@@ -32,6 +33,7 @@ export default function Home() {
     e.preventDefault()
     if (validatePhoneNumber(phoneNumber)) {
       const digitPhoneNumber = phoneNumber.replace(/[^0-9]/g, '')
+      console.log("BACKEND URL: " + BACKEND_URL)
 
       axios.post(`${BACKEND_URL}/create-user?username=${digitPhoneNumber}&phone_number=${digitPhoneNumber}`)
       .then((response) => {
@@ -40,8 +42,8 @@ export default function Home() {
         window.location.href = "/link-device"
       })
       .catch((error) => {
-        if (error.response.status === 400){
-          console.log("User already exists")
+        if (error.response.status === 404){
+          console.log("No phone number provided")
         }
         else{
           console.error(error)

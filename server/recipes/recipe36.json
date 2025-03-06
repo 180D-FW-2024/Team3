@@ -1,0 +1,76 @@
+{
+    "completion_time": 1500,
+    "id": 36,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "ground beef",
+            "quantity": 450
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "whiskey",
+            "quantity": 60
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "garlic powder",
+            "quantity": 5
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "onion powder",
+            "quantity": 5
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        },
+        {
+            "id": 7,
+            "measureType": "Count",
+            "name": "hamburger buns",
+            "quantity": 4
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "cheese slices",
+            "quantity": 56
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "lettuce",
+            "quantity": 50
+        },
+        {
+            "id": 10,
+            "measureType": "Weight",
+            "name": "tomato",
+            "quantity": 100
+        },
+        {
+            "id": 11,
+            "measureType": "Weight",
+            "name": "onion",
+            "quantity": 50
+        }
+    ],
+    "recipe_text": "Quantity; 450; Prepare 450 grams of ground beef| Measurement; 60; Measure out 60 grams of whiskey| Measurement; 5; Measure out 5 grams of garlic powder| Measurement; 5; Measure out 5 grams of onion powder| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Quantity; 4; Prepare 4 hamburger buns| Measurement; 56; Measure out 56 grams of cheese slices| Measurement; 50; Measure out 50 grams of lettuce| Measurement; 100; Measure out 100 grams of tomato, sliced| Measurement; 50; Measure out 50 grams of onion, sliced| Untimed; None; In a bowl, combine ground beef, whiskey, garlic powder, onion powder, salt, and black pepper| Untimed; None; Shape the mixture into 4 patties| Untimed; None; Preheat a skillet or grill over medium-high heat| Untimed; None; Cook the patties for 3-4 minutes on each side| Untimed; None; Add a cheese slice to each patty during the last minute of cooking| Untimed; None; Toast the hamburger buns| Untimed; None; Assemble the burgers with lettuce, tomato, onion, and patties| Finish; None; Serve and enjoy!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Triple Seared Whiskey Burger"
+}

@@ -6,6 +6,7 @@ from typing import Optional
 from recipe_handler import Recipe
 from scale_reader import get_weight_in_grams
 from thermometer_reader import get_current_temperature_f
+from LLM.LLMAgent import answer_question, options
 import requests
 import speech_recognition as sr
 import dotenv
@@ -76,6 +77,45 @@ def handle_command(command, recipe_object) -> Optional[str]:
     elif(command == "stop timer"):
         recipe_object.stopTimer()
         return None
+    elif(command == "question"):
+        return 'question'
+    else:
+        return None
+
+def questionHandler(recognizer, recipe, source, userId):
+
+    say("Ask your question.")
+    recognizer = sr.Recognizer()
+    mic = sr.Microphone()
+    with mic as source:
+        audio_command = recognizer.listen(source, timeout=None)
+    try:
+        # First, get the allergies and ingredients
+        questionString = recognizer.recognize_google(audio_command, language="en")
+        print("You said: " + questionString)
+        say("Generating response...")
+
+        response = requests.get(backend_url + "/get-allergies-ingredients?userId=" + str(userId))
+        if response.status_code == 200:
+            contextAllergies = response.json()['allergies']
+            contextIngredients = response.json()['ingredients']
+        else:
+            contextAllergies = None
+            contextIngredients = None
+
+        answer = answer_question(questionString, contextIngredients=contextIngredients, contextAllergies=contextAllergies, contextRecipe=str(recipe))
+
+        if answer == "INVALID":
+            say("I'm sorry, I couldn't answer your question.")
+        else:
+            say(answer)
+    
+    except sr.UnknownValueError:
+        print("Sorry, I couldn't understand the question.")
+    except sr.RequestError as e:
+        print(f"Error with the speech recognition service: {e}")
+    return
+
 
 def addAllergyHandler(recognizer, recipe, source, userId):
     say("Adding allergy. State ingredient you are allergic to.")

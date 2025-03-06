@@ -9,7 +9,9 @@
 
 import speech_recognition as sr
 from text_to_speech import tts as say
-from command_handler import handle_command, addIngredientHandler, addIngredientCamHandler, removeIngredientHandler, recommendRecipeHandler, addAllergyHandler, removeAllergyHandler
+from command_handler import ( 
+    handle_command, addIngredientHandler, removeIngredientHandler, 
+    recommendRecipeHandler, addAllergyHandler, removeAllergyHandler, questionHandler)
 from recipe_handler import Recipe
 from userSetup import loadUserId
 from LLM.LLMAgent import send_command, options
@@ -178,6 +180,8 @@ class RaspiSM:
                                     addAllergyHandler(recognizer, self.recipe, source, userId)
                                 elif additionalPrompt == 'remove allergy':
                                     removeAllergyHandler(recognizer, self.recipe, source, userId)
+                                elif additionalPrompt == 'question':
+                                    questionHandler(recognizer, self.recipe, source, userId)
                             
                             if self.recipe and self.recipe.finished:
                                 self.recipe = None

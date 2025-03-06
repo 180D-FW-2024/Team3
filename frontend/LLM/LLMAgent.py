@@ -21,7 +21,8 @@ options = [
     "measure ingredient",
     "add allergy",
     "remove allergy",
-    "scan login"
+    "scan login",
+    "question"
 ]
 
 client = Together()
@@ -39,8 +40,8 @@ def send_command(command) -> str:
             "content": command
         }
         ],
-        max_tokens=512,
-        temperature=0.7,
+        max_tokens=32,
+        temperature=0.2,
         top_p=0.7,
         top_k=50,
         repetition_penalty=0,
@@ -55,6 +56,52 @@ def send_command(command) -> str:
             print(token.choices[0].delta.content, end='', flush=True)
             results.append(token.choices[0].delta.content.strip())
         return results
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+
+def answer_question(question, contextIngredients=None, contextAllergies=None, contextRecipe=None) -> str:
+    if not question:
+        return None
+    
+    systemPrompt = """You are a cooking assistant, who will answer the following user question regarding cooking. 
+                      IF THE QUESTION IS UNRELATED TO COOKING, RETURN ONLY 'INVALID'."""
+
+    if contextIngredients:
+        systemPrompt += f"CONTEXT: The following user inventory ingredients are available: {contextIngredients}"
+    if contextAllergies:
+        systemPrompt += f"CONTEXT: The following user allergies are available: {contextAllergies}"
+    if contextRecipe:
+        systemPrompt += f"CONTEXT: The following recipe is being used: {contextRecipe}"
+
+    response = client.chat.completions.create(
+        model="meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo",
+        messages=[{
+            "role": "system",
+            "content": systemPrompt
+        },
+        {
+            "role": "user",
+            "content": question
+        }
+        ],
+        max_tokens=128,
+        temperature=0.5,
+        top_p=0.7,
+        top_k=50,
+        repetition_penalty=0,
+        stop=["<|eot_id|>","<|eom_id|>"],
+        stream=True
+    )
+    if response is None:
+        return None
+    try:
+        results = []
+        for token in response:
+            print(token.choices[0].delta.content, end='', flush=True)
+            results.append(token.choices[0].delta.content.strip())
+        outputString = "".join([re.sub(r'[^\w;]+', '', token) for token in results]).strip().lower()
+        return outputString
     except Exception as e:
         print(f"Error: {e}")
         return None
@@ -77,7 +124,7 @@ def standardizeIngredient(name) -> dict:
         ],
         max_tokens=512,
         temperature=0.7,
-        top_p=0.7,
+        top_p=0.3,
         top_k=50,
         repetition_penalty=1,
         stop=["<|eot_id|>","<|eom_id|>"],

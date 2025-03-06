@@ -1,0 +1,34 @@
+{
+    "completion_time": 18000,
+    "id": 35,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "chicken breasts",
+            "quantity": 900
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "root beer",
+            "quantity": 480
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "barbecue sauce",
+            "quantity": 480
+        },
+        {
+            "id": 4,
+            "measureType": "Count",
+            "name": "hamburger buns",
+            "quantity": 6
+        }
+    ],
+    "recipe_text": "Quantity; 900; Prepare 900 grams of chicken breasts| Measurement; 480; Measure out 480 grams of root beer| Measurement; 480; Measure out 480 grams of barbecue sauce| Quantity; 6; Prepare 6 hamburger buns| Untimed; None; Place chicken breasts in a slow cooker| Untimed; None; Pour root beer and barbecue sauce over the chicken| Untimed; None; Cover and cook on low heat| Timed; 18000; Cook for 5 hours| Untimed; None; Shred the chicken using two forks| Untimed; None; Assemble sandwiches by placing shredded chicken on hamburger buns| Finish; None; Serve and enjoy!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Slow Cooker Root Beer Chicken Sandwiches"
+}

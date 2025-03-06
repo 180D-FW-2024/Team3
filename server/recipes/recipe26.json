@@ -1,0 +1,64 @@
+{
+    "completion_time": 1800,
+    "id": 26,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Count",
+            "name": "frozen ravioli",
+            "quantity": 450
+        },
+        {
+            "id": 2,
+            "measureType": "Count",
+            "name": "eggs",
+            "quantity": 2
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "milk",
+            "quantity": 60
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "bread crumbs",
+            "quantity": 100
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "parmesan cheese",
+            "quantity": 50
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "vegetable oil",
+            "quantity": 240
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "marinara sauce",
+            "quantity": 240
+        }
+    ],
+    "recipe_text": "Quantity; 450; Prepare 450 grams of frozen ravioli| Quantity; 2; Prepare 2 eggs| Measurement; 60; Measure out 60 grams of milk| Measurement; 100; Measure out 100 grams of bread crumbs| Measurement; 50; Measure out 50 grams of grated parmesan cheese| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Measurement; 240; Measure out 240 grams of vegetable oil| Measurement; 240; Measure out 240 grams of marinara sauce| Untimed; None; In a shallow bowl, whisk together eggs and milk| Untimed; None; In another shallow bowl, combine bread crumbs, parmesan cheese, salt, and black pepper| Untimed; None; Dip each ravioli in the egg mixture, then coat with the bread crumb mixture| Untimed; None; Heat vegetable oil in a large skillet over medium heat| Timed; 600; Fry ravioli in batches for 2-3 minutes on each side, or until golden brown| Untimed; None; Drain on paper towels| Untimed; None; Warm marinara sauce in a small saucepan| Finish; None; Serve fried ravioli with warm marinara sauce!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "St. Louis Toasted Ravioli"
+}

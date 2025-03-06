@@ -1,0 +1,58 @@
+{
+    "completion_time": 2220,
+    "id": 8,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "cooked chicken",
+            "quantity": 450
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "bacon",
+            "quantity": 150
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "ranch dressing",
+            "quantity": 240
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "sour cream",
+            "quantity": 120
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "cheddar cheese",
+            "quantity": 200
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "green onions",
+            "quantity": 30
+        },
+        {
+            "id": 7,
+            "measureType": "Count",
+            "name": "flour tortillas",
+            "quantity": 8
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "enchilada sauce",
+            "quantity": 480
+        }
+    ],
+    "recipe_text": "Quantity; 450; Prepare 450 grams of cooked chicken, shredded| Measurement; 150; Measure out 150 grams of bacon, cooked and crumbled| Measurement; 240; Measure out 240 grams of ranch dressing| Measurement; 120; Measure out 120 grams of sour cream| Measurement; 200; Measure out 200 grams of cheddar cheese, shredded| Measurement; 30; Measure out 30 grams of green onions, chopped| Quantity; 8; Prepare 8 flour tortillas| Measurement; 480; Measure out 480 grams of enchilada sauce| Untimed; None; Preheat oven to 190 degrees C (375 degrees F)| Untimed; None; In a bowl, mix shredded chicken, bacon, ranch dressing, sour cream, cheddar cheese, and green onions| Untimed; None; Spoon the mixture onto each tortilla and roll them up| Untimed; None; Place the rolled tortillas seam-side down in a baking dish| Untimed; None; Pour enchilada sauce over the tortillas| Untimed; None; Sprinkle with additional cheddar cheese if desired| Timed; 1200; Bake in the preheated oven for 20 minutes| Finish; None; Serve hot!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Bacon Ranch Chicken Enchiladas"
+}
