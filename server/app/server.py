@@ -303,6 +303,15 @@ Originally, this triggers the random username creation process on Raspi (OLD INV
 def ping():
     return jsonify({"response": "pong"}), 200
 
+@app.rout("/get-allergies-ingredients", methods=['GET']) # "/get-allergies-ingredients?userId="
+def get_allergies_ingredients():
+    userId = request.args.get('userId')
+    user = session.query(User).filter_by(id=userId).first()
+    if user is None:
+        return jsonify({"error": "User not found"}), 404
+    userDict = user.to_dict()
+    return jsonify({"allergies": ", ".join(userDict["allergies"]), "ingredients": ", ".join(userDict["inventory"])}), 200
+
 @app.route("/create-user", methods=['POST'])
 def create_user():
     """
