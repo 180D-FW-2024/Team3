@@ -143,6 +143,7 @@ class Recipe:
     def __init__(self, recipeObject=None):
         if recipeObject is None:
             return
+        self.recipeObj = recipeObject
         recipeString = recipeObject["recipe_text"]
         recipeIngredients = recipeObject["ingredients"]
         self.steps = self.parseInstrString(recipeString)
@@ -150,6 +151,9 @@ class Recipe:
         self.stepCounter = 0
         self.timer = CountdownTimer(0)
         self.finished = False
+    
+    def __str__(self):
+        return str(self.recipeObj)
 
 
     def parseInstrString(self, recipeString):
