@@ -95,7 +95,15 @@ def questionHandler(recognizer, recipe, source, userId):
         print("You said: " + questionString)
         say("Generating response...")
 
-        response = requests.get(backend_url + "/get-allergies-ingredients?userId=" + str(userId))
+        
+        while True:
+            try:
+                print("Retrying...")
+                response = requests.get(backend_url + "/get-allergies-ingredients?userId=" + str(userId), timeout=2)
+                if response.status_code == 200:  # Check if response is successful
+                    break
+            except requests.exceptions.RequestException:  # Catches timeout and other request errors
+                pass  
         if response.status_code == 200:
             contextAllergies = response.json()['allergies']
             contextIngredients = response.json()['ingredients']
@@ -108,6 +116,7 @@ def questionHandler(recognizer, recipe, source, userId):
         if answer == "INVALID":
             say("I'm sorry, I couldn't answer your question.")
         else:
+            print(answer)
             say(answer)
     
     except sr.UnknownValueError:
