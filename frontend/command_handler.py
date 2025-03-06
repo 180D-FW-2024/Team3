@@ -98,7 +98,8 @@ def questionHandler(recognizer, recipe, source, userId):
         else:
             contextAllergies = None
             contextIngredients = None
-
+            
+        print("Recipe: ", str(recipe))
         answer = answer_question(questionString, contextIngredients=contextIngredients, contextAllergies=contextAllergies, contextRecipe=str(recipe))
 
         if answer == "INVALID":
