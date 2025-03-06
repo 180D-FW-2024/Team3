@@ -53,8 +53,13 @@ class IngredientRecog:
             self.take_pic(file_name = "qrcode.jpg")
             qr_path = os.path.join(script_dir, "qrcode.jpg")
             frame = cv2.imread(qr_path)
+            print("one\n")
             decoded_qrs = decode(frame)
+
+            print("two\n")
+            
             for obj in decoded_qrs:
+
                 data = obj.data.decode('utf-8')
                 print('data: ' + str(data))
                 dataString = f"username={data}&phone_number={data}"
@@ -70,8 +75,8 @@ class IngredientRecog:
 
                 if response.status_code == 200:
                     try:
-                        config_path = os.path.join(script_dir, "../config.txt")
-                        file = open("config_path", "w")
+                        config_path = os.path.join(script_dir, "../userConfig.txt")
+                        file = open(config_path, "w")
                         user_id = "USERNAME:" + response.json()["user_id"]
                         file.write(user_id)
                         file.close()
@@ -126,7 +131,7 @@ class IngredientRecog:
 
     def take_pic(self, file_name = "test.jpg"):
         # Capture an image
-        pic_path = os.path.join(script_dir, "test.jpg")
+        pic_path = os.path.join(script_dir, file_name)
         try:
             subprocess.run([
         "libcamera-still",

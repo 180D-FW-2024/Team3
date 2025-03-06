@@ -38,11 +38,11 @@ def getUserId(file_path):
                         response = requests.get(backend_url + "/get-user/" + username, timeout=2)
                         if 200 <= response.status_code < 300:  # Check if response is successful
                             break
+                        if response.status_code == 404:
+                            removeUsername(real_file_path)
+                            return None
                     except requests.exceptions.RequestException:  # Catches timeout and other request errors
                         pass  
-                if response.status_code != 200:
-                    removeUsername(real_file_path)
-                    return None
                 return response.json()["id"]
     return None
 

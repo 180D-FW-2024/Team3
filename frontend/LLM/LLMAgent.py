@@ -20,7 +20,8 @@ options = [
     "recommend recipe",
     "measure ingredient",
     "add allergy",
-    "remove allergy"
+    "remove allergy",
+    "scan login"
 ]
 
 client = Together()

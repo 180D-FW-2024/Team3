@@ -160,6 +160,9 @@ class RaspiSM:
                                     addIngredientHandler(recognizer, self.recipe, source, userId)
                                 elif additionalPrompt == "add ingredient with camera":
                                     addIngredientCamHandler(recognizer, self.image_recognizer, self.recipe, source, userId)
+                                elif additionalPrompt == "scan login":
+                                    # untested
+                                    self.image_recognizer.scan_qr_login()
                                 elif additionalPrompt == 'remove ingredient':
                                     removeIngredientHandler(recognizer, self.recipe, source, userId)
                                 elif additionalPrompt == 'recommend recipe':
