@@ -98,7 +98,7 @@ def answer_question(question, contextIngredients=None, contextAllergies=None, co
         for token in response:
             print(token.choices[0].delta.content, end='', flush=True)
             results.append(token.choices[0].delta.content.strip())
-        outputString = "".join([re.sub(r'[^\w;]+', '', token) for token in results]).strip().lower()
+        outputString = "".join(token for token in results).strip().lower()
         return outputString
     except Exception as e:
         print(f"Error: {e}")
