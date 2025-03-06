@@ -1,0 +1,58 @@
+{
+    "completion_time": 1800,
+    "id": 51,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "ground beef",
+            "quantity": 450
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "onion",
+            "quantity": 100
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "garlic",
+            "quantity": 10
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "cabbage",
+            "quantity": 500
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "tomato sauce",
+            "quantity": 240
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "water",
+            "quantity": 120
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        }
+    ],
+    "recipe_text": "Quantity; 450; Prepare 450 grams of ground beef| Measurement; 100; Measure out 100 grams of onion, chopped| Measurement; 10; Measure out 10 grams of garlic, minced| Measurement; 500; Measure out 500 grams of cabbage, chopped| Measurement; 240; Measure out 240 grams of tomato sauce| Measurement; 120; Measure out 120 grams of water| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Untimed; None; In a large skillet, cook ground beef, onion, and garlic over medium heat until beef is browned| Untimed; None; Drain excess fat| Untimed; None; Add cabbage, tomato sauce, water, salt, and black pepper to the skillet| Untimed; None; Stir to combine| Timed; 1200; Simmer for 20 minutes, or until cabbage is tender| Finish; None; Serve hot and enjoy!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Ground Beef and Cabbage"
+}

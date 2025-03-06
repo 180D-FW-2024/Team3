@@ -19,13 +19,15 @@ import string
 import os
 import requests
 
+
+
 dotenv.load_dotenv()
 PORT_NUMBER = os.getenv("PORT_NUMBER")
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 BACKEND_URL = os.getenv("BACKEND_URL")
 
 # Run test_db.py to test database, remove on database completion
-subprocess.run(["python3", "/app/app/test_db.py"])
+subprocess.run(["python3", "/app/app/setup_db.py"])
 
 engine = create_engine('sqlite:///raspitouille.db', echo=True)
 Session = sessionmaker(bind=engine)

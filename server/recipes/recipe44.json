@@ -1,0 +1,70 @@
+{
+    "completion_time": 1500,
+    "id": 44,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "chicken breasts",
+            "quantity": 450
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "barbecue sauce",
+            "quantity": 120
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "romaine lettuce",
+            "quantity": 300
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "black beans",
+            "quantity": 200
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "corn kernels",
+            "quantity": 150
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "cherry tomatoes",
+            "quantity": 150
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "red onion",
+            "quantity": 50
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "cheddar cheese",
+            "quantity": 100
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "tortilla chips",
+            "quantity": 100
+        },
+        {
+            "id": 10,
+            "measureType": "Weight",
+            "name": "ranch dressing",
+            "quantity": 120
+        }
+    ],
+    "recipe_text": "Quantity; 450; Prepare 450 grams of chicken breasts| Measurement; 120; Measure out 120 grams of barbecue sauce| Measurement; 300; Measure out 300 grams of romaine lettuce, chopped| Measurement; 200; Measure out 200 grams of black beans, drained and rinsed| Measurement; 150; Measure out 150 grams of corn kernels| Measurement; 150; Measure out 150 grams of cherry tomatoes, halved| Measurement; 50; Measure out 50 grams of red onion, chopped| Measurement; 100; Measure out 100 grams of cheddar cheese, shredded| Measurement; 100; Measure out 100 grams of tortilla chips, crushed| Measurement; 120; Measure out 120 grams of ranch dressing| Untimed; None; Preheat grill to medium-high heat| Untimed; None; Grill chicken breasts, basting with barbecue sauce, until cooked through| Untimed; None; Let chicken rest, then slice into strips| Untimed; None; In a large bowl, combine romaine lettuce, black beans, corn, cherry tomatoes, red onion, cheddar cheese, and tortilla chips| Untimed; None; Top with grilled chicken strips| Untimed; None; Drizzle with ranch dressing| Finish; None; Serve immediately and enjoy!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "BBQ Chicken Chopped Salad"
+}

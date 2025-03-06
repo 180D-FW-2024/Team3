@@ -1,0 +1,88 @@
+{
+    "completion_time": 1200,
+    "id": 27,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "chickpeas",
+            "quantity": 400
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "olive oil",
+            "quantity": 30
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "chili powder",
+            "quantity": 5
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "ground cumin",
+            "quantity": 5
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "garlic powder",
+            "quantity": 2
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "onion powder",
+            "quantity": 2
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        },
+        {
+            "id": 9,
+            "measureType": "Count",
+            "name": "tortillas",
+            "quantity": 8
+        },
+        {
+            "id": 10,
+            "measureType": "Weight",
+            "name": "lettuce",
+            "quantity": 100
+        },
+        {
+            "id": 11,
+            "measureType": "Weight",
+            "name": "tomatoes",
+            "quantity": 150
+        },
+        {
+            "id": 12,
+            "measureType": "Weight",
+            "name": "avocado",
+            "quantity": 150
+        },
+        {
+            "id": 13,
+            "measureType": "Weight",
+            "name": "sour cream",
+            "quantity": 100
+        }
+    ],
+    "recipe_text": "Measurement; 400; Measure out 400 grams of chickpeas, drained and rinsed| Measurement; 30; Measure out 30 grams of olive oil| Measurement; 5; Measure out 5 grams of chili powder| Measurement; 5; Measure out 5 grams of ground cumin| Measurement; 2; Measure out 2 grams of garlic powder| Measurement; 2; Measure out 2 grams of onion powder| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Quantity; 8; Prepare 8 tortillas| Measurement; 100; Measure out 100 grams of lettuce, shredded| Measurement; 150; Measure out 150 grams of tomatoes, diced| Measurement; 150; Measure out 150 grams of avocado, sliced| Measurement; 100; Measure out 100 grams of sour cream| Untimed; None; Preheat oven to 200 degrees C (400 degrees F)| Untimed; None; In a bowl, toss chickpeas with olive oil, chili powder, cumin, garlic powder, onion powder, salt, and black pepper| Untimed; None; Spread seasoned chickpeas on a baking sheet| Timed; 600; Roast in the preheated oven for 20 minutes| Untimed; None; Warm tortillas in a skillet or microwave| Untimed; None; Assemble tacos by filling tortillas with roasted chickpeas, lettuce, tomatoes, avocado, and sour cream| Finish; None; Serve immediately!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Vegetarian Chickpea Tacos"
+}

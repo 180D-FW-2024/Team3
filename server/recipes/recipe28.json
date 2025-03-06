@@ -1,0 +1,70 @@
+{
+    "completion_time": 1800,
+    "id": 28,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "branzino fish",
+            "quantity": 900
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "olive oil",
+            "quantity": 60
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "garlic",
+            "quantity": 10
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "lemon juice",
+            "quantity": 60
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "oregano",
+            "quantity": 5
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "cherry tomatoes",
+            "quantity": 200
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "kalamata olives",
+            "quantity": 100
+        },
+        {
+            "id": 10,
+            "measureType": "Weight",
+            "name": "fresh parsley",
+            "quantity": 10
+        }
+    ],
+    "recipe_text": "Quantity; 900; Prepare 900 grams of branzino fish, cleaned and scaled| Measurement; 60; Measure out 60 grams of olive oil| Measurement; 10; Measure out 10 grams of garlic, minced| Measurement; 60; Measure out 60 grams of lemon juice| Measurement; 5; Measure out 5 grams of dried oregano| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Measurement; 200; Measure out 200 grams of cherry tomatoes, halved| Measurement; 100; Measure out 100 grams of kalamata olives, pitted| Measurement; 10; Measure out 10 grams of fresh parsley, chopped| Untimed; None; Preheat oven to 200 degrees C (400 degrees F)| Untimed; None; In a small bowl, combine olive oil, garlic, lemon juice, oregano, salt, and black pepper| Untimed; None; Place branzino in a baking dish and pour the olive oil mixture over it| Untimed; None; Scatter cherry tomatoes and olives around the fish| Untimed; None; Bake in the preheated oven| Timed; 1200; Bake for 20 minutes, or until fish is cooked through| Untimed; None; Garnish with fresh parsley| Finish; None; Serve hot!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Branzino Mediterranean"
+}

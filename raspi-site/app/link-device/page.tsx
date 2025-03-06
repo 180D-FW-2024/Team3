@@ -6,12 +6,12 @@ import { Button } from "@/components/ui/button"
 import { QrCode as QrCodeIcon, ArrowLeft } from "lucide-react"
 import QRCode from "react-qr-code";
 import Link from "next/link";
-
+import getConfig from 'next/config';
 import axios from "axios";
 
-const BACKEND_URL = "http://localhost:80" // 'https://suitable-kangaroo-immensely.ngrok-free.app'
-
 const BOTNAME = "RaspitouilleBot"
+
+const BACKEND_URL = "https://raspitouille.xyz/api"
 
 export default function LinkDevice() {
   const [qrValue, setQrValue] = useState<string>("")
@@ -28,7 +28,7 @@ export default function LinkDevice() {
     const phoneNumber = localStorage.getItem("phoneNumber") as string || ""
     setQrValue(JSON.stringify({ phoneNumber }))
 
-    console.log("Getting code for phone number " + phoneNumber + " at " + `${BACKEND_URL}/connect-telegram`)
+    console.log("Getting code for phone number " + phoneNumber + " at " + `/api/connect-telegram`)
 
     axios.get<ConnectTelegramResponse>(`${BACKEND_URL}/connect-telegram?phoneNumber=${phoneNumber}`)
       .then((response) => {

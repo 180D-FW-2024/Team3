@@ -1,0 +1,64 @@
+{
+    "completion_time": 2880,
+    "id": 11,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Count",
+            "name": "bell peppers",
+            "quantity": 4
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "ground beef",
+            "quantity": 450
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "rice",
+            "quantity": 200
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "onion",
+            "quantity": 150
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "garlic",
+            "quantity": 10
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "tomato sauce",
+            "quantity": 480
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "cheddar cheese",
+            "quantity": 200
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        }
+    ],
+    "recipe_text": "Quantity; 4; Prepare 4 bell peppers, tops removed and seeded| Measurement; 450; Measure out 450 grams of ground beef| Measurement; 200; Measure out 200 grams of cooked rice| Measurement; 150; Measure out 150 grams of onion, chopped| Measurement; 10; Measure out 10 grams of garlic, minced| Measurement; 480; Measure out 480 grams of tomato sauce| Measurement; 200; Measure out 200 grams of cheddar cheese, shredded| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Untimed; None; Preheat oven to 190 degrees C (375 degrees F)| Untimed; None; In a skillet, cook ground beef over medium heat until browned| Untimed; None; Add onion and garlic to the skillet and cook until softened| Untimed; None; Stir in cooked rice, tomato sauce, salt, and black pepper| Untimed; None; Stuff the mixture into the bell peppers| Untimed; None; Place the stuffed peppers in a baking dish| Untimed; None; Sprinkle cheddar cheese over the top of the peppers| Timed; 1800; Bake in the preheated oven for 30 minutes| Finish; None; Serve hot!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Chef John's Stuffed Peppers"
+}

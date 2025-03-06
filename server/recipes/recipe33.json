@@ -1,0 +1,58 @@
+{
+    "completion_time": 1500,
+    "id": 33,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "salmon fillets",
+            "quantity": 450
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "honey",
+            "quantity": 60
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "lime juice",
+            "quantity": 30
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "soy sauce",
+            "quantity": 30
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "olive oil",
+            "quantity": 15
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "garlic",
+            "quantity": 5
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 2
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 1
+        }
+    ],
+    "recipe_text": "Quantity; 450; Prepare 450 grams of salmon fillets| Measurement; 60; Measure out 60 grams of honey| Measurement; 30; Measure out 30 grams of lime juice| Measurement; 30; Measure out 30 grams of soy sauce| Measurement; 15; Measure out 15 grams of olive oil| Measurement; 5; Measure out 5 grams of garlic, minced| Measurement; 2; Measure out 2 grams of salt| Measurement; 1; Measure out 1 gram of black pepper| Untimed; None; Preheat oven to 200 degrees C (400 degrees F)| Untimed; None; In a bowl, whisk together honey, lime juice, soy sauce, olive oil, garlic, salt, and black pepper| Untimed; None; Place salmon fillets in a baking dish| Untimed; None; Pour the honey-lime mixture over the salmon| Timed; 900; Bake in the preheated oven for 15 minutes| Finish; None; Serve hot and enjoy!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Honey Lime Salmon"
+}

@@ -1,0 +1,52 @@
+{
+    "completion_time": 7200,
+    "id": 15,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "sweet bread",
+            "quantity": 450
+        },
+        {
+            "id": 2,
+            "measureType": "Count",
+            "name": "eggs",
+            "quantity": 6
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "milk",
+            "quantity": 480
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "sugar",
+            "quantity": 100
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "vanilla extract",
+            "quantity": 5
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "cinnamon",
+            "quantity": 5
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "butter",
+            "quantity": 28
+        }
+    ],
+    "recipe_text": "Quantity; 450; Prepare 450 grams of sweet bread, cubed| Quantity; 6; Prepare 6 eggs| Measurement; 480; Measure out 480 grams of milk| Measurement; 100; Measure out 100 grams of sugar| Measurement; 5; Measure out 5 grams of vanilla extract| Measurement; 5; Measure out 5 grams of cinnamon| Measurement; 28; Measure out 28 grams of butter, melted| Untimed; None; Grease a baking dish with butter| Untimed; None; Arrange bread cubes in the prepared baking dish| Untimed; None; In a bowl, whisk together eggs, milk, sugar, vanilla extract, and cinnamon| Untimed; None; Pour the mixture over the bread cubes| Untimed; None; Cover and refrigerate for at least 8 hours or overnight| Untimed; None; Preheat oven to 175 degrees C (350 degrees F)| Timed; 3600; Bake in the preheated oven for 60 minutes| Finish; None; Serve warm!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Sweet Bread Strata"
+}

@@ -1,0 +1,70 @@
+{
+    "completion_time": 2100,
+    "id": 24,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "butter",
+            "quantity": 56
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "onion",
+            "quantity": 150
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "garlic",
+            "quantity": 10
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "tomatoes",
+            "quantity": 800
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "chicken broth",
+            "quantity": 480
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "basil",
+            "quantity": 5
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "sugar",
+            "quantity": 10
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        },
+        {
+            "id": 10,
+            "measureType": "Weight",
+            "name": "heavy cream",
+            "quantity": 240
+        }
+    ],
+    "recipe_text": "Measurement; 56; Measure out 56 grams of butter| Measurement; 150; Measure out 150 grams of onion, chopped| Measurement; 10; Measure out 10 grams of garlic, minced| Measurement; 800; Measure out 800 grams of tomatoes, chopped| Measurement; 480; Measure out 480 grams of chicken broth| Measurement; 5; Measure out 5 grams of fresh basil, chopped| Measurement; 10; Measure out 10 grams of sugar| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Measurement; 240; Measure out 240 grams of heavy cream| Untimed; None; Melt butter in a large pot over medium heat| Untimed; None; Add onion and garlic to the pot and cook until softened| Untimed; None; Stir in tomatoes, chicken broth, basil, sugar, salt, and black pepper| Untimed; None; Bring to a boil, then reduce heat and simmer| Timed; 1200; Simmer for 20 minutes| Untimed; None; Blend the soup until smooth using an immersion blender or regular blender| Untimed; None; Stir in heavy cream| Untimed; None; Heat through but do not boil| Finish; None; Serve hot!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Rich and Creamy Tomato Basil Soup"
+}

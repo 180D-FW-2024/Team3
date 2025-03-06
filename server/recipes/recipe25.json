@@ -1,0 +1,64 @@
+{
+    "completion_time": 2400,
+    "id": 25,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "chicken broth",
+            "quantity": 1200
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "butter",
+            "quantity": 56
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "onion",
+            "quantity": 100
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "arborio rice",
+            "quantity": 300
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "white wine",
+            "quantity": 120
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "saffron threads",
+            "quantity": 1
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "parmesan cheese",
+            "quantity": 50
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        }
+    ],
+    "recipe_text": "Measurement; 1200; Measure out 1200 grams of chicken broth| Measurement; 56; Measure out 56 grams of butter| Measurement; 100; Measure out 100 grams of onion, finely chopped| Measurement; 300; Measure out 300 grams of arborio rice| Measurement; 120; Measure out 120 grams of white wine| Measurement; 1; Measure out 1 gram of saffron threads| Measurement; 50; Measure out 50 grams of grated parmesan cheese| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Untimed; None; Heat chicken broth in a saucepan and keep warm over low heat| Untimed; None; Melt butter in a large skillet over medium heat| Untimed; None; Add onion to the skillet and cook until softened| Untimed; None; Stir in arborio rice and cook for 2 minutes| Untimed; None; Pour in white wine and cook until absorbed| Untimed; None; Add saffron threads to the warm broth| Untimed; None; Add broth to the rice, one ladle at a time, stirring constantly| Timed; 1800; Cook for 18 minutes, or until rice is tender and creamy| Untimed; None; Stir in parmesan cheese| Untimed; None; Season with salt and black pepper| Finish; None; Serve hot!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Risotto alla Milanese"
+}

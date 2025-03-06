@@ -1,0 +1,64 @@
+{
+    "completion_time": 2100,
+    "id": 14,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "beef sirloin",
+            "quantity": 680
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "soy sauce",
+            "quantity": 60
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "lemon juice",
+            "quantity": 30
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "sugar",
+            "quantity": 10
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "garlic",
+            "quantity": 10
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "onion",
+            "quantity": 150
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "vegetable oil",
+            "quantity": 30
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        }
+    ],
+    "recipe_text": "Quantity; 680; Prepare 680 grams of beef sirloin, thinly sliced| Measurement; 60; Measure out 60 grams of soy sauce| Measurement; 30; Measure out 30 grams of lemon juice| Measurement; 10; Measure out 10 grams of sugar| Measurement; 10; Measure out 10 grams of garlic, minced| Quantity; 150; Prepare 150 grams of onion, sliced| Measurement; 30; Measure out 30 grams of vegetable oil| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Untimed; None; In a bowl, combine soy sauce, lemon juice, sugar, garlic, salt, and black pepper| Untimed; None; Add beef slices to the marinade and toss to coat| Untimed; None; Cover and refrigerate for at least 1 hour| Untimed; None; Heat vegetable oil in a skillet over medium heat| Untimed; None; Add marinated beef and cook until browned| Timed; 300; Cook beef for 5 minutes, stirring occasionally| Untimed; None; Add onion slices and cook until softened| Finish; None; Serve hot!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Filipino Beef Steak"
+}

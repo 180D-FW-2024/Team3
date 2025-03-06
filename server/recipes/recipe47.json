@@ -1,0 +1,52 @@
+{
+    "completion_time": 1800,
+    "id": 47,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "canned salmon",
+            "quantity": 450
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "bread crumbs",
+            "quantity": 100
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "onion",
+            "quantity": 50
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "egg",
+            "quantity": 50
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "olive oil",
+            "quantity": 30
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 2
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 1
+        }
+    ],
+    "recipe_text": "Quantity; 450; Prepare 450 grams of canned salmon, drained and flaked| Measurement; 100; Measure out 100 grams of bread crumbs| Measurement; 50; Measure out 50 grams of onion, finely chopped| Measurement; 50; Measure out 50 grams of egg, beaten| Measurement; 30; Measure out 30 grams of olive oil| Measurement; 2; Measure out 2 grams of salt| Measurement; 1; Measure out 1 gram of black pepper| Untimed; None; In a bowl, combine salmon, bread crumbs, onion, egg, salt, and black pepper| Untimed; None; Shape the mixture into patties| Untimed; None; Heat olive oil in a skillet over medium heat| Timed; 1200; Cook patties in the skillet for 6-8 minutes on each side, or until golden brown| Finish; None; Serve hot and enjoy!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Grandma's Famous Salmon Cakes"
+}

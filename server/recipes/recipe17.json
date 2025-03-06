@@ -1,0 +1,70 @@
+{
+    "completion_time": 3480,
+    "id": 17,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "spaghetti",
+            "quantity": 450
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "ground beef",
+            "quantity": 450
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "onion",
+            "quantity": 150
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "garlic",
+            "quantity": 10
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "tomato sauce",
+            "quantity": 800
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "sugar",
+            "quantity": 10
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "dried oregano",
+            "quantity": 5
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        },
+        {
+            "id": 10,
+            "measureType": "Weight",
+            "name": "cheddar cheese",
+            "quantity": 200
+        }
+    ],
+    "recipe_text": "Quantity; 450; Prepare 450 grams of spaghetti| Measurement; 450; Measure out 450 grams of ground beef| Measurement; 150; Measure out 150 grams of onion, chopped| Measurement; 10; Measure out 10 grams of garlic, minced| Measurement; 800; Measure out 800 grams of tomato sauce| Measurement; 10; Measure out 10 grams of sugar| Measurement; 5; Measure out 5 grams of dried oregano| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Measurement; 200; Measure out 200 grams of cheddar cheese, shredded| Untimed; None; Cook spaghetti according to package instructions| Untimed; None; Drain spaghetti and set aside| Untimed; None; In a skillet, cook ground beef over medium heat until browned| Untimed; None; Add onion and garlic to the skillet and cook until softened| Untimed; None; Stir in tomato sauce, sugar, oregano, salt, and black pepper| Untimed; None; Simmer the sauce for 10 minutes| Untimed; None; Preheat oven to 175 degrees C (350 degrees F)| Untimed; None; Combine cooked spaghetti and sauce in a baking dish| Untimed; None; Sprinkle cheddar cheese over the top| Timed; 1800; Bake in the preheated oven for 30 minutes| Finish; None; Serve hot!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Basic Baked Spaghetti"
+}

@@ -5,6 +5,9 @@ try {
   // ignore error
 }
 
+import dotenv from 'dotenv'
+dotenv.config({ path: '../.env' })
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -20,7 +23,7 @@ const nextConfig = {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
-  },
+  }
 }
 
 mergeConfig(nextConfig, userConfig)
