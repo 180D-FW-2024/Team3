@@ -1,0 +1,46 @@
+{
+    "completion_time": 2220,
+    "id": 10,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "frozen tater tots",
+            "quantity": 900
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "pork shoulder",
+            "quantity": 450
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "BBQ sauce",
+            "quantity": 240
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "cheddar cheese",
+            "quantity": 200
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "green onions",
+            "quantity": 30
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "sour cream",
+            "quantity": 120
+        }
+    ],
+    "recipe_text": "Quantity; 900; Prepare 900 grams of frozen tater tots| Quantity; 450; Prepare 450 grams of cooked pork shoulder, shredded| Measurement; 240; Measure out 240 grams of BBQ sauce| Measurement; 200; Measure out 200 grams of cheddar cheese, shredded| Measurement; 30; Measure out 30 grams of green onions, chopped| Measurement; 120; Measure out 120 grams of sour cream| Untimed; None; Preheat oven to 220 degrees C (425 degrees F)| Untimed; None; Spread frozen tater tots in a single layer on a baking sheet| Timed; 1200; Bake tater tots in the preheated oven for 20 minutes| Untimed; None; In a bowl, mix shredded pork shoulder with BBQ sauce| Untimed; None; Remove tater tots from the oven and top with BBQ pork mixture| Untimed; None; Sprinkle cheddar cheese over the top| Timed; 600; Return to the oven and bake for an additional 10 minutes| Untimed; None; Garnish with green onions and dollops of sour cream| Finish; None; Serve hot!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Memphis BBQ Pork Totchos"
+}

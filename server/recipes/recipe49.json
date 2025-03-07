@@ -1,0 +1,76 @@
+{
+    "completion_time": 3600,
+    "id": 49,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "spaghetti",
+            "quantity": 200
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "butter",
+            "quantity": 30
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "onion",
+            "quantity": 100
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "ham",
+            "quantity": 300
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "mushrooms",
+            "quantity": 150
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "all-purpose flour",
+            "quantity": 30
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "chicken broth",
+            "quantity": 480
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "heavy cream",
+            "quantity": 120
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "parmesan cheese",
+            "quantity": 50
+        },
+        {
+            "id": 10,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 11,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        }
+    ],
+    "recipe_text": "Quantity; 200; Prepare 200 grams of spaghetti, cooked according to package instructions| Measurement; 30; Measure out 30 grams of butter| Measurement; 100; Measure out 100 grams of onion, chopped| Measurement; 300; Measure out 300 grams of ham, diced| Measurement; 150; Measure out 150 grams of mushrooms, sliced| Measurement; 30; Measure out 30 grams of all-purpose flour| Measurement; 480; Measure out 480 grams of chicken broth| Measurement; 120; Measure out 120 grams of heavy cream| Measurement; 50; Measure out 50 grams of grated parmesan cheese| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Untimed; None; Preheat oven to 190 degrees C (375 degrees F)| Untimed; None; In a large skillet, melt butter over medium heat| Untimed; None; Add onion, ham, and mushrooms to the skillet and cook until vegetables are tender| Untimed; None; Stir in flour and cook for 1-2 minutes| Untimed; None; Gradually add chicken broth and heavy cream, stirring constantly until the mixture thickens| Untimed; None; Stir in parmesan cheese, salt, and black pepper| Untimed; None; Combine the cooked spaghetti with the sauce in a baking dish| Timed; 1800; Bake in the preheated oven for 30 minutes, or until bubbly and golden| Finish; None; Serve hot and enjoy!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Ham Tetrazzini"
+}

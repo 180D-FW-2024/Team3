@@ -1,1 +1,12 @@
+__pycache__/recipe_handler.cpython-311.pyc
+timertest.py
+__pycache__/text_to_speech.cpython-311.pyc
+__pycache__
 .env
+*.db
+llama-agentic-system/
+userConfig.txt
+components/ui/
+node_modules/
+.next/
+**/package-lock.json

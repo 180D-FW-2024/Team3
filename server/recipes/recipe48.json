@@ -1,0 +1,64 @@
+{
+    "completion_time": 1200,
+    "id": 48,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "canned tuna",
+            "quantity": 200
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "lime juice",
+            "quantity": 30
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "olive oil",
+            "quantity": 15
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "red onion",
+            "quantity": 50
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "cilantro",
+            "quantity": 10
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 2
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 1
+        },
+        {
+            "id": 8,
+            "measureType": "Count",
+            "name": "tostada shells",
+            "quantity": 4
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "avocado",
+            "quantity": 150
+        }
+    ],
+    "recipe_text": "Quantity; 200; Prepare 200 grams of canned tuna, drained| Measurement; 30; Measure out 30 grams of lime juice| Measurement; 15; Measure out 15 grams of olive oil| Measurement; 50; Measure out 50 grams of red onion, finely chopped| Measurement; 10; Measure out 10 grams of cilantro, chopped| Measurement; 2; Measure out 2 grams of salt| Measurement; 1; Measure out 1 gram of black pepper| Quantity; 4; Prepare 4 tostada shells| Measurement; 150; Measure out 150 grams of avocado, sliced| Untimed; None; In a bowl, combine tuna, lime juice, olive oil, red onion, cilantro, salt, and black pepper| Untimed; None; Spread the tuna mixture evenly over the tostada shells| Untimed; None; Top with avocado slices| Finish; None; Serve immediately and enjoy!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Tuna Lime Tostadas"
+}

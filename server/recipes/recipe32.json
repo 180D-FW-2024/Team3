@@ -1,0 +1,52 @@
+{
+    "completion_time": 2400,
+    "id": 32,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "chicken legs",
+            "quantity": 900
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "olive oil",
+            "quantity": 30
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "smoked paprika",
+            "quantity": 5
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "garlic powder",
+            "quantity": 5
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "onion powder",
+            "quantity": 5
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        }
+    ],
+    "recipe_text": "Quantity; 900; Prepare 900 grams of chicken legs| Measurement; 30; Measure out 30 grams of olive oil| Measurement; 5; Measure out 5 grams of smoked paprika| Measurement; 5; Measure out 5 grams of garlic powder| Measurement; 5; Measure out 5 grams of onion powder| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Untimed; None; Preheat air fryer to 190 degrees C (375 degrees F)| Untimed; None; Pat chicken legs dry with paper towels| Untimed; None; In a bowl, toss chicken legs with olive oil, smoked paprika, garlic powder, onion powder, salt, and black pepper| Untimed; None; Arrange chicken legs in the air fryer basket in a single layer| Timed; 1800; Cook in the preheated air fryer for 30 minutes, flipping halfway through| Finish; None; Serve hot and enjoy!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Air Fryer Chicken Legs"
+}

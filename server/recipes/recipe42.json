@@ -1,0 +1,46 @@
+{
+    "completion_time": 1800,
+    "id": 42,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Count",
+            "name": "Italian sausage links",
+            "quantity": 4
+        },
+        {
+            "id": 2,
+            "measureType": "Count",
+            "name": "Italian hoagie rolls",
+            "quantity": 4
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "green bell pepper",
+            "quantity": 150
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "onion",
+            "quantity": 150
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "olive oil",
+            "quantity": 30
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "marinara sauce",
+            "quantity": 240
+        }
+    ],
+    "recipe_text": "Quantity; 4; Prepare 4 Italian sausage links| Quantity; 4; Prepare 4 Italian hoagie rolls| Measurement; 150; Measure out 150 grams of green bell pepper, sliced| Measurement; 150; Measure out 150 grams of onion, sliced| Measurement; 30; Measure out 30 grams of olive oil| Measurement; 240; Measure out 240 grams of marinara sauce| Untimed; None; Preheat grill to medium-high heat| Untimed; None; Brush sausages, bell peppers, and onions with olive oil| Untimed; None; Grill sausages, bell peppers, and onions until sausages are cooked through and vegetables are tender| Untimed; None; Warm hoagie rolls on the grill| Untimed; None; Spread marinara sauce inside the rolls| Untimed; None; Place grilled sausages, bell peppers, and onions inside the rolls| Finish; None; Serve hot and enjoy!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Festival Style Grilled Italian Sausage Sandwiches"
+}

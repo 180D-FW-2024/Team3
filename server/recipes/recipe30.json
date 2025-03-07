@@ -1,0 +1,106 @@
+{
+    "completion_time": 2400,
+    "id": 30,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "butter",
+            "quantity": 28
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "onion",
+            "quantity": 150
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "green bell pepper",
+            "quantity": 100
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "celery",
+            "quantity": 100
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "garlic",
+            "quantity": 10
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "tomatoes",
+            "quantity": 400
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "chicken broth",
+            "quantity": 480
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "tomato paste",
+            "quantity": 60
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "bay leaves",
+            "quantity": 2
+        },
+        {
+            "id": 10,
+            "measureType": "Weight",
+            "name": "dried thyme",
+            "quantity": 2
+        },
+        {
+            "id": 11,
+            "measureType": "Weight",
+            "name": "dried basil",
+            "quantity": 2
+        },
+        {
+            "id": 12,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 13,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        },
+        {
+            "id": 14,
+            "measureType": "Weight",
+            "name": "cayenne pepper",
+            "quantity": 1
+        },
+        {
+            "id": 15,
+            "measureType": "Weight",
+            "name": "shrimp",
+            "quantity": 450
+        },
+        {
+            "id": 16,
+            "measureType": "Weight",
+            "name": "crabmeat",
+            "quantity": 200
+        }
+    ],
+    "recipe_text": "Measurement; 28; Measure out 28 grams of butter| Measurement; 150; Measure out 150 grams of onion, chopped| Measurement; 100; Measure out 100 grams of green bell pepper, chopped| Measurement; 100; Measure out 100 grams of celery, chopped| Measurement; 10; Measure out 10 grams of garlic, minced| Measurement; 400; Measure out 400 grams of tomatoes, chopped| Measurement; 480; Measure out 480 grams of chicken broth| Measurement; 60; Measure out 60 grams of tomato paste| Measurement; 2; Measure out 2 grams of bay leaves| Measurement; 2; Measure out 2 grams of dried thyme| Measurement; 2; Measure out 2 grams of dried basil| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Measurement; 1; Measure out 1 gram of cayenne pepper| Measurement; 450; Measure out 450 grams of shrimp, peeled and deveined| Measurement; 200; Measure out 200 grams of crabmeat| Untimed; None; Melt butter in a large pot over medium heat| Untimed; None; Add onion, green bell pepper, celery, and garlic to the pot and cook until softened| Untimed; None; Stir in tomatoes, chicken broth, tomato paste, bay leaves, thyme, basil, salt, black pepper, and cayenne pepper| Untimed; None; Bring to a boil, then reduce heat and simmer| Timed; 1200; Simmer for 20 minutes| Untimed; None; Add shrimp and crabmeat to the pot| Untimed; None; Cook until shrimp are pink and cooked through| Finish; None; Serve hot over rice or with crusty bread!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Seafood Creole"
+}

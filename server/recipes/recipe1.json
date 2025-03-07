@@ -1,0 +1,22 @@
+{
+    "completion_time": 30,
+    "id": 1,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "sugar",
+            "quantity": 100
+        },
+        {
+            "id": 2,
+            "measureType": "Count",
+            "name": "apple",
+            "quantity": 3
+        }
+    ],
+    "recipe_text": "Quantity; 3; Cut up 3 apples| Measurement; 50; Measure out 50 grams of white sugar| Untimed; None; Mash apples and mix in sugar in bowl| Temperature; 200; Gather the ingredients. Preheat the oven to 200 degrees F| Timed; 10; Place mix in oven in ceramic dish and bake for 20 minutes| Finish; None; Serve!",
+    "scale_needed": 0,
+    "thermometer_needed": 0,
+    "title": "Apple Custard"
+}

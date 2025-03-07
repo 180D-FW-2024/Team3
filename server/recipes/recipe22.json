@@ -1,0 +1,82 @@
+{
+    "completion_time": 18000,
+    "id": 22,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "ground beef",
+            "quantity": 900
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "bread crumbs",
+            "quantity": 60
+        },
+        {
+            "id": 3,
+            "measureType": "Count",
+            "name": "eggs",
+            "quantity": 1
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "onion",
+            "quantity": 100
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "milk",
+            "quantity": 60
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "flour",
+            "quantity": 30
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "mushrooms",
+            "quantity": 150
+        },
+        {
+            "id": 10,
+            "measureType": "Weight",
+            "name": "beef broth",
+            "quantity": 480
+        },
+        {
+            "id": 11,
+            "measureType": "Weight",
+            "name": "onion soup mix",
+            "quantity": 20
+        },
+        {
+            "id": 12,
+            "measureType": "Weight",
+            "name": "water",
+            "quantity": 240
+        }
+    ],
+    "recipe_text": "Quantity; 900; Prepare 900 grams of ground beef| Measurement; 60; Measure out 60 grams of bread crumbs| Quantity; 1; Prepare 1 egg| Measurement; 100; Measure out 100 grams of onion, finely chopped| Measurement; 60; Measure out 60 grams of milk| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Measurement; 30; Measure out 30 grams of flour| Measurement; 150; Measure out 150 grams of mushrooms, sliced| Measurement; 480; Measure out 480 grams of beef broth| Measurement; 20; Measure out 20 grams of onion soup mix| Measurement; 240; Measure out 240 grams of water| Untimed; None; In a large bowl, combine ground beef, bread crumbs, egg, onion, milk, salt, and black pepper| Untimed; None; Shape the mixture into patties| Untimed; None; Dredge the patties in flour| Untimed; None; In a skillet, brown the patties on both sides| Untimed; None; Place the browned patties in a slow cooker| Untimed; None; Add mushrooms, beef broth, onion soup mix, and water to the slow cooker| Untimed; None; Cover and cook on low heat| Timed; 18000; Cook for 5 hours| Finish; None; Serve hot with mashed potatoes or rice!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Slow Cooker Salisbury Steak"
+}

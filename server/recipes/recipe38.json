@@ -1,0 +1,58 @@
+{
+    "completion_time": 2400,
+    "id": 38,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "pork chops",
+            "quantity": 600
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "vegetable oil",
+            "quantity": 30
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "shallot",
+            "quantity": 50
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "orange juice",
+            "quantity": 120
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "marsala wine",
+            "quantity": 120
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "butter",
+            "quantity": 28
+        }
+    ],
+    "recipe_text": "Quantity; 600; Prepare 600 grams of pork chops| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Measurement; 30; Measure out 30 grams of vegetable oil| Measurement; 50; Measure out 50 grams of shallot, minced| Measurement; 120; Measure out 120 grams of orange juice| Measurement; 120; Measure out 120 grams of marsala wine| Measurement; 28; Measure out 28 grams of butter| Untimed; None; Season pork chops with salt and black pepper| Untimed; None; Heat vegetable oil in a large skillet over medium-high heat| Untimed; None; Add pork chops to the skillet and cook for 3-4 minutes on each side| Untimed; None; Remove pork chops from the skillet and set aside| Untimed; None; Add shallot to the skillet and cook until softened| Untimed; None; Stir in orange juice and marsala wine, scraping up any browned bits from the skillet| Timed; 600; Simmer the sauce for 10 minutes| Untimed; None; Stir in butter until melted| Untimed; None; Return pork chops to the skillet and coat with the sauce| Finish; None; Serve hot and enjoy!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Orange Shallot Marsala Pork Chops"
+}

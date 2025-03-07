@@ -1,0 +1,58 @@
+{
+    "completion_time": 1200,
+    "id": 34,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "shrimp",
+            "quantity": 450
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "olive oil",
+            "quantity": 60
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "garlic",
+            "quantity": 15
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "lemon juice",
+            "quantity": 30
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "butter",
+            "quantity": 28
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 2
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 1
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "parsley",
+            "quantity": 5
+        }
+    ],
+    "recipe_text": "Quantity; 450; Prepare 450 grams of shrimp, peeled and deveined| Measurement; 60; Measure out 60 grams of olive oil| Measurement; 15; Measure out 15 grams of garlic, minced| Measurement; 30; Measure out 30 grams of lemon juice| Measurement; 28; Measure out 28 grams of butter| Measurement; 2; Measure out 2 grams of salt| Measurement; 1; Measure out 1 gram of black pepper| Measurement; 5; Measure out 5 grams of fresh parsley, chopped| Untimed; None; Heat olive oil in a large skillet over medium heat| Untimed; None; Add garlic to the skillet and cook until fragrant| Untimed; None; Add shrimp to the skillet and cook until pink| Untimed; None; Stir in lemon juice, butter, salt, and black pepper| Untimed; None; Cook until shrimp are fully cooked through| Untimed; None; Garnish with fresh parsley| Finish; None; Serve hot and enjoy!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Garlic Shrimp"
+}

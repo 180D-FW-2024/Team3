@@ -1,0 +1,112 @@
+{
+    "completion_time": 3600,
+    "id": 29,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "ground beef",
+            "quantity": 450
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "onion",
+            "quantity": 150
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "garlic",
+            "quantity": 10
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "tomato sauce",
+            "quantity": 400
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "corn",
+            "quantity": 200
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "black olives",
+            "quantity": 100
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "chili powder",
+            "quantity": 15
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "cumin",
+            "quantity": 5
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 10,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        },
+        {
+            "id": 11,
+            "measureType": "Weight",
+            "name": "cornmeal",
+            "quantity": 120
+        },
+        {
+            "id": 12,
+            "measureType": "Weight",
+            "name": "flour",
+            "quantity": 120
+        },
+        {
+            "id": 13,
+            "measureType": "Weight",
+            "name": "sugar",
+            "quantity": 10
+        },
+        {
+            "id": 14,
+            "measureType": "Weight",
+            "name": "baking powder",
+            "quantity": 10
+        },
+        {
+            "id": 15,
+            "measureType": "Weight",
+            "name": "milk",
+            "quantity": 240
+        },
+        {
+            "id": 16,
+            "measureType": "Weight",
+            "name": "egg",
+            "quantity": 50
+        },
+        {
+            "id": 17,
+            "measureType": "Weight",
+            "name": "butter",
+            "quantity": 28
+        }
+    ],
+    "recipe_text": "Measurement; 450; Measure out 450 grams of ground beef| Measurement; 150; Measure out 150 grams of onion, chopped| Measurement; 10; Measure out 10 grams of garlic, minced| Measurement; 400; Measure out 400 grams of tomato sauce| Measurement; 200; Measure out 200 grams of corn| Measurement; 100; Measure out 100 grams of black olives, sliced| Measurement; 15; Measure out 15 grams of chili powder| Measurement; 5; Measure out 5 grams of cumin| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Measurement; 120; Measure out 120 grams of cornmeal| Measurement; 120; Measure out 120 grams of flour| Measurement; 10; Measure out 10 grams of sugar| Measurement; 10; Measure out 10 grams of baking powder| Measurement; 240; Measure out 240 grams of milk| Measurement; 50; Measure out 50 grams of egg| Measurement; 28; Measure out 28 grams of butter, melted| Untimed; None; Preheat oven to 200 degrees C (400 degrees F)| Untimed; None; In a skillet, cook ground beef, onion, and garlic over medium heat until beef is browned| Untimed; None; Add tomato sauce, corn, black olives, chili powder, cumin, salt, and black pepper| Untimed; None; Simmer the mixture for 5 minutes| Untimed; None; In a bowl, combine cornmeal, flour, sugar, baking powder, milk, egg, and melted butter| Untimed; None; Spread the beef mixture in a baking dish| Untimed; None; Pour the cornmeal mixture over the beef mixture| Timed; 1800; Bake in the preheated oven for 30 minutes| Finish; None; Serve hot!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Hot Tamale Pie"
+}

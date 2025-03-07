@@ -1,0 +1,6 @@
+quart
+sqlalchemy
+together
+quart-cors
+python-dotenv
+python-telegram-bot

@@ -1,0 +1,76 @@
+{
+    "completion_time": 1860,
+    "id": 5,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "chicken breast",
+            "quantity": 680
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "soy sauce",
+            "quantity": 30
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "peanut butter",
+            "quantity": 120
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "honey",
+            "quantity": 30
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "rice vinegar",
+            "quantity": 15
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "sesame oil",
+            "quantity": 15
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "garlic",
+            "quantity": 10
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "ginger",
+            "quantity": 5
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "red pepper flakes",
+            "quantity": 2
+        },
+        {
+            "id": 10,
+            "measureType": "Count",
+            "name": "green onions",
+            "quantity": 4
+        },
+        {
+            "id": 11,
+            "measureType": "Count",
+            "name": "lime",
+            "quantity": 1
+        }
+    ],
+    "recipe_text": "Quantity; 680; Prepare 680 grams of chicken breast, cut into strips| Measurement; 30; Measure out 30 grams of soy sauce| Measurement; 120; Measure out 120 grams of peanut butter| Measurement; 30; Measure out 30 grams of honey| Measurement; 15; Measure out 15 grams of rice vinegar| Measurement; 15; Measure out 15 grams of sesame oil| Measurement; 10; Measure out 10 grams of garlic, minced| Measurement; 5; Measure out 5 grams of ginger, minced| Measurement; 2; Measure out 2 grams of red pepper flakes| Quantity; 4; Prepare 4 green onions, sliced| Quantity; 1; Prepare 1 lime, cut into wedges| Untimed; None; In a bowl, whisk together soy sauce, peanut butter, honey, rice vinegar, sesame oil, garlic, ginger, and red pepper flakes| Untimed; None; Add chicken strips to the mixture and toss to coat| Untimed; None; Heat a skillet over medium heat| Untimed; None; Add the chicken and cook until no longer pink in the center| Timed; 600; Cook the chicken for 10 minutes, stirring occasionally| Untimed; None; Garnish with green onions and lime wedges| Finish; None; Serve hot!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Thai Peanut Chicken"
+}

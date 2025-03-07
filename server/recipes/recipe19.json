@@ -1,0 +1,70 @@
+{
+    "completion_time": 1800,
+    "id": 19,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Weight",
+            "name": "rotini pasta",
+            "quantity": 340
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "cooked chicken",
+            "quantity": 450
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "celery",
+            "quantity": 100
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "carrots",
+            "quantity": 100
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "blue cheese",
+            "quantity": 100
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "mayonnaise",
+            "quantity": 120
+        },
+        {
+            "id": 7,
+            "measureType": "Weight",
+            "name": "hot sauce",
+            "quantity": 60
+        },
+        {
+            "id": 8,
+            "measureType": "Weight",
+            "name": "milk",
+            "quantity": 60
+        },
+        {
+            "id": 9,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 5
+        },
+        {
+            "id": 10,
+            "measureType": "Weight",
+            "name": "black pepper",
+            "quantity": 2
+        }
+    ],
+    "recipe_text": "Quantity; 340; Prepare 340 grams of rotini pasta| Measurement; 450; Measure out 450 grams of cooked chicken, shredded| Measurement; 100; Measure out 100 grams of celery, chopped| Measurement; 100; Measure out 100 grams of carrots, shredded| Measurement; 100; Measure out 100 grams of blue cheese, crumbled| Measurement; 120; Measure out 120 grams of mayonnaise| Measurement; 60; Measure out 60 grams of hot sauce| Measurement; 60; Measure out 60 grams of milk| Measurement; 5; Measure out 5 grams of salt| Measurement; 2; Measure out 2 grams of black pepper| Untimed; None; Cook rotini pasta according to package instructions| Untimed; None; Drain pasta and rinse under cold water| Untimed; None; In a large bowl, combine pasta, chicken, celery, carrots, and blue cheese| Untimed; None; In a small bowl, whisk together mayonnaise, hot sauce, milk, salt, and black pepper| Untimed; None; Pour the dressing over the pasta mixture and toss to coat| Timed; 600; Refrigerate for 10 minutes to allow flavors to blend| Finish; None; Serve chilled!",
+    "scale_needed": 1,
+    "thermometer_needed": 0,
+    "title": "Buffalo Chicken Pasta Salad"
+}
