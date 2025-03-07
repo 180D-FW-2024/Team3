@@ -1,5 +1,6 @@
 import copy
 import os
+import re
 import random
 import tensorflow as tf
 from picamera2 import Picamera2
@@ -13,6 +14,7 @@ import base64
 import json
 
 from sklearn.cluster import KMeans
+
 
 import numpy as np
 import scipy
@@ -40,8 +42,8 @@ backend_url = os.getenv('BACKEND_URL')
 class IngredientRecog:
     def __init__(self):
         try:
-            self.cnn = tf.keras.models.load_model("trained_model.h5")
-            self.client = OpenAI(api_key = os.getenv("OPENAI_API"))
+            self.cnn = tf.keras.models.load_model(model_path)
+            self.client = OpenAI(api_key = os.getenv("OPENAI_API_KEY"))
             # self.picam2 = Picamera2()
             # config = self.picam2.create_preview_configuration(main={"size": (1640, 1232)})
             # self.picam2.configure(config)
@@ -69,13 +71,31 @@ class IngredientRecog:
             for obj in decoded_qrs:
 
                 data = obj.data.decode('utf-8')
-                response = requests.get(backend_url + "/get-user/" + json.loads(data)["phoneNumber"])
+                try:
+                    jsonData = json.loads(data)
+                except json.JSONDecodeError as e:
+                    print("Invalid json scan")
+                    continue
+                print(jsonData)
+                if "phoneNumber" not in jsonData or len(jsonData["phoneNumber"]) != 12:
+                    print("Invalid phone number")
+                    continue
+                while True:
+                    try:
+                        print("Retrying...")
+                        response = requests.get(backend_url + "/get-user/" + jsonData["phoneNumber"], timeout=2)
+                        if 200 <= response.status_code < 300:  # Check if response is successful
+                            break
+                    except requests.exceptions.RequestException:  # Catches timeout and other request errors
+                        pass  
+                
                 if response.status_code == 200:
+                    config_path = os.path.join(script_dir, "../userConfig.txt")
                     try: 
-                        with open("./config.txt", "w") as file:
+                        with open(config_path, "w") as file:
                             user_id = "USERNAME:" + str(response.json()["username"])
                             file.write(user_id)
-                        return
+                        return (0, response.json()["username"])
                     except Exception as err:
                         return (9, err) #error code and dcoument
                 else:
@@ -138,7 +158,8 @@ class IngredientRecog:
             return(2, None)
 
     def predict_img(self, use_ai = True):
-        if not os.path.exists("./test.jpg"):
+        test_path = os.path.join(script_dir, "test.jpg")
+        if not os.path.exists(test_path):
             return(3, None) #some exit message
         test_image = self.__crop_img_qr()
         if(type(test_image) == tuple):
@@ -155,7 +176,7 @@ class IngredientRecog:
         # image = tf.keras.preprocessing.image.img_to_array(image)
         prediction = self.cnn.predict(prediction_image)
         prediction_position = np.argmax(prediction)
-        os.remove("./test.jpg")
+        os.remove(test_path)
         return image_cat[prediction_position]
 
     def encode_img(self, img):
@@ -172,14 +193,14 @@ class IngredientRecog:
             messages = [
                         {
                             "role": "user",
-                            content: [
+                            "content": [
                                 {
                                     "type" : "text",
                                     "text" : prompt,
                                 },
                                 {
                                     "type" : "image_url",
-                                    "image_url" : {"url": f"data:image/jpg; base64, {encoded_base_image}"},
+                                    "image_url" : {"url": f"data:image/jpg; base64, {encoded_base_img}"},
                                 },
                             ],
                         }

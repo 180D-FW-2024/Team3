@@ -41,6 +41,24 @@ def tts(string):
         "Command not recognized" : "command_not_recognized.wav",
         "First step:" : "first_step.wav",
         "No recipes found:" : "no_recipes_found.wav",
+        "Hello, and welcome! Take a look at our user manual and say, 'Hey Ratatouille' to start!" : "intro.wav",
+        "Hold the QR in view of my camera." : "holdTheQR.wav",
+        "Phone number added successfully" : "phoneNumberAddSuccess.wav",
+        "Phone number addition failure. Try again." : "phoneNumberAddFailure.wav",
+        "No user logged in. Please go to Raspitouille dot x y z, as shown in our user manual, to login with your phone number." : "noUserLoggedIn.wav",
+        "Hold the QR in view of my camera." : "holdQR.wav",
+        "Please ask your question." : "askQuestion.wav",
+        "Generating response..." : "generating.wav",
+        "I'm sorry, I couldn't answer your question." : "cantAnswer.wav",
+        "Cancelling ingredient addition." : "cancelIngredientAdd.wav",
+        "Couldn't understand your response. Cancelling ingredient addition." : "cantUnderstandAddition.wav",
+        "Place ingredient on the provided placement paper. When you have done so, say: Ready!" : "placementPaper.wav", 
+        "Error with image recognition. Please try again." : "errorImageRecog.wav",
+        "How much of this ingredient would you like to add?" : "howMuchIngredient.wav",
+        "Cancelling ingredient removal." : "ingRemovalCancel.wav",
+        "Couldn't understand your response. Cancelling ingredient removal." : "cantUnderstandRemove.wav",
+        "Removal failure." : "removalFailure.wav",
+
     }
 
     # Use prerecorded line if exists

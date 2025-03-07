@@ -84,7 +84,7 @@ def handle_command(command, recipe_object) -> Optional[str]:
 
 def questionHandler(recognizer, recipe, source, userId):
 
-    say("Ask your question.")
+    say("Please ask your question.")
     recognizer = sr.Recognizer()
     mic = sr.Microphone()
     with mic as source:
