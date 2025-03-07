@@ -7,6 +7,10 @@ import time
 from pyzbar.pyzbar import decode
 import subprocess
 import requests
+from openai import OpenAI
+from dotenv import load_dotenv
+import base64
+import json
 
 from sklearn.cluster import KMeans
 
@@ -30,10 +34,14 @@ model_path = os.path.join(script_dir, "trained_model.h5")
 #9 = error when writing file for logging in user : error code
 #10 = no response from server : None
 
+load_dotenv()
+backend_url = os.getenv('BACKEND_URL')
+
 class IngredientRecog:
     def __init__(self):
         try:
-            self.cnn = tf.keras.models.load_model(model_path)
+            self.cnn = tf.keras.models.load_model("trained_model.h5")
+            self.client = OpenAI(api_key = os.getenv("OPENAI_API"))
             # self.picam2 = Picamera2()
             # config = self.picam2.create_preview_configuration(main={"size": (1640, 1232)})
             # self.picam2.configure(config)
@@ -61,30 +69,16 @@ class IngredientRecog:
             for obj in decoded_qrs:
 
                 data = obj.data.decode('utf-8')
-                print('data: ' + str(data))
-                dataString = f"username={data}&phone_number={data}"
-
-                while True:
-                    try:
-                        print("Retrying...")
-                        response = requests.get("https://raspitouille.xyz/api/create-user?" + dataString, timeout=2)
-                        if 200 <= response.status_code < 300:  # Check if response is successful
-                            break
-                    except requests.exceptions.RequestException:  # Catches timeout and other request errors
-                        pass  
-
+                response = requests.get(backend_url + "/get-user/" + json.loads(data)["phoneNumber"])
                 if response.status_code == 200:
-                    try:
-                        config_path = os.path.join(script_dir, "../userConfig.txt")
-                        file = open(config_path, "w")
-                        user_id = "USERNAME:" + response.json()["user_id"]
-                        file.write(user_id)
-                        file.close()
+                    try: 
+                        with open("./config.txt", "w") as file:
+                            user_id = "USERNAME:" + str(response.json()["username"])
+                            file.write(user_id)
                         return
                     except Exception as err:
                         return (9, err) #error code and dcoument
                 else:
-                    # cam.close()
                     return (10, None)
         return (8, None)
 
@@ -143,18 +137,17 @@ class IngredientRecog:
         except:
             return(2, None)
 
-    def predict_img(self):
-        test_path = os.path.join(script_dir, "test.jpg")
-        if not os.path.exists(test_path):
+    def predict_img(self, use_ai = True):
+        if not os.path.exists("./test.jpg"):
             return(3, None) #some exit message
         test_image = self.__crop_img_qr()
         if(type(test_image) == tuple):
             return test_image
-        # cropped_image = self.__crop_image(test_image)
-        # cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2RGB)
-        cropped_path = os.path.join(script_dir, "test.jpg")
-        cv2.imwrite(cropped_path, test_image)
-        prediction_image = Image.fromarray(test_image, 'RGB')
+        cropped_image = self.__crop_image(test_image)
+        cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2RGB)
+        if use_ai:
+            return self.predict_img_openai(cropped_image)
+        prediction_image = Image.fromarray(cropped_image, 'RGB')
         prediction_image = prediction_image.resize((64,64))
         prediction_image = np.array(prediction_image)
         prediction_image = np.expand_dims(prediction_image, axis=0)
@@ -162,8 +155,40 @@ class IngredientRecog:
         # image = tf.keras.preprocessing.image.img_to_array(image)
         prediction = self.cnn.predict(prediction_image)
         prediction_position = np.argmax(prediction)
-        # os.remove("./test.jpg")
+        os.remove("./test.jpg")
         return image_cat[prediction_position]
+
+    def encode_img(self, img):
+        _, buffer = cv2.imencode('.jpg', img)  # Convert NumPy array to PNG format in memory
+        return base64.b64encode(buffer).decode("utf-8")
+    
+    def predict_img_openai(self, img):
+        prompt = "What food product is in this image. Give me a response in 1 word of what food it is"
+        encoded_base_img = self.encode_img(img)
+        try:
+            response = self.client.chat.completions.create(
+            model = "gpt-4o-mini",
+            max_tokens = 300, #might need to be changed to load more
+            messages = [
+                        {
+                            "role": "user",
+                            content: [
+                                {
+                                    "type" : "text",
+                                    "text" : prompt,
+                                },
+                                {
+                                    "type" : "image_url",
+                                    "image_url" : {"url": f"data:image/jpg; base64, {encoded_base_image}"},
+                                },
+                            ],
+                        }
+                    ],
+                )
+            return response.choices[0].message.content
+        except:
+            return()
+
 
     def __crop_img_qr (self):
         try:
@@ -178,7 +203,7 @@ class IngredientRecog:
             decoded_objects = decode(frame)
             edges = []
             edge_coord = []
-            good_edges =['3', '4', '1', '2'] #change if needed
+            good_edges =['3', '4', '1', '2'] 
             for obj in decoded_objects:
                 data = obj.data.decode('utf-8')
                 if data in good_edges:
@@ -210,29 +235,23 @@ class IngredientRecog:
 
 
 
-# if __name__ == '__main__':
-#     cnn = tf.keras.models.load_model("trained_model.h5")
-#     #test_image = opencv image
-#     #go through label index
-#     # picam2 = Picamera2()
-#     # picam2.configure(picam2.create_preview_configuration())
-#     # picam2.start()
-#     # frame = picam2.capture_array() #what the
-#     # cap = cv2.VideoCapture(0)
-#     # ret, frame = cap.read()
-#     recognizer = IngredientRecog()
-#     # recognizer.wake()
-#     print("take pic")
-#     recognizer.take_pic()
-#     recognizer.predict_img()
-#     print("qr login")
-#     print(recognizer.scan_qr_login())
-#     print("take pic")
-#     recognizer.take_pic()
-#     recognizer.predict_img()
-#     print("qr login")
-#     print(recognizer.scan_qr_login())
-   
+if __name__ == '__main__':
+    #test_image = opencv image
+    #go through label index
+    # picam2 = Picamera2()
+    # picam2.configure(picam2.create_preview_configuration())
+    # picam2.start()
+    # frame = picam2.capture_array() #what the
+    # cap = cv2.VideoCapture(0)
+    # ret, frame = cap.read()
+    load_dotenv()
+    recognizer = IngredientRecog()
+    # # recognizer.wake()
+    # print("take pic")
+    # recognizer.take_pic()
+    # preditino = recognizer.predict_img()
+    # print(preditino)
+    print(recognizer.scan_qr_login())
    
    
    
