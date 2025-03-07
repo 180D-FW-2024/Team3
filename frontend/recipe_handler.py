@@ -16,8 +16,10 @@ from text_to_speech import tts as say
 
 # HTTP Request import
 import requests
+import re
 
 from threading import Timer
+from userSetup import loadUserId
 
 import dotenv
 import os
@@ -30,6 +32,12 @@ backend_url = os.getenv("BACKEND_URL")
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 def timeout():
     # call text api
+    userId = loadUserId("userConfig.txt")
+    messageText = "Timer Finished!"
+    params = {"userId": str(userId), "message": messageText}
+    print(messageText)
+    say(messageText)
+    requests.post(backend_url + "/send-alert", params=params)
     return
 
 
