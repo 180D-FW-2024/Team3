@@ -7,6 +7,10 @@ import time
 from pyzbar.pyzbar import decode
 import subprocess
 import requests
+from openai import OpenAI
+from dotenv import load_dotenv
+import base64
+import json
 
 from sklearn.cluster import KMeans
 
@@ -28,10 +32,14 @@ image_cat = ['apple', 'banana', 'beetroot', 'bell pepper', 'cabbage', 'capsicum'
 #9 = error when writing file for logging in user : error code
 #10 = no response from server : None
 
+load_dotenv()
+backend_url = os.getenv('BACKEND_URL')
+
 class IngredientRecog:
     def __init__(self):
         try:
             self.cnn = tf.keras.models.load_model("trained_model.h5")
+            self.client = OpenAI(api_key = os.getenv("OPENAI_API"))
             # self.picam2 = Picamera2()
             # config = self.picam2.create_preview_configuration(main={"size": (1640, 1232)})
             # self.picam2.configure(config)
@@ -53,19 +61,16 @@ class IngredientRecog:
             decoded_qrs = decode(frame)
             for obj in decoded_qrs:
                 data = obj.data.decode('utf-8')
-                print('data: ' + str(data))
-                response = requests.get("https://suitable-kangaroo-immensely.ngrok-free.app/add-ser-phone/" + data)
+                response = requests.get(backend_url + "/get-user/" + json.loads(data)["phoneNumber"])
                 if response.status_code == 200:
                     try: 
-                        file = open("../config.txt", "w")
-                        user_id = "USERNAME:" + response.json()["user_id"]
-                        file.write(user_id)
-                        file.close()
+                        with open("./config.txt", "w") as file:
+                            user_id = "USERNAME:" + str(response.json()["username"])
+                            file.write(user_id)
                         return
                     except Exception as err:
                         return (9, err) #error code and dcoument
                 else:
-                    cam.close()
                     return (10, None)
         return (8, None)
 
@@ -123,7 +128,7 @@ class IngredientRecog:
         except:
             return(2, None)
 
-    def predict_img(self):
+    def predict_img(self, use_ai = True):
         if not os.path.exists("./test.jpg"):
             return(3, None) #some exit message
         test_image = self.__crop_img_qr()
@@ -131,6 +136,8 @@ class IngredientRecog:
             return test_image
         cropped_image = self.__crop_image(test_image)
         cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2RGB)
+        if use_ai:
+            return self.predict_img_openai(cropped_image)
         prediction_image = Image.fromarray(cropped_image, 'RGB')
         prediction_image = prediction_image.resize((64,64))
         prediction_image = np.array(prediction_image)
@@ -140,7 +147,39 @@ class IngredientRecog:
         prediction = self.cnn.predict(prediction_image)
         prediction_position = np.argmax(prediction)
         os.remove("./test.jpg")
-        return prediction_position
+        return image_cat[prediction_position]
+
+    def encode_img(self, img):
+        _, buffer = cv2.imencode('.jpg', img)  # Convert NumPy array to PNG format in memory
+        return base64.b64encode(buffer).decode("utf-8")
+    
+    def predict_img_openai(self, img):
+        prompt = "What food product is in this image. Give me a response in 1 word of what food it is"
+        encoded_base_img = self.encode_img(img)
+        try:
+            response = self.client.chat.completions.create(
+            model = "gpt-4o-mini",
+            max_tokens = 300, #might need to be changed to load more
+            messages = [
+                        {
+                            "role": "user",
+                            content: [
+                                {
+                                    "type" : "text",
+                                    "text" : prompt,
+                                },
+                                {
+                                    "type" : "image_url",
+                                    "image_url" : {"url": f"data:image/jpg; base64, {encoded_base_image}"},
+                                },
+                            ],
+                        }
+                    ],
+                )
+            return response.choices[0].message.content
+        except:
+            return()
+
 
     def __crop_img_qr (self):
         try:
@@ -154,7 +193,7 @@ class IngredientRecog:
             decoded_objects = decode(frame)
             edges = []
             edge_coord = []
-            good_edges =['3', '4', '1', '2'] #change if needed
+            good_edges =['3', '4', '1', '2'] 
             for obj in decoded_objects:
                 data = obj.data.decode('utf-8')
                 if data in good_edges:
@@ -187,7 +226,6 @@ class IngredientRecog:
 
 
 if __name__ == '__main__':
-    cnn = tf.keras.models.load_model("trained_model.h5")
     #test_image = opencv image
     #go through label index
     # picam2 = Picamera2()
@@ -196,19 +234,14 @@ if __name__ == '__main__':
     # frame = picam2.capture_array() #what the
     # cap = cv2.VideoCapture(0)
     # ret, frame = cap.read()
+    load_dotenv()
     recognizer = IngredientRecog()
-    # recognizer.wake()
-    print("take pic")
-    recognizer.take_pic()
-    recognizer.predict_img()
-    print("qr login")
+    # # recognizer.wake()
+    # print("take pic")
+    # recognizer.take_pic()
+    # preditino = recognizer.predict_img()
+    # print(preditino)
     print(recognizer.scan_qr_login())
-    print("take pic")
-    recognizer.take_pic()
-    recognizer.predict_img()
-    print("qr login")
-    print(recognizer.scan_qr_login())
-   
    
    
    
