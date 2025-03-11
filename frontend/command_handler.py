@@ -244,6 +244,7 @@ def addIngredientCamHandler(recognizer, image_recognizer, recipe, source, userId
         if "ready" in response.lower():
             image_recognizer.take_pic()
             return_val = image_recognizer.predict_img()
+            print(return_val)
             if(type(return_val) == tuple):
                 if(return_val[0] == 6):
                     missing_corners = return_val[1]
@@ -364,7 +365,7 @@ def recommendRecipeHandler(recognizer, recipe, mic, userId):
     data = response.json()
     say("Here is a list of recommended recipes, select 'Start' to begin or 'Next' to hear more")
     for recipe in data:
-        say("Recipe title: " + recipe['title'] + ". Completion time: " + str(recipe['completion_time']) + " minutes")
+        say("Recipe title: " + recipe['title'] + ". Completion time: " + str(recipe['completion_time']//60) + " minutes")
         while True:
             with mic as source:
                 audio_command = recognizer.listen(source, timeout=None)

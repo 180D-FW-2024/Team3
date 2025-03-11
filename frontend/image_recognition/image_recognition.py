@@ -12,6 +12,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import base64
 import json
+import shutil
 
 from sklearn.cluster import KMeans
 
@@ -95,7 +96,7 @@ class IngredientRecog:
                         with open(config_path, "w") as file:
                             user_id = "USERNAME:" + str(response.json()["username"])
                             file.write(user_id)
-                        return (0, response.json()["username"])
+                        return (0, response.json()["id"])
                     except Exception as err:
                         return (9, err) #error code and dcoument
                 else:
@@ -146,15 +147,20 @@ class IngredientRecog:
     def take_pic(self, file_name = "test.jpg"):
         # Capture an image
         pic_path = os.path.join(script_dir, file_name)
+        cwd = os.getcwd()
+        source_path = os.path.join(cwd, file_name)
         try:
             subprocess.run([
-        "libcamera-still",
+        "rpicam-still",
         "--width", "1920",
         "--height", "1080",
-        "-o", pic_path,
-        "--immediate"
+        "-o", pic_path, "--sharpness", "1.5",
+        "--contrast", "1.5"
+        # "--immediate"
         ])
+            os.replace(source_path, pic_path)
         except:
+            print("error")
             return(2, None)
 
     def predict_img(self, use_ai = True):
@@ -165,8 +171,10 @@ class IngredientRecog:
         if(type(test_image) == tuple):
             return test_image
         cropped_image = self.__crop_image(test_image)
-        cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2RGB)
+        cv2.imwrite('./testing1.jpg', cropped_image)
+        # cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2RGB)
         if use_ai:
+            cv2.imwrite('./testing.jpg', cropped_image)
             return self.predict_img_openai(cropped_image)
         prediction_image = Image.fromarray(cropped_image, 'RGB')
         prediction_image = prediction_image.resize((64,64))
@@ -176,7 +184,7 @@ class IngredientRecog:
         # image = tf.keras.preprocessing.image.img_to_array(image)
         prediction = self.cnn.predict(prediction_image)
         prediction_position = np.argmax(prediction)
-        os.remove(test_path)
+        # os.remove(test_path)
         return image_cat[prediction_position]
 
     def encode_img(self, img):
@@ -207,8 +215,8 @@ class IngredientRecog:
                     ],
                 )
             return response.choices[0].message.content
-        except:
-            return()
+        except Exception as e:
+            return (15,e)
 
 
     def __crop_img_qr (self):
