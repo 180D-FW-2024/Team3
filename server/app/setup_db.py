@@ -17,6 +17,8 @@ def loadRecipe(session, data):
     if (data.get("completion_time") is None or data.get("title") is None or data.get("ingredients") is None 
         or data.get("recipe_text") is None or data.get("scale_needed") is None or data.get("thermometer_needed") is None):
         return None
+    if session.query(Recipe).filter_by(recipe_text=data.get("recipe_text"), title=data.get("title")).first() is not None:
+        return
     newRecipe = Recipe(
         title=data.get("title"),
         recipe_text=data.get("recipe_text"),
@@ -28,11 +30,14 @@ def loadRecipe(session, data):
         if ingredient.get("name") is None or ingredient.get("measureType") is None or ingredient.get("quantity") is None:
             continue
         measureType = MeasureType(ingredient.get("measureType"))
-        newRecipe.ingredients.append( RecipeIngredient(
+        newIngredient = RecipeIngredient(
             name=ingredient.get("name").lower(),
             measureType=measureType,
             quantity=ingredient.get("quantity")
-        ))
+        )
+        session.add(newIngredient)
+        newRecipe.ingredients.append(newIngredient)
+    
     session.add(newRecipe)
     session.commit()
     
@@ -70,4 +75,5 @@ for allergy in session.query(Allergy).all():
     print(allergy)
 
 for recipe in session.query(Recipe).all():
+    print("recipe")
     print(recipe)
