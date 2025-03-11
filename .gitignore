@@ -10,3 +10,6 @@ components/ui/
 node_modules/
 .next/
 **/package-lock.json
+frontend/image_recognition/test_set/
+frontend/image_recognition/validation_set/
+frontend/image_recognition/train_set/

@@ -16,12 +16,30 @@ from text_to_speech import tts as say
 
 # HTTP Request import
 import requests
+import re
+
+from threading import Timer
+from userSetup import loadUserId
 
 import dotenv
 import os
 
 dotenv.load_dotenv()
 backend_url = os.getenv("BACKEND_URL")
+
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Timeout definiton - what to do when the timer runs out
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+def timeout():
+    # call text api
+    userId = loadUserId("userConfig.txt")
+    messageText = "Timer Finished!"
+    params = {"userId": str(userId), "message": messageText}
+    print(messageText)
+    say(messageText)
+    requests.post(backend_url + "/send-alert", params=params)
+    return
+
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Timer Class - courtesy of ChatGPT
@@ -34,6 +52,7 @@ class CountdownTimer:
         self.remaining_time = duration
         self.end_time = None
         self.running = False
+        self.t = Timer(self.remaining_time, timeout)
 
     def set_time(self, seconds):
         # Set the countdown to start with a specific duration (in seconds).
@@ -47,17 +66,25 @@ class CountdownTimer:
         if not self.running:
             # Calculate the end time from now using the remaining time
             self.end_time = time.time() + self.remaining_time
-            say("Timer started")
             self.running = True
+            
+            # Start thread
+            self.t = Timer(self.remaining_time, timeout)
+            self.t.start()
+            
+            say("Timer started")
         elif self.running:
             say("Timer already running")
+        else:
+            say("Timer not needed")
 
     def pause(self):
         # Pause the countdown and save the remaining time.
         if self.running:
             self.remaining_time = max(0, self.end_time - time.time())
-            say("Timer paused")
+            self.t.cancel()
             self.running = False
+            say("Timer paused")
         elif not self.running:
             say("Timer not running")
 
@@ -66,6 +93,7 @@ class CountdownTimer:
         self.remaining_time = self.initial_duration
         self.end_time = None
         self.running = False
+        self.t.cancel()
 
     def time_left(self):
         # Return the remaining time in the countdown.
@@ -81,7 +109,7 @@ class CountdownTimer:
 
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# Instruction Class
+# Step Class
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 class Step:
     def __init__(self, type, value, string):
@@ -227,7 +255,12 @@ class Recipe:
         say(str(round((self.timer.time_left())//60)) + " minutes and " + str(round(self.timer.time_left()) % 60) + " seconds remaining")
     
     def startTimer(self):
-        self.timer.start()
+        step = self.steps[self.stepCounter]
+        if(step.type == "Timed"):
+            self.timer.start()
+        else:
+            say("Timer not needed.")
+        
     
     def stopTimer(self):
         self.timer.pause()
@@ -241,7 +274,15 @@ class Recipe:
     def suggestRecipes(self):
         if self.userId is None:
             return None
-        requests.get(backend_url + "/suggest-recipes", json={"user_id": self.userId})
+        
+        while True:
+            try:
+                print("Retrying...")
+                response = requests.get(backend_url + "/suggest-recipes", json={"user_id": self.userId}, timeout=2)
+                if 200 <= response.status_code < 300:  # Check if response is successful
+                    break
+            except requests.exceptions.RequestException:  # Catches timeout and other request errors
+                pass  
     
     # ------------------------------------------------------------------------
     # END COMMAND-MAPPED FUNCTIONS

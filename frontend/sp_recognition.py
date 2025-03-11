@@ -11,10 +11,11 @@ import speech_recognition as sr
 from text_to_speech import tts as say
 from command_handler import ( 
     handle_command, addIngredientHandler, removeIngredientHandler, 
-    recommendRecipeHandler, addAllergyHandler, removeAllergyHandler, questionHandler)
+    recommendRecipeHandler, addAllergyHandler, removeAllergyHandler, questionHandler, addIngredientCamHandler)
 from recipe_handler import Recipe
 from userSetup import loadUserId
 from LLM.LLMAgent import send_command, options
+from image_recognition.image_recognition import IngredientRecog
 import dotenv
 import requests
 import os
@@ -88,6 +89,7 @@ recipe = None
 class RaspiSM:
     def __init__(self):
         self.recipe = None
+        self.image_recognizer = IngredientRecog()
 
         # Setup for cache
         self.commandCache = {}
@@ -124,6 +126,7 @@ class RaspiSM:
         with mic as source:
             recognizer.adjust_for_ambient_noise(source)
             print("Listening for the wake word 'Hey Ratatouille'. Press Ctrl+C to stop.")
+            say("Hello, and welcome! Take a look at our user manual and say, 'Hey Ratatouille' to start!")
 
         try:
             while True:
@@ -157,6 +160,16 @@ class RaspiSM:
                             if additionalPrompt is not None:
                                 if additionalPrompt == 'add ingredient':
                                     addIngredientHandler(recognizer, self.recipe, source, userId)
+                                elif additionalPrompt == "add ingredient with camera":
+                                    addIngredientCamHandler(recognizer, self.image_recognizer, self.recipe, source, userId)
+                                elif additionalPrompt == "scan login":
+                                    say("Hold the QR in view of my camera.")
+                                    qr_return_val = self.image_recognizer.scan_qr_login()
+                                    if qr_return_val is None:
+                                        say("Phone number added successfully")
+                                    else:
+                                        print(qr_return_val)
+                                        say("Phone number addition failure. Try again.")
                                 elif additionalPrompt == 'remove ingredient':
                                     removeIngredientHandler(recognizer, self.recipe, source, userId)
                                 elif additionalPrompt == 'recommend recipe':

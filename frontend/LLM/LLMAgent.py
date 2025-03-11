@@ -15,11 +15,13 @@ options = [
     "start timer",
     "stop timer",
     "add ingredient",
+    "add ingredient with camera",
     "remove ingredient",
     "recommend recipe",
     "measure ingredient",
     "add allergy",
     "remove allergy",
+    "scan login",
     "question"
 ]
 
