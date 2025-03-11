@@ -31,8 +31,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 subprocess.run(["python3", "/app/app/setup_db.py"])
 
 engine = create_engine(DATABASE_URL, echo=True)
-Session = sessionmaker(bind=engine)
-session = Session()
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 app = Quart(__name__)
 cors(app)
@@ -65,30 +64,36 @@ async def send_message(chat_id, text):
 
 async def start(update, context):
     print("Processing start command: " + str(update))
-    try:
-        joinCode = update.message.text.split(' ')[-1]
-        print('Filtering for join code: ' + joinCode)
-        joinRelation = session.query(TelegramRegistration).filter_by(user_code=joinCode).first()
-        print("Join relation: " + str(joinRelation))
-        if joinRelation is None:
+    with SessionLocal() as session:
+        try:
+            joinCode = update.message.text.split(' ')[-1]
+            print('Filtering for join code: ' + joinCode)
+            joinRelation = session.query(TelegramRegistration).filter_by(user_code=joinCode).first()
+            print("Join relation: " + str(joinRelation))
+            if joinRelation is None:
+                await send_message(chat_id=update.message.chat_id, text="Invalid join code")
+                return
+        except Exception as e:
+            session.rollback()
+            print(e)
             await send_message(chat_id=update.message.chat_id, text="Invalid join code")
             return
-    except Exception as e:
-        print(e)
-        await send_message(chat_id=update.message.chat_id, text="Invalid join code")
-        return
-    
-    try:
-        rows = session.query(User).filter_by(id=joinRelation.user_id).update({"telegram_id": update.message.chat_id})
-        if rows == 0:
-            await send_message(chat_id=update.message.chat_id, text="No matching user found")
+        
+    with SessionLocal() as session:
+        try:
+            rows = session.query(User).filter_by(id=joinRelation.user_id).update({"telegram_id": update.message.chat_id})
+            if rows == 0:
+                await send_message(chat_id=update.message.chat_id, text="No matching user found")
+                return
+            session.commit()
+
+            print("Updated user: " + str(session.query(User).filter_by(id=joinRelation.user_id).first()))
+            await send_message(chat_id=update.message.chat_id, text="Congratulations! Your account has been successfully linked")
+        except Exception as e:
+            session.rollback()
+            print(e)
+            await send_message(chat_id=update.message.chat_id, text="Error linking account")
             return
-        print("Updated user: " + str(session.query(User).filter_by(id=joinRelation.user_id).first()))
-        await send_message(chat_id=update.message.chat_id, text="Congratulations! Your account has been successfully linked")
-    except Exception as e:
-        print(e)
-        await send_message(chat_id=update.message.chat_id, text="Error linking account")
-        return
 
 async def echo(update, context):
     await update.message.reply_text(update.message.text)
@@ -135,13 +140,20 @@ async def send_alert():
     userId = request.args.get('userId')
     message = re.sub(r'\%20', ' ', request.args.get('message', default=''))
     print("Sending alert to user " + userId + " with message " + message)
-    row = session.query(User).filter_by(id=userId).first()
-    if row is None:
-        return jsonify({"error": "User not found"}), 404
-    if row.telegram_id is None:
-        return jsonify({"error": "User is not registered with Telegram"}), 400
-    await send_message(chat_id=row.telegram_id, text=message)
-    return jsonify({"response": "Alert sent"}), 200
+    with SessionLocal() as session:
+        try:
+            row = session.query(User).filter_by(id=userId).first()
+            if row is None:
+                return jsonify({"error": "User not found"}), 404
+            if row.telegram_id is None:
+                return jsonify({"error": "User is not registered with Telegram"}), 400
+            await send_message(chat_id=row.telegram_id, text=message)
+            session.commit()
+            return jsonify({"response": "Alert sent"}), 200
+        except Exception as e:
+            session.rollback()
+            print(e)
+            return jsonify({"error": "Error sending alert"}), 500
 
 @app.route("/command/<command>", methods=['GET'])
 def map_command(command):
@@ -225,19 +237,23 @@ def connect_telegram():
         200 : The code was successfully generated and associated with the given phone number
         404 : The phone number does not exist in the database
         """
-        connectingUser = session.query(User).filter_by(phone_number=phone_number).first()
-        if connectingUser is None:
-            return jsonify({"error": "User not found"}), 404
-        
-        joinCode = ''.join(random.choices(string.ascii_letters, k=15))
-        while session.query(TelegramRegistration).filter_by(user_code=joinCode).first() is not None:
-            joinCode = ''.join(random.choices(string.ascii_letters, k=15))
+        with SessionLocal() as session:
+            try:
+                connectingUser = session.query(User).filter_by(phone_number=phone_number).first()
+                if connectingUser is None:
+                    return jsonify({"error": "User not found"}), 404
+                
+                joinCode = ''.join(random.choices(string.ascii_letters, k=15))
+                while session.query(TelegramRegistration).filter_by(user_code=joinCode).first() is not None:
+                    joinCode = ''.join(random.choices(string.ascii_letters, k=15))
 
-        session.add(TelegramRegistration(user_id=connectingUser.id, user_code=joinCode))
-        session.commit()
-        print("SUCCESS generating join code: " + joinCode)
-
-        return jsonify({"join_code": joinCode}), 200
+                session.add(TelegramRegistration(user_id=connectingUser.id, user_code=joinCode))
+                session.commit()
+                print("SUCCESS generating join code: " + joinCode)
+                return jsonify({"join_code": joinCode}), 200
+            except Exception as e:
+                session.rollback()
+                return jsonify({"error": str(e)}), 500
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -269,14 +285,19 @@ def register_telegram(join_code, telegram_id):
     200 : The registration was successful
     400 : The join code is invalid
     """
-    session.query(TelegramRegistration).filter(TelegramRegistration.generation_time + text("INTERVAL 30 MINUTE") > func.now() ).delete()
-    registration = session.query(TelegramRegistration).filter_by(join_code=join_code).first()
-    if registration is None:
-        return jsonify({"error": "Invalid join code"}), 400
-    user = session.query(User).filter_by(id=registration.user_id).first()
-    user.telegram_id = telegram_id
-    session.commit()
-    return jsonify({"response": "Registration successful"}), 200
+    with SessionLocal() as session:
+        try:
+            session.query(TelegramRegistration).filter(TelegramRegistration.generation_time + text("INTERVAL 30 MINUTE") > func.now() ).delete()
+            registration = session.query(TelegramRegistration).filter_by(join_code=join_code).first()
+            if registration is None:
+                return jsonify({"error": "Invalid join code"}), 400
+            user = session.query(User).filter_by(id=registration.user_id).first()
+            user.telegram_id = telegram_id
+            session.commit()
+            return jsonify({"response": "Registration successful"}), 200
+        except Exception as e:
+            session.rollback()
+            return jsonify({"error": str(e)}), 500
     
 
 '''
@@ -311,11 +332,16 @@ def ping():
 @app.route("/get-allergies-ingredients", methods=['GET']) # "/get-allergies-ingredients?userId="
 def get_allergies_ingredients():
     userId = request.args.get('userId')
-    user = session.query(User).filter_by(id=userId).first()
-    if user is None:
-        return jsonify({"error": "User not found"}), 404
-    userDict = user.to_dict()
-    return jsonify({"allergies": ", ".join(userDict["allergies"]), "ingredients": ", ".join(userDict["inventory"])}), 200
+    with SessionLocal() as session:
+        try:
+            user = session.query(User).filter_by(id=userId).first()
+            if user is None:
+                return jsonify({"error": "User not found"}), 404
+            userDict = user.to_dict()
+            return jsonify({"allergies": ", ".join(userDict["allergies"]), "ingredients": ", ".join(userDict["inventory"])}), 200
+        except Exception as e:
+            session.rollback()
+            return jsonify({"error": str(e)}), 500
 
 @app.route("/create-user", methods=['POST'])
 def create_user():
@@ -348,12 +374,17 @@ def create_user():
         return jsonify({"error": "No username provided"}), 404
     phoneNumber = re.sub(r'[^0-9]','',request.args.get('phone_number', ''))
     username = standardize(username)
-    if session.query(User).filter_by(username=username).first() is not None:
-        return jsonify({"message": "User already exists"}), 200
-    firstName = request.args.get('firstName')
-    session.add(User(username=username, first_name=(firstName if firstName is not None else ""), phone_number=phoneNumber))
-    session.commit()
-    return jsonify(session.query(User).filter_by(username=username).first().to_dict()), 201
+    with SessionLocal() as session:
+        try:
+            if session.query(User).filter_by(username=username).first() is not None:
+                return jsonify({"message": "User already exists"}), 200
+            firstName = request.args.get('firstName')
+            session.add(User(username=username, first_name=(firstName if firstName is not None else ""), phone_number=phoneNumber))
+            session.commit()
+            return jsonify(session.query(User).filter_by(username=username).first().to_dict()), 201
+        except Exception as e:
+            session.rollback()
+            return jsonify({"error": str(e)}), 500
 
 @app.route("/get-user/<username>", methods=['GET'])
 def get_user(username):
@@ -379,10 +410,16 @@ def get_user(username):
     404 : The user does not exist in the database
     """
     username = standardize(username)
-    user = session.query(User).filter_by(username=username).first()
-    if user is None:
-        return jsonify({"error": "User not found"}), 404
-    return jsonify(user.to_dict()), 200
+    with SessionLocal() as session:
+        try:
+            user = session.query(User).filter_by(username=username).first()
+            if user is None:
+                return jsonify({"error": "User not found"}), 404
+            session.commit()
+            return jsonify(user.to_dict()), 200
+        except Exception as e:
+            session.rollback()
+            return jsonify({"error": str(e)}), 500
 
 @app.route("/add-allergy/<user_id>/<allergy_name>", methods=['PUT'])
 def add_allergy(user_id, allergy_name):
@@ -410,18 +447,23 @@ def add_allergy(user_id, allergy_name):
     200 : The user exists in the database and the allergy was already added
     404 : The user does not exist in the database
     """
-    user = session.query(User).filter_by(id=user_id).first()
-    if user is None:
-        return jsonify({"error": "User not found"}), 404
-    allergy = session.query(Allergy).filter_by(name=standardize(allergy_name)).first()
-    if allergy is None:
-        allergy = Allergy(name=allergy_name)
-    if allergy not in user.allergies:
-        user.addAllergy(allergy)
-        session.commit()
-        return jsonify(user.to_dict()), 201
-    else:
-        return jsonify(user.to_dict()), 200
+    with SessionLocal() as session:
+        try:
+            user = session.query(User).filter_by(id=user_id).first()
+            if user is None:
+                return jsonify({"error": "User not found"}), 404
+            allergy = session.query(Allergy).filter_by(name=standardize(allergy_name)).first()
+            if allergy is None:
+                allergy = Allergy(name=allergy_name)
+            if allergy not in user.allergies:
+                user.addAllergy(allergy)
+                session.commit()
+                return jsonify(user.to_dict()), 201
+            else:
+                return jsonify(user.to_dict()), 200
+        except Exception as e:
+            session.rollback()
+            return jsonify({"error": str(e)}), 500
 
 @app.route("/remove-allergy/<user_id>/<allergy_name>", methods=['PUT'])
 def remove_allergy(user_id, allergy_name):
@@ -448,15 +490,20 @@ def remove_allergy(user_id, allergy_name):
     404 : The user does not exist in the database
     404 : The allergy does not exist in the database
     """
-    user = session.query(User).filter_by(id=user_id).first()
-    if user is None:
-        return jsonify({"error": "User not found"}), 404
-    allergy = session.query(Allergy).filter_by(name=standardize(allergy_name)).first()
-    if allergy is None:
-        return jsonify({"error": "Allergy not found"}), 404
-    user.removeAllergy(allergy)
-    session.commit()
-    return jsonify(user.to_dict()), 200
+    with SessionLocal() as session:
+        try:
+            user = session.query(User).filter_by(id=user_id).first()
+            if user is None:
+                return jsonify({"error": "User not found"}), 404
+            allergy = session.query(Allergy).filter_by(name=standardize(allergy_name)).first()
+            if allergy is None:
+                return jsonify({"error": "Allergy not found"}), 404
+            user.removeAllergy(allergy)
+            session.commit()
+            return jsonify(user.to_dict()), 200
+        except Exception as e:
+            session.rollback()
+            return jsonify({"error": str(e)}), 500
 
 @app.route("/get-recipe/<recipe_id>", methods=['GET'])
 def get_recipe(recipe_id):
@@ -479,10 +526,16 @@ def get_recipe(recipe_id):
     200 : The recipe exists in the database
     404 : The recipe does not exist in the database
     """
-    recipe = session.query(Recipe).filter_by(id=recipe_id).first()
-    if recipe is None:
-        return jsonify({"error": "Recipe not found"}), 404
-    return jsonify(recipe.to_dict()), 200
+    with SessionLocal() as session:
+        try:
+            recipe = session.query(Recipe).filter_by(id=recipe_id).first()
+            if recipe is None:
+                return jsonify({"error": "Recipe not found"}), 404
+            session.commit()
+            return jsonify(recipe.to_dict()), 200
+        except Exception as e:
+            session.rollback()
+            return jsonify({"error": str(e)}), 500
 
 @app.route("/suggest-recipes/<user_id>", methods=['GET'])
 def suggest_recipes(user_id):
@@ -505,36 +558,50 @@ def suggest_recipes(user_id):
     200 : The user exists in the database and the recipes were suggested
     404 : The user does not exist in the database
     """
-    
-    user = session.query(User).filter_by(id=user_id).first()
-    if user is None:
-        return jsonify({"error": "User not found"}), 404
-    userAllergyNames = [allergy.name for allergy in user.allergies]
-    userInventoryMap = {} 
-    for ingredient in user.inventory:
-        userInventoryMap[ingredient.name] = ingredient.quantity
+    with SessionLocal() as session:
+        try:
+            user = session.query(User).filter_by(id=user_id).first()
+            if user is None:
+                return jsonify({"error": "User not found"}), 404
+            userAllergyNames = [allergy.name for allergy in user.allergies]
+            userInventoryMap = {} 
+            for ingredient in user.inventory:
+                userInventoryMap[ingredient.name] = ingredient.quantity
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            return jsonify({"error": str(e)}), 500
 
-    validRecipes = (
-        session.query(Recipe)
-        .outerjoin(RecipeIngredient, RecipeIngredient.recipe_id == Recipe.id)
-        .outerjoin(
-            InventoryIngredient,
-            and_((RecipeIngredient.name == InventoryIngredient.name), (InventoryIngredient.user_id == user.id)),
-        )
-        .filter(
-            not_(
-                Recipe.ingredients.any(RecipeIngredient.name.in_(userAllergyNames))
+    # sql = text("""SELECT * FROM recipes
+    #               """)
+    # users = session.query(User).from_statement(sql).params(username="test_user").all()
+    with SessionLocal() as session:
+        try:
+            validRecipes = (
+                session.query(Recipe)
+                .outerjoin(RecipeIngredient, RecipeIngredient.recipe_id == Recipe.id)
+                .outerjoin(
+                    InventoryIngredient,
+                    and_((RecipeIngredient.name == InventoryIngredient.name), (InventoryIngredient.user_id == user.id)),
+                )
+                .filter(
+                    not_(
+                        Recipe.ingredients.any(RecipeIngredient.name.in_(userAllergyNames))
+                    )
+                )
+                .group_by(Recipe)
+                .having(
+                    func.count(InventoryIngredient.name) == func.count(RecipeIngredient.name)
+                )
+                .having(
+                    func.min(InventoryIngredient.quantity - RecipeIngredient.quantity) >= 0
+                )
+                .all()
             )
-        )
-        .group_by(Recipe)
-        .having(
-            func.count(InventoryIngredient.name) == func.count(RecipeIngredient.name)
-        )
-        .having(
-            func.min(InventoryIngredient.quantity - RecipeIngredient.quantity) >= 0
-        )
-        .all()
-    )
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            return jsonify({"error": str(e)}), 500
 
     print('Filter results:' + str(validRecipes))
     
@@ -565,15 +632,20 @@ def start_recipe(recipe_id, user_id):
     404 : The user does not exist in the database
     404 : The recipe does not exist in the database
     """
-    user = session.query(User).filter_by(id=user_id).first()
-    if user is None:
-        return jsonify({"error": "User not found"}), 404
-    recipe = session.query(Recipe).filter_by(id=recipe_id).first()
-    if recipe is None:
-        return jsonify({"error": "Recipe not found"}), 404
-    user.addRecipeHistory(recipe)
-    session.commit()
-    return jsonify(user.to_dict()), 200
+    with SessionLocal() as session:
+        try:
+            user = session.query(User).filter_by(id=user_id).first()
+            if user is None:
+                return jsonify({"error": "User not found"}), 404
+            recipe = session.query(Recipe).filter_by(id=recipe_id).first()
+            if recipe is None:
+                return jsonify({"error": "Recipe not found"}), 404
+            user.addRecipeHistory(recipe)
+            session.commit()
+            return jsonify(user.to_dict()), 200
+        except Exception as e:
+            session.rollback()
+            return jsonify({"error": str(e)}), 500
 
 @app.route("/modify-inventory/<user_id>/<ingredient_name>/<quantity>/<measureTypeName>/<changeType>", methods=['PUT'])
 def modify_inventory(user_id, ingredient_name, quantity, measureTypeName, changeType):
@@ -582,28 +654,38 @@ def modify_inventory(user_id, ingredient_name, quantity, measureTypeName, change
     except ValueError:
         return jsonify({"error": "Invalid measure type"}), 400
     
-    user = session.query(User).filter_by(id=user_id).first()
-
-    if user is None:
-        return jsonify({"error": "User not found"}), 404
+    with SessionLocal() as session:
+        try:
+            user = session.query(User).filter_by(id=user_id).first()
+            if user is None:
+                return jsonify({"error": "User not found"}), 404
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            return jsonify({"error": str(e)}), 500
+        
     try:
         quantity_n = int(quantity) if changeType == "add" else (int(quantity) * -1)
     except ValueError:
         return jsonify({"error": "Invalid quantity"}), 400
     
-    inventoryItem = session.query(InventoryIngredient).filter_by(user_id=user_id, name=ingredient_name).first()
-    if inventoryItem is None:
-        if quantity_n <= 0:
-            return jsonify({"error": "Invalid quantity"}), 400
-        inventoryItem = InventoryIngredient(user=user, name=ingredient_name, quantity=quantity_n, measureType=measureType)
-        user.addInventory(inventoryItem)
-        session.commit()
-    else:
-        inventoryItem.quantity = quantity_n+inventoryItem.quantity
-        if inventoryItem.quantity <= 0:
-            user.removeInventory(inventoryItem)
-        session.commit()
-    print(inventoryItem.to_dict())
+    with SessionLocal() as session:
+        try:
+            inventoryItem = session.query(InventoryIngredient).filter_by(user_id=user_id, name=ingredient_name).first()
+            if inventoryItem is None:
+                if quantity_n <= 0:
+                    return jsonify({"error": "Invalid quantity"}), 400
+                inventoryItem = InventoryIngredient(user=user, name=ingredient_name, quantity=quantity_n, measureType=measureType)
+                user.addInventory(inventoryItem)
+            else:
+                inventoryItem.quantity = quantity_n+inventoryItem.quantity
+                if inventoryItem.quantity <= 0:
+                    user.removeInventory(inventoryItem)
+            session.commit()
+            print(inventoryItem.to_dict())
+        except Exception as e:
+            session.rollback()
+            return jsonify({"error": str(e)}), 500
     return jsonify(inventoryItem.to_dict()), 200
 
 '''

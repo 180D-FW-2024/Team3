@@ -57,7 +57,7 @@ session = Session()
 tables = Base.metadata.tables
 
 # Ensure the table is created (if it doesn't already exist)
-Base.metadata.drop_all(engine)
+# Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
 databaseLoad(session, "./recipes")
