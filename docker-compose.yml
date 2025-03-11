@@ -1,12 +1,37 @@
-service:
-  raspi-site:
-    build:
-      context: ./frontend
+services:
+  raspitouille-server:
+    image: ashishbasetty/raspitouille-server:latest-amd64
+    env_file:
+      - /etc/environment
     ports:
-      - "80:80"
-  server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
+      - "8080:80"
+    restart: unless-stopped
+    depends_on:
+      - postgres  # Ensure Postgres starts before this service
+    networks:
+      - raspinet
+
+  raspitouille-site:
+    image: ashishbasetty/raspitouille-site:latest-amd64
     ports:
-      - "5001:5001"
+      - "3030:3000"
+    restart: unless-stopped
+    networks:
+      - raspinet
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: raspitouille
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - raspinet
+
+volumes:
+  postgres_data:
+
+networks:
+  raspinet:

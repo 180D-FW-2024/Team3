@@ -1,7 +1,7 @@
 FROM python:3.11-slim
 
 # Clean up APT cache to reduce image size
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* && apt-get update
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* && apt-get update && apt-get install -y libpq-dev gcc
 
 # Set working directory
 WORKDIR /app

@@ -25,11 +25,12 @@ dotenv.load_dotenv()
 PORT_NUMBER = os.getenv("PORT_NUMBER")
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 BACKEND_URL = os.getenv("BACKEND_URL")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Run test_db.py to test database, remove on database completion
+# Run setup_db.py to test database, remove on database completion
 subprocess.run(["python3", "/app/app/setup_db.py"])
 
-engine = create_engine('sqlite:///raspitouille.db', echo=True)
+engine = create_engine(DATABASE_URL, echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -89,25 +90,29 @@ async def start(update, context):
         await send_message(chat_id=update.message.chat_id, text="Error linking account")
         return
 
-def echo(update, context):
-    update.message.reply_text(update.message.text)
+async def echo(update, context):
+    await update.message.reply_text(update.message.text)
 
 def help(update, context):
-    update.message.reply_text("Hello! I am Raspitouille's notification service. Use Raspitouille to ")
+    update.message.reply_text("Hello! I am Raspitouille's notification service.")
     return 'ok', 200
 
 @app.route('/webhook', methods=['POST'])
 async def webhook():
     print("Received webhook update")
-    # Get the update
-    json_data = await request.get_json() 
-    update = Update.de_json(json_data, bot_app.bot)
-    print("Received update: " + str(update))
-    
-    # Process the update
-    await bot_app.process_update(update)
+    try:
+        # Get the update
+        json_data = await request.get_json() 
+        update = Update.de_json(json_data, bot_app.bot)
+        print("Received update: " + str(update))
+        
+        # Process the update
+        await bot_app.process_update(update)
 
-    return 'ok', 200
+        return 'ok', 200
+    except Exception as e:
+        print('Failure to process webhook, exception: ', e)
+        return 'failure', 500
 
 
 @app.route('/send-alert', methods=['POST'])

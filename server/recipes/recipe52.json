@@ -1,0 +1,22 @@
+{
+    "completion_time": 8500,
+    "id": 52,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Count",
+            "name": "steak",
+            "quantity": 1
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "butter",
+            "quantity": 185
+        }
+    ],
+    "recipe_text": "Quantity; 3; Prepare and crush 3 cloves of garlic| 7200; None; Salt steak and let it rest in fridge for 2 hours| Measurement; 60; Prepare 60 milliliters of dry white wine| Quantity; 1; Prepare one lemon| Quantity; 1; Prepare and mince one medium shallot| Measurement; 185; Prepare 185 grams of butter, cut into chunks| Measurement; None; Prepare small amounts of salt and pepper| Untimed; None; Prepare aromatics such as thyme and rosemary| Untimed; None; Preheat oven to 250 F| Untimed; None; Put meat thermometer in steak and cook steaks in oven until desired doneness| Untimed; None; Once steak reaches desired doneness, put pan on medium heat| Timed; 120; Sear on the steak's fat cap for 2 minutes| Timed; 120; Sear on each side for 2 minutes or until a brown crust forms| Untimed; None; Take steaks out of the pan| Untimed; None; Drop heat to medium low and put in garlic, a chunk of butter, and any aromatics| Timed; 30; Baste steak for 30 seconds| Timed; 600; Take steak out and let it rest for 10 minutes| Untimed; None; Squeeze lemon juice into a saucepan| Untimed; None; Add the shallots and white wine into the same saucepan| Untimed; None; Heat the saucepan and cook at a simmer while stirring occasionally, until the liquid is almost fully evaporated| Untimed; None; Slowly whisk butter into the wine base one chunk at a time| Untimed; None; Season with salt once all the butter has melted, and set the finished sauce aside| Finish; None; Serve!",
+    "scale_needed": 1,
+    "thermometer_needed": 1,
+    "title": "Beurre Blanc Sauce Steak"
+}

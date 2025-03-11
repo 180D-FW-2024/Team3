@@ -54,6 +54,8 @@ measureTypeMapping = {
     "tbsp": [ MeasureType.VOLUME, 15 ],
     "tablespoon": [ MeasureType.VOLUME, 15 ],
     "tablespoons": [ MeasureType.VOLUME, 15 ],
+    "quart": [ MeasureType.VOLUME, 946],
+    "quarts": [ MeasureType.VOLUME, 946],
 
     # Mapping for count input
     "count": [ MeasureType.COUNT, 1 ],

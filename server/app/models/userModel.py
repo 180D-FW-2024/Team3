@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Table, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, Table, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from .ingredientModel import user_allergy_association, Allergy
@@ -37,8 +37,8 @@ class User(Base):
     allergies = relationship('Allergy', secondary=user_allergy_association, back_populates='users')
     inventory = relationship('InventoryIngredient', back_populates='user', cascade="all, delete-orphan")
     recipe_history = relationship('Recipe', secondary=user_history_association)
-    has_scale = Column(Integer, nullable=False)
-    has_thermometer = Column(Integer, nullable=False)
+    has_scale = Column(Boolean, nullable=False)
+    has_thermometer = Column(Boolean, nullable=False)
     telegram_id = Column(String)
 
 

@@ -4,3 +4,4 @@ together
 quart-cors
 python-dotenv
 python-telegram-bot
+psycopg2

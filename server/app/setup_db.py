@@ -5,7 +5,11 @@ from models.ingredientModel import Allergy, RecipeIngredient, InventoryIngredien
 from models.recipeModel import Recipe
 from models.helpers import MeasureType
 import os
+import dotenv
 import json
+
+dotenv.load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 def loadRecipe(session, data):
     if data is None or session is None:
@@ -46,7 +50,7 @@ def databaseLoad(session, recipePath):
 
 
 # Set up the database engine and session
-engine = create_engine('sqlite:///raspitouille.db')#, echo=True)
+engine = create_engine(DATABASE_URL)#, echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 

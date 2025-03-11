@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Table
+from sqlalchemy import Column, Integer, String, ForeignKey, Table, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from .helpers import InstructionType
@@ -12,8 +12,8 @@ class Recipe(Base):
     completion_time = Column(Integer, nullable=False)
     ingredients = relationship('RecipeIngredient', back_populates='recipe')
     recipe_text = Column(String, nullable=False)
-    scale_needed = Column(Integer, nullable=False)
-    thermometer_needed = Column(Integer, nullable=False)
+    scale_needed = Column(Boolean, nullable=False)
+    thermometer_needed = Column(Boolean, nullable=False)
 
 
     def __init__(self, title="", recipe_text="", scale_needed=False, thermometer_needed=False, completion_time=0):
