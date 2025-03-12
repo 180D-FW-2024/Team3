@@ -1,7 +1,7 @@
 # Flask script for handling incoming requests
 from quart import Quart, jsonify, request, current_app
 from quart_cors import cors
-from sqlalchemy import create_engine, not_, func, or_, and_, exists, text
+from sqlalchemy import create_engine, not_, func, or_, and_, exists, text, tuple_
 from sqlalchemy.orm import sessionmaker, aliased
 from .models.userModel import User, TelegramRegistration
 from .models.recipeModel import Recipe
@@ -79,7 +79,6 @@ async def start(update, context):
             await send_message(chat_id=update.message.chat_id, text="Invalid join code")
             return
         
-    with SessionLocal() as session:
         try:
             rows = session.query(User).filter_by(id=joinRelation.user_id).update({"telegram_id": update.message.chat_id})
             if rows == 0:
@@ -455,6 +454,7 @@ def add_allergy(user_id, allergy_name):
             allergy = session.query(Allergy).filter_by(name=standardize(allergy_name)).first()
             if allergy is None:
                 allergy = Allergy(name=allergy_name)
+                session.add(allergy)
             if allergy not in user.allergies:
                 user.addAllergy(allergy)
                 session.commit()
@@ -567,16 +567,31 @@ def suggest_recipes(user_id):
             userInventoryMap = {} 
             for ingredient in user.inventory:
                 userInventoryMap[ingredient.name] = ingredient.quantity
-            session.commit()
-        except Exception as e:
-            session.rollback()
-            return jsonify({"error": str(e)}), 500
-
-    # sql = text("""SELECT * FROM recipes
-    #               """)
-    # users = session.query(User).from_statement(sql).params(username="test_user").all()
-    with SessionLocal() as session:
-        try:
+            # sql = text("""SELECT * FROM recipes
+            #               WHERE NOT EXISTS (
+            #                   SELECT * FROM recipe_ingredients
+            #                   LEFT JOIN inventory_ingredients ON inventory_ingredients.name = recipe_ingredients.name 
+            #                   WHERE recipe_ingredients.recipe_id = recipes.id AND recipe_ingredients.name IN :userAllergyNames
+            #               )
+            #               AND EXISTS (
+            #                   SELECT * FROM inventory_ingredients
+            #                   WHERE inventory_ingredients.user_id = :userId
+            #                   AND inventory_ingredients.name = recipe_ingredients.name
+            #               """)
+            sql = text(""" 
+                        SELECT recipes.* FROM recipes
+                        LEFT JOIN recipe_ingredients ON recipe_ingredients.recipe_id = recipes.id
+                        LEFT JOIN (
+                            SELECT * FROM inventory_ingredients
+                            WHERE inventory_ingredients.user_id = :userId
+                        ) AS user_inventory ON user_inventory.name = recipe_ingredients.name and user_inventory."measureType" = recipe_ingredients."measureType"
+                        GROUP BY recipes.id
+                        HAVING COUNT(user_inventory.name) = COUNT(recipe_ingredients.name) 
+                        AND MIN(user_inventory.quantity - recipe_ingredients.quantity) >= 0
+                        AND COUNT(CASE WHEN recipe_ingredients.name IS NOT NULL AND recipe_ingredients.name = ANY(:userAllergyNames) THEN 1 END) = 0;
+                       """)
+            validRecipes = session.query(Recipe).from_statement(sql).params(userId=user.id, userAllergyNames=userAllergyNames if userAllergyNames else ['']).all()
+            '''
             validRecipes = (
                 session.query(Recipe)
                 .outerjoin(RecipeIngredient, RecipeIngredient.recipe_id == Recipe.id)
@@ -598,14 +613,13 @@ def suggest_recipes(user_id):
                 )
                 .all()
             )
+            '''
             session.commit()
+            print('Filter results:' + str(validRecipes))
+            return jsonify([recipe.to_dict() for recipe in validRecipes]), 200
         except Exception as e:
             session.rollback()
             return jsonify({"error": str(e)}), 500
-
-    print('Filter results:' + str(validRecipes))
-    
-    return jsonify([recipe.to_dict() for recipe in validRecipes]), 200
 
 @app.route("/start-recipe/<recipe_id>/<user_id>", methods=['PUT'])
 def start_recipe(recipe_id, user_id):
@@ -664,12 +678,11 @@ def modify_inventory(user_id, ingredient_name, quantity, measureTypeName, change
             session.rollback()
             return jsonify({"error": str(e)}), 500
         
-    try:
-        quantity_n = int(quantity) if changeType == "add" else (int(quantity) * -1)
-    except ValueError:
-        return jsonify({"error": "Invalid quantity"}), 400
-    
-    with SessionLocal() as session:
+        try:
+            quantity_n = int(quantity) if changeType == "add" else (int(quantity) * -1)
+        except ValueError:
+            return jsonify({"error": "Invalid quantity"}), 400
+        
         try:
             inventoryItem = session.query(InventoryIngredient).filter_by(user_id=user_id, name=ingredient_name).first()
             if inventoryItem is None:
@@ -677,6 +690,7 @@ def modify_inventory(user_id, ingredient_name, quantity, measureTypeName, change
                     return jsonify({"error": "Invalid quantity"}), 400
                 inventoryItem = InventoryIngredient(user=user, name=ingredient_name, quantity=quantity_n, measureType=measureType)
                 user.addInventory(inventoryItem)
+                session.add(inventoryItem)
             else:
                 inventoryItem.quantity = quantity_n+inventoryItem.quantity
                 if inventoryItem.quantity <= 0:

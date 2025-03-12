@@ -28,6 +28,8 @@ On EC2 Run:
 `docker run --env-file /etc/environment -p 80:80 ashishbasetty/raspitouille-server:latest-amd64`
 `docker run -p 3000:3000 ashishbasetty/raspitouille-site:latest-amd64`
 
-With nginx, run with mappings 8080:80 and 3030:3000
+With nginx, run with mappings 8080:80 and 3030:3000. Or, just use docker-compose up to set everything up automatically (after copy and pasting local docker-compose.yml to server).
+
+SQL connection string: `psql -h localhost -U username -d raspitouille`
 
 Keep in mind that in docker the .env file variables must have no quotes, while it may work locally (MacOS).
