@@ -61,7 +61,7 @@ class IngredientRecog:
         start_time = time.time()
         duration = 10  # seconds
         while(time.time() - start_time < duration):
-            self.take_pic(file_name = "qrcode.jpg")
+            self.take_qr_pic(file_name = "qrcode.jpg")
             qr_path = os.path.join(script_dir, "qrcode.jpg")
             frame = cv2.imread(qr_path)
             print("one\n")
@@ -157,6 +157,24 @@ class IngredientRecog:
         "-o", pic_path, "--sharpness", "1.5",
         "--contrast", "1.5"
         # "--immediate"
+        ])
+            os.replace(source_path, pic_path)
+        except:
+            print("error")
+            return(2, None)
+
+    def take_qr_pic(self, file_name = "test.jpg"):
+        # Capture an image
+        pic_path = os.path.join(script_dir, file_name)
+        cwd = os.getcwd()
+        source_path = os.path.join(cwd, file_name)
+        try:
+            subprocess.run([
+        "rpicam-still",
+        "--width", "1920",
+        "--height", "1080",
+        "-o", pic_path, 
+        "--immediate"
         ])
             os.replace(source_path, pic_path)
         except:

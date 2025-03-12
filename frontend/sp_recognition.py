@@ -138,7 +138,7 @@ class RaspiSM:
                     print(f"Heard: {text}")
 
                     # Check if the wake word "Hey Ratatouille" is spoken
-                    if "hey ratatouille" in text.lower():  # Case insensitive check
+                    if "hey ratatouille" in text.lower() or "play ratatouille" in text.lower():  # Case insensitive check
                         say("Listening...")
                         
                         # Listen for the command after the wake word

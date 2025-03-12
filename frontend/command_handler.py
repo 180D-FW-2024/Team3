@@ -99,7 +99,7 @@ def questionHandler(recognizer, recipe, source, userId):
         while True:
             try:
                 print("Retrying...")
-                response = requests.get(backend_url + "/get-allergies-ingredients?userId=" + str(userId), timeout=2)
+                response = requests.get(backend_url + "/get-allergies-ingredients?userId=" + str(userId), timeout=5)
                 if response.status_code == 200:  # Check if response is successful
                     break
             except requests.exceptions.RequestException:  # Catches timeout and other request errors
@@ -139,7 +139,7 @@ def addAllergyHandler(recognizer, recipe, source, userId):
         while True:
             try:
                 print("Retrying...")
-                response = requests.put(backend_url + "/add-allergy/" + str(userId) + "/" + ingredientString, timeout=2)
+                response = requests.put(backend_url + "/add-allergy/" + str(userId) + "/" + ingredientString, timeout=5)
                 if 200 <= response.status_code < 300:  # Check if response is successful
                     break
             except requests.exceptions.RequestException:  # Catches timeout and other request errors
@@ -172,7 +172,7 @@ def removeAllergyHandler(recognizer, recipe, source, userId):
         while True:
             try:
                 print("Retrying...")
-                response = requests.put(backend_url + "/remove-allergy/" + str(userId) + "/" + ingredientString, timeout=2)
+                response = requests.put(backend_url + "/remove-allergy/" + str(userId) + "/" + ingredientString, timeout=5)
                 if 200 <= response.status_code < 300:  # Check if response is successful
                     break
             except requests.exceptions.RequestException:  # Catches timeout and other request errors
@@ -200,13 +200,13 @@ def addIngredientHandler(recognizer, recipe, source, userId):
     try:
         ingredientString = recognizer.recognize_google(audio_command, language="en")
         print("You said: " + ingredientString)
-        say("I heard " + ingredientString + ". Is this what you meant?")
+        say("I heard " + ingredientString + ". Is this what you meant? If you'd like to cancel, say, cancel; otherwise, say yes or no.")
         with mic as confirmation_source:
             confirmation_audio_command = recognizer.listen(confirmation_source, timeout=None)
             confirmation_string = recognizer.recognize_google(confirmation_audio_command, language="en")
             if "yes" in confirmation_string.lower():
                 confirmation = True
-            elif "no" in confirmation_string.lower():
+            elif "no" in confirmation_string.lower() or "cancel" in confirmation_string.lower():
                 say("Cancelling ingredient addition.")
                 return
             else:
@@ -215,7 +215,8 @@ def addIngredientHandler(recognizer, recipe, source, userId):
         while confirmation:
             try:
                 print("Retrying...")
-                response = requests.put(backend_url + "/add-ingredient/" + str(userId) + "/" + ingredientString, timeout=2)
+                print(userId)
+                response = requests.put(backend_url + "/add-ingredient/" + str(userId) + "/" + ingredientString, timeout=5)
                 if response.status_code == 200:  # Check if response is successful
                     break
                 if response.status_code != 200:
@@ -259,29 +260,32 @@ def addIngredientCamHandler(recognizer, image_recognizer, recipe, source, userId
                 # Ask user for how many of the ingredient they want to add
                 ingredientScalar = ""
                 say("How much of this ingredient would you like to add?")
-                with mic as source:
-                    secondAudio = recognizer.listen(source, timeout=None)
+                with mic as scalar_source:
+                    secondAudio = recognizer.listen(scalar_source, timeout=None)
                 try:
                     ingredientScalar = recognizer.recognize_google(secondAudio, language="en")
+                    print(ingredientScalar)
                 except sr.UnknownValueError:
                     print("Sorry, I couldn't understand the command.")
+                    say("Sorry, I couldn't understand what number you said. Cancelling ingredient addition.")
+                    return
 
                 # Add ingredient to database
                 ingredientString = ingredientScalar + " " + return_val
                 while True:
                     try:
                         print("Retrying...")
-                        response = requests.put(backend_url + "/add-ingredient/" + str(userId) + "/" + ingredientString, timeout=2)
-                        if 200 <= response.status_code < 300:  # Check if response is successful
+                        print(userId)
+                        response = requests.put(backend_url + "/add-ingredient/" + str(userId) + "/" + ingredientString, timeout=5)
+                        if response.status_code == 200:  # Check if response is successful
                             break
+                        if response.status_code != 200:
+                            say("Ingredient addition failure")
+                            print("Addition Failure")
+                            return    
                     except requests.exceptions.RequestException:  # Catches timeout and other request errors
-                        pass  
-                if response.status_code != 200:
-                    say("Ingredient addition failure")
-                    print("Addition Failure")
-                    return      
-                else:
-                    say("Ingredient added to inventory. You now have " + response.json()['text'])  
+                        pass    
+                say("Ingredient added to inventory. You now have " + response.json()['text'])  
     except sr.UnknownValueError:
         print("Sorry, I couldn't understand the command.")
         say("Sorry, I couldn't understand the command.")
@@ -300,14 +304,14 @@ def removeIngredientHandler(recognizer, recipe, source, userId):
     try:
         ingredientString = recognizer.recognize_google(audio_command, language="en")
         print("You said: " + ingredientString)
-        say("I heard " + ingredientString + ". Is this what you meant?")
+        say("I heard " + ingredientString + ". Is this what you meant? If you'd like to cancel, say, cancel; otherwise, say yes or no.")
         with mic as confirmation_source:
             confirmation_audio_command = recognizer.listen(confirmation_source, timeout=None)
             confirmation_string = recognizer.recognize_google(confirmation_audio_command, language="en")
             if "yes" in confirmation_string.lower():
                 confirmation = True
-            elif "no" in confirmation_string.lower():
-                say("Cancelling ingredient removal.")
+            elif "no" in confirmation_string.lower() or "cancel" in confirmation_string.lower():
+                say("Cancelling ingredient addition.")
                 return
             else:
                 say("Couldn't understand your response. Cancelling ingredient removal.")
@@ -315,7 +319,7 @@ def removeIngredientHandler(recognizer, recipe, source, userId):
         while confirmation:
             try:
                 print("Retrying...")
-                response = requests.put(backend_url + "/remove-ingredient/" + str(userId) + "/" + ingredientString, timeout=2)
+                response = requests.put(backend_url + "/remove-ingredient/" + str(userId) + "/" + ingredientString, timeout=5)
                 if response.status_code == 200:  # Check if response is successful
                     break
                 if response.status_code != 200:
@@ -334,7 +338,7 @@ def loadRecipe(recipeId):
     while True:
         try:
             print("Retrying...")
-            response = requests.get(backend_url + "/get-recipe/" + str(recipeId), timeout=2)
+            response = requests.get(backend_url + "/get-recipe/" + str(recipeId), timeout=5)
             if 200 <= response.status_code < 300:  # Check if response is successful
                 break
         except requests.exceptions.RequestException:  # Catches timeout and other request errors
@@ -349,7 +353,7 @@ def recommendRecipeHandler(recognizer, recipe, mic, userId):
     while True:
         try:
             print("Retrying...")
-            response = requests.get(backend_url + "/suggest-recipes/" + str(userId), timeout=2)
+            response = requests.get(backend_url + "/suggest-recipes/" + str(userId), timeout=5)
             if 200 <= response.status_code < 300:  # Check if response is successful
                 break
             if response.status_code != 200:
@@ -377,7 +381,7 @@ def recommendRecipeHandler(recognizer, recipe, mic, userId):
             except sr.RequestError as e:
                 print(f"Error with the speech recognition service: {e}")
                 break
-            if command.lower() == "start":
+            if "start" in command.lower():
                 recipe_response = loadRecipe(recipe['id'])
                 if recipe_response is None:
                     say("Recipe select failure, try again")
@@ -385,10 +389,13 @@ def recommendRecipeHandler(recognizer, recipe, mic, userId):
                 print(recipe_response)
                 say("Recipe selected: " + recipe_response['title'])
                 return recipe_response
-            elif command.lower() == "next":
+            elif "next" in command.lower():
                 break
+            elif "cancel" in command.lower():
+                say("No recipe selected, cancelling recipe selection.")
+                return None
             else:
-                say("Invalid Command, say either 'Start' or 'Next'")
+                say("Invalid Command, say either 'Start', 'Next', or 'Cancel'.")
 
-        say("No recipe selected, returning to original recipe")
-        return None
+    say("No more available recipes based on your ingredient list. Cancelling recipe selection.")
+    return None

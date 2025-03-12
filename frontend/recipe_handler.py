@@ -30,7 +30,7 @@ backend_url = os.getenv("BACKEND_URL")
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Timeout definiton - what to do when the timer runs out
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------
-def timeout():
+def timeout(timerObject):
     # call text api
     userId = loadUserId("userConfig.txt")
     messageText = "Timer Finished!"
@@ -38,6 +38,9 @@ def timeout():
     print(messageText)
     say(messageText)
     requests.post(backend_url + "/send-alert", params=params)
+
+    # set timer object's state
+    timerObject.reset()
     return
 
 
@@ -52,7 +55,7 @@ class CountdownTimer:
         self.remaining_time = duration
         self.end_time = None
         self.running = False
-        self.t = Timer(self.remaining_time, timeout)
+        self.t = Timer(self.remaining_time, timeout, [self])
 
     def set_time(self, seconds):
         # Set the countdown to start with a specific duration (in seconds).
@@ -69,7 +72,7 @@ class CountdownTimer:
             self.running = True
             
             # Start thread
-            self.t = Timer(self.remaining_time, timeout)
+            self.t = Timer(self.remaining_time, timeout, [self])
             self.t.start()
             
             say("Timer started")

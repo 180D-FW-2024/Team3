@@ -1,0 +1,46 @@
+{
+    "completion_time": 2700,
+    "id": 53,
+    "ingredients": [
+        {
+            "id": 1,
+            "measureType": "Count",
+            "name": "apple",
+            "quantity": 6
+        },
+        {
+            "id": 2,
+            "measureType": "Weight",
+            "name": "flour",
+            "quantity": 140
+        },
+        {
+            "id": 3,
+            "measureType": "Weight",
+            "name": "butter",
+            "quantity": 100
+        },
+        {
+            "id": 4,
+            "measureType": "Weight",
+            "name": "sugar",
+            "quantity": 250
+        },
+        {
+            "id": 5,
+            "measureType": "Weight",
+            "name": "cinnamon",
+            "quantity": 3
+        },
+        {
+            "id": 6,
+            "measureType": "Weight",
+            "name": "salt",
+            "quantity": 3
+        }
+    ],
+    "recipe_text": "Measurement; 120; Prepare 120 grams of flour.| Measurement; 150; Prepare 150 grams of sugar| Untimed; None; Prepare a teaspoon of salt and cinnamon each| Untimed; None; Prepare a stick of butter and melt it down in a bowl. Add all your prepared ingredients and stir until crumbly| Quantity; 6; Prepare and slice 6 apples| Measurement; 100; Prepare 100 grams of sugar| Measurement; 20; Prepare 20 grams of flour| Untimed; None; Combine these new ingredients in a bowl. Do not add in the earlier butter mixture yet.| Untimed; None; Transfer apple mixture to a baking dish and spread the butter mixture on top| Untimed; None; Heat oven to 375 degrees Fahrenheit| Timed; 2400; Bake mixture for 40 minutes| Finish; None; Serve!",
+    "scale_needed": 1,
+    "thermometer_needed": 1,
+    "title": "Beurre Blanc Sauce Steak"
+}
