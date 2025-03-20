@@ -181,8 +181,11 @@ class IngredientRecog:
             print("error")
             return(2, None)
 
-    def predict_img(self, use_ai = True):
+    def predict_img(self, use_ai = True, no_cropping = False):
         test_path = os.path.join(script_dir, "test.jpg")
+        if no_cropping:
+            uncropped_image = cv2.imread(test_path)
+            return self.predict_img_openai(uncropped_image)
         if not os.path.exists(test_path):
             return(3, None) #some exit message
         test_image = self.__crop_img_qr()

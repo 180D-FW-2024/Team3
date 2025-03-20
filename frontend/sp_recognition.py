@@ -103,7 +103,8 @@ class RaspiSM:
             return self.commandCache[parsedInput]
         
         outputString = ""
-        while outputString == "":
+        # while outputString == "":
+        if outputString == "":
             output = send_command(parsedInput)
             if output is None:
                 return None
