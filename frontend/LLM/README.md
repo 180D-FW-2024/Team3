@@ -1,0 +1,1 @@
+This folder deals with LLM mapping of commands and ingredients.

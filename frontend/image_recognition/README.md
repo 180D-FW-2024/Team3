@@ -1,0 +1,1 @@
+This folder contains files that deal with how Raspitouille recognizes ingredients.

@@ -1,0 +1,1 @@
+This folder contains the inner workings of our dockerized server.
